@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Meal Tracker app</string>
+    <string name="txt_caloricGoal">Caloric Goal</string>
+    <string name="txt_caloriesEaten">Eaten</string>
+    <string name="txt_caloriesLeft">Left</string>
+    <string name="txt_breakfast">Breakfast</string>
+    <string name="txt_lunch">Lunch</string>
+    <string name="txt_dinner">Dinner</string>
+    <string name="txt_extras">Extras</string>
+    <string name="txt_carbs">Carbs</string>
+    <string name="txt_protein">Protein</string>
+    <string name="txt_fat">Fat</string>
 </resources>
