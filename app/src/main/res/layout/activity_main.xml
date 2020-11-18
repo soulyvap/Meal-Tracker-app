@@ -32,23 +32,21 @@
         android:id="@+id/txtCaloriesLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="75dp"
         android:text="@string/txt_caloriesLeft"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/progressBar" />
+        app:layout_constraintTop_toBottomOf="@id/guideline6" />
 
     <TextView
         android:id="@+id/txtCaloriesLeftValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
         android:text="0"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="@+id/progressBar"
-        app:layout_constraintStart_toStartOf="@+id/progressBar" />
+        app:layout_constraintEnd_toEndOf="@+id/circularProgressionBar"
+        app:layout_constraintStart_toStartOf="@+id/circularProgressionBar"
+        app:layout_constraintTop_toBottomOf="@id/guideline5" />
 
     <TextView
         android:id="@+id/txtProteins"
@@ -138,7 +136,7 @@
         android:text="@string/txt_caloriesEaten"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtCaloriesLeft"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/progressBar"
+        app:layout_constraintEnd_toStartOf="@+id/circularProgressionBar"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -149,7 +147,7 @@
         android:text="0"
         android:textSize="24sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtCaloriesLeftValue"
-        app:layout_constraintEnd_toStartOf="@+id/progressBar"
+        app:layout_constraintEnd_toStartOf="@+id/circularProgressionBar"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -161,7 +159,7 @@
         android:text="@string/txt_dinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/progressBar"
+        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
         app:layout_constraintTop_toBottomOf="@+id/txtLunchValue" />
 
     <TextView
@@ -172,7 +170,7 @@
         android:text="@string/txt_extras"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@id/guideline3"
+        app:layout_constraintStart_toEndOf="@id/circularProgressionBar"
         app:layout_constraintTop_toBottomOf="@+id/txtDinnerValue" />
 
     <ImageView
@@ -182,15 +180,15 @@
 
         android:layout_marginStart="100dp"
         android:layout_marginLeft="100dp"
-        android:layout_marginTop="50dp"
         android:layout_marginEnd="100dp"
         android:layout_marginRight="100dp"
         android:layout_marginBottom="90dp"
+        android:padding="20dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtCaloricGoalValue"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ring" />
 
@@ -202,20 +200,20 @@
         android:text="@string/txt_lunch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/progressBar"
+        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
         app:layout_constraintTop_toBottomOf="@+id/txtBreakfastValue" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/circularProgressionBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="100dp"
         android:layout_marginLeft="100dp"
-        android:layout_marginTop="50dp"
         android:layout_marginEnd="100dp"
         android:layout_marginRight="100dp"
         android:layout_marginBottom="90dp"
+        android:padding="20dp"
         android:progress="90"
         android:progressDrawable="@drawable/circle"
         android:rotation="90"
@@ -225,8 +223,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@id/txtCaloricGoalValue" />
 
     <TextView
         android:id="@+id/txtBreakfastValue"
@@ -236,7 +233,7 @@
         android:text="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/progressBar"
+        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
         app:layout_constraintTop_toBottomOf="@+id/txtBreakfast" />
 
     <TextView
@@ -244,12 +241,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="108dp"
         android:text="0"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@id/guideline3"
+        app:layout_constraintStart_toEndOf="@id/circularProgressionBar"
         app:layout_constraintTop_toBottomOf="@+id/txtExtras" />
 
     <TextView
@@ -260,7 +255,7 @@
         android:text="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/progressBar"
+        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
         app:layout_constraintTop_toBottomOf="@+id/txtLunch" />
 
     <TextView
@@ -271,7 +266,7 @@
         android:text="@string/txt_breakfast"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
-        app:layout_constraintStart_toEndOf="@+id/progressBar"
+        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -282,7 +277,7 @@
         android:text="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/progressBar"
+        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
         app:layout_constraintTop_toBottomOf="@+id/txtDinner" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -321,6 +316,43 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="@id/linearLayout" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabBtnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_baseline_add_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.23" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1708126" />
+
+    <Button
+        android:id="@+id/btn_toSetup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Setup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
