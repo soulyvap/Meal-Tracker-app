@@ -10,4 +10,5 @@
     <string name="txt_carbs">Carbs</string>
     <string name="txt_protein">Protein</string>
     <string name="txt_fat">Fat</string>
+    <string name="txt_waterCount">Water(glasses)</string>
 </resources>

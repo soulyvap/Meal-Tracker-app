@@ -343,5 +343,45 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.1708126" />
 
+    <TextView
+        android:id="@+id/txtWaterCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_waterCount"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtCaloricGoal"
+        app:layout_constraintEnd_toStartOf="@id/circularProgressionBar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txtWaterCountValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtCaloricGoalValue"
+        app:layout_constraintEnd_toStartOf="@id/circularProgressionBar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txtWaterPlus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="+"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtWaterCountValue"
+        app:layout_constraintStart_toEndOf="@+id/txtWaterCountValue" />
+
+    <TextView
+        android:id="@+id/txtWaterMinus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="-"
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtWaterCountValue"
+        app:layout_constraintEnd_toStartOf="@+id/txtWaterCountValue" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
