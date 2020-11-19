@@ -17,8 +17,28 @@ public class Counter {
         return count;
     }
 
+    public String getCountString() {
+        return Integer.toString(count);
+    }
+
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public void add(int value) {
+        if ((count + value) > maxValue){
+            this.count = maxValue;
+        } else {
+            this.count += value;
+        }
+    }
+
+    public void remove(int value) {
+        if ((count - value) < minValue){
+            this.count = minValue;
+        } else {
+            this.count -= value;
+        }
     }
 
     public int getStartingValue() {
