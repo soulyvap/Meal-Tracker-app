@@ -47,11 +47,11 @@
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginBottom="56dp"
-        android:text="Bithdate"
+        android:text="Birthdate"
         app:layout_constraintBottom_toTopOf="@+id/textView8"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
+    <Text
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -115,6 +115,7 @@
         android:layout_marginBottom="16dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:text=" "
         app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName5"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -127,6 +128,7 @@
         android:layout_marginBottom="30dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:text=" "
         app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName6"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -139,6 +141,7 @@
         android:layout_marginBottom="37dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:text=" "
         app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName7"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -151,6 +154,7 @@
         android:layout_marginBottom="21dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:text=" "
         app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName8"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -163,6 +167,7 @@
         android:layout_marginBottom="9dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:text=""
         app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName9"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -175,6 +180,7 @@
         android:layout_marginBottom="119dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:text=""
         app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName10"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -187,6 +193,7 @@
         android:layout_marginBottom="146dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:text=" "
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
