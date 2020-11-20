@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import static com.example.mealtrackerapp.SetupActivity.EXTRA_CALORIC_GOAL;
+import static com.example.mealtrackerapp.SetupActivity.PREF_CALORIC_GOAL;
 import static com.example.mealtrackerapp.SetupActivity.SETUP_PREF;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
         //set caloric goal
         caloricGoalDisplay = findViewById(R.id.txtCaloricGoalValue);
         circularPG = findViewById(R.id.circularProgressionBar);
-        if (setupPref.contains(EXTRA_CALORIC_GOAL)) {
-            caloricGoalInt = setupPref.getInt(EXTRA_CALORIC_GOAL, 0);
+        if (setupPref.contains(PREF_CALORIC_GOAL)) {
+            caloricGoalInt = setupPref.getInt(PREF_CALORIC_GOAL, 0);
             caloricCounter = new Counter(0, 0, caloricGoalInt);
             caloricGoalDisplay.setText(Integer.toString(caloricCounter.getMaxValue()));
             circularPG.setMax(caloricGoalInt);
