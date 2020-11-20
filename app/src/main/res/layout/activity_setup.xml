@@ -4,233 +4,281 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Setup">
+    tools:context=".SetupActivity">
 
-
-    <TextView
-        android:id="@+id/txtsetup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="62dp"
-        android:layout_marginLeft="62dp"
-        android:layout_marginBottom="40dp"
-        android:text="Setup User info and goals"
-        app:layout_constraintBottom_toTopOf="@+id/textfirstname"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textfirstname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginBottom="44dp"
         android:text="First name"
         app:layout_constraintBottom_toTopOf="@+id/textlastname"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/textlastname"
+        app:layout_constraintTop_toTopOf="@id/guidelineTop" />
 
     <TextView
         android:id="@+id/textlastname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
-        android:layout_marginBottom="48dp"
         android:text="Last name"
         app:layout_constraintBottom_toTopOf="@+id/textBirthdate"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/textBirthdate"
+        app:layout_constraintTop_toBottomOf="@+id/textfirstname" />
 
     <TextView
         android:id="@+id/textBirthdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginBottom="50dp"
         android:text="Birthdate"
         app:layout_constraintBottom_toTopOf="@+id/textHeight"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/textHeight"
+        app:layout_constraintTop_toBottomOf="@+id/textlastname" />
 
     <TextView
         android:id="@+id/textweight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="29dp"
-        android:layout_marginLeft="29dp"
-        android:layout_marginBottom="43dp"
         android:text="Weight"
         app:layout_constraintBottom_toTopOf="@+id/textDailycaloricgoal"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/textDailycaloricgoal"
+        app:layout_constraintTop_toBottomOf="@+id/textHeight" />
 
     <TextView
         android:id="@+id/textDailycaloricgoal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginLeft="22dp"
-        android:layout_marginBottom="71dp"
-        android:text="Daily caloric goal"
+        android:text="Daily caloric goal*"
         app:layout_constraintBottom_toTopOf="@+id/textMacrogoal"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/textMacrogoal"
+        app:layout_constraintTop_toBottomOf="@+id/textweight" />
 
     <TextView
         android:id="@+id/textMacrogoal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="26dp"
-        android:layout_marginLeft="26dp"
-        android:layout_marginBottom="55dp"
-        android:text="Macro goal(%)"
+        android:text="Macro goal(%)*"
         app:layout_constraintBottom_toTopOf="@+id/textwaterdrinkinggoal"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/textwaterdrinkinggoal"
+        app:layout_constraintTop_toBottomOf="@+id/textDailycaloricgoal" />
 
     <TextView
         android:id="@+id/textwaterdrinkinggoal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginLeft="22dp"
-        android:layout_marginBottom="155dp"
-        android:text="Water drinking goal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:text="Water drinking goal*"
+        app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textMacrogoal" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName4"
+        android:id="@+id/etxtSetLastname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
-        android:layout_marginRight="76dp"
-        android:layout_marginBottom="16dp"
         android:ems="10"
+        android:gravity="center"
         android:inputType="textPersonName"
         android:text=" "
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName5"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/btnBirthdateCalendar"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline8"
+        app:layout_constraintTop_toBottomOf="@+id/etxtSetFirstname" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName5"
+        android:id="@+id/etxtSetHeight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
-        android:layout_marginRight="76dp"
-        android:layout_marginBottom="30dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text=" "
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName6"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:gravity="center"
+        android:hint="cm"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/etxtSetValue"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline8"
+        app:layout_constraintTop_toBottomOf="@+id/btnBirthdateCalendar" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName6"
+        android:id="@+id/etxtSetCaloricValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
-        android:layout_marginRight="76dp"
-        android:layout_marginBottom="37dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text=" "
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName7"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextTextPersonName7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
-        android:layout_marginRight="76dp"
-        android:layout_marginBottom="21dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text=" "
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName8"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <EditText
-        android:id="@+id/editTextTextPersonName8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="69dp"
-        android:layout_marginRight="69dp"
-        android:layout_marginBottom="9dp"
-        android:ems="10"
-        android:inputType="textPersonName"
+        android:gravity="center"
+        android:hint="kcal"
+        android:inputType="number"
         android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName9"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/etxtSetCarbs"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline8"
+        app:layout_constraintTop_toBottomOf="@+id/etxtSetValue" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName9"
+        android:id="@+id/etxtSetWater"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="73dp"
-        android:layout_marginRight="73dp"
-        android:layout_marginBottom="119dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName10"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:gravity="center"
+        android:inputType="number"
+        android:text=" "
+        android:textSize="14sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textwaterdrinkinggoal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline8" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName10"
+        android:id="@+id/etxtSetValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="73dp"
-        android:layout_marginRight="73dp"
-        android:layout_marginBottom="146dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="kg"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/etxtSetCaloricValue"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline8"
+        app:layout_constraintTop_toBottomOf="@+id/etxtSetHeight" />
+
+    <EditText
+        android:id="@+id/etxtSetFirstname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
         android:text=" "
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:textSize="14sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textfirstname"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline8"
+        android:gravity="center" />
 
     <Button
-        android:id="@+id/buttonsave"
+        android:id="@+id/btnSaveSetup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="180dp"
-        android:layout_marginLeft="180dp"
-        android:layout_marginEnd="333dp"
-        android:layout_marginRight="333dp"
-        android:layout_marginBottom="41dp"
+        android:layout_marginBottom="24dp"
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline7"
+        android:id="@+id/guidelineBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_percent="0.86" />
 
     <TextView
         android:id="@+id/textHeight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginBottom="43dp"
         android:text="Height"
         app:layout_constraintBottom_toTopOf="@+id/textweight"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/textweight"
+        app:layout_constraintTop_toBottomOf="@+id/textBirthdate" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.13" />
+
+    <ImageView
+        android:id="@+id/btnBirthdateCalendar"
+        android:layout_width="30dp"
+        android:layout_height="49dp"
+        android:src="@drawable/ic_baseline_calendar_today_24"
+        app:layout_constraintBottom_toTopOf="@+id/etxtSetHeight"
+        app:layout_constraintEnd_toEndOf="@id/guideline9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/guideline8"
+        app:layout_constraintTop_toBottomOf="@+id/etxtSetLastname" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="197dp" />
+
+    <EditText
+        android:id="@+id/etxtSetProtein"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="protein"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxtSetCarbs"
+        app:layout_constraintEnd_toStartOf="@+id/etxtSetFat"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/etxtSetCarbs" />
+
+    <EditText
+        android:id="@+id/etxtSetCarbs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="carbs"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/etxtSetWater"
+        app:layout_constraintEnd_toStartOf="@+id/etxtSetProtein"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline8"
+        app:layout_constraintTop_toBottomOf="@+id/etxtSetCaloricValue" />
+
+    <EditText
+        android:id="@+id/etxtSetFat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="fat"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxtSetProtein"
+        app:layout_constraintEnd_toStartOf="@+id/guideline9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/etxtSetProtein" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="24dp" />
+
+    <TextView
+        android:id="@+id/txtSetup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="35dp"
+        android:text="Setup"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

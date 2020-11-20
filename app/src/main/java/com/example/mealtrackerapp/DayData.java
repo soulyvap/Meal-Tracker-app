@@ -1,9 +1,9 @@
 package com.example.mealtrackerapp;
 
-public class Day {
-    private int day;
-    private int month;
-    private int year;
+import java.util.Date;
+
+public class DayData {
+    private Date date;
     private int weight;
     private int caloricGoal;
     private int carbPercent;
@@ -11,10 +11,8 @@ public class Day {
     private int fatPercent;
     private int waterAmount;
 
-    public Day(int day, int month, int year, int weight, int caloricGoal, int carbPercent, int proteinPercent, int fatPercent, int waterAmount) {
-        this.day = day;
-        this.month = month;
-        this.year = year;
+    public DayData(Date date, int weight, int caloricGoal, int carbPercent, int proteinPercent, int fatPercent, int waterAmount) {
+        this.date = date;
         this.weight = weight;
         this.caloricGoal = caloricGoal;
         this.carbPercent = carbPercent;
@@ -23,28 +21,12 @@ public class Day {
         this.waterAmount = waterAmount;
     }
 
-    public int getDay() {
-        return day;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDay(int day) {
-        this.day = day;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public int getWeight() {
