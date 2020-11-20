@@ -22,6 +22,7 @@ import static com.example.mealtrackerapp.SetupActivity.SETUP_PREF;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String PREF_WATER = "pref_water";
     //references to views on the layout
     TextView caloricGoalDisplay, eatenDisplay, caloriesLeftDisplay, breakfastDisplay, lunchDisplay, dinnerDisplay, extrasDisplay, waterDisplay, waterMinus, waterPlus;
     ProgressBar circularPG, carbsPG, proteinPG, fatPG;
@@ -62,7 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
         //water counter
         waterCounter = new Counter(0, 0, 100);
-
+        if (setupPref.contains(PREF_WATER)) {
+            waterCounter.setCount(setupPref.getInt(PREF_WATER, 0));
+        }
         waterDisplay = findViewById(R.id.txtWaterCountValue);
         waterMinus = findViewById(R.id.txtWaterMinus);
         waterPlus = findViewById(R.id.txtWaterPlus);
@@ -84,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor prefEditor = setupPref.edit();
+        prefEditor.putInt(PREF_WATER, waterCounter.getCount());
+        prefEditor.commit();
     }
 
     private void updateWaterCount() {
