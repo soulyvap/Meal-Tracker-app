@@ -46,15 +46,18 @@ public class SetupActivity extends AppCompatActivity {
                 fatPercent = findViewById(R.id.etxtSetFat);
                 waterGoal = findViewById(R.id.etxtSetWater);
 
-                prefEditor.putString(EXTRA_CALORIC_GOAL, caloricGoal.getText().toString().trim());
+                try {
+                    prefEditor.putInt(EXTRA_CALORIC_GOAL, Integer.parseInt(caloricGoal.getText().toString().trim()));
 //                prefEditor.putInt(EXTRA_CARBS, Integer.parseInt(carbsPercent.getText().toString()));
 //                prefEditor.putInt(EXTRA_PROTEIN, Integer.parseInt(proteinPercent.getText().toString()));
 //                prefEditor.putInt(EXTRA_FAT, Integer.parseInt(fatPercent.getText().toString()));
 //                prefEditor.putInt(EXTRA_WATER, Integer.parseInt(waterGoal.getText().toString()));
-                prefEditor.commit();
-
-
-                startActivity(intent);
+                    prefEditor.commit();
+                    Log.d("test", "adding sharedPref successful");
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(SetupActivity.this, "Please fill in compulsory fields :)", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });

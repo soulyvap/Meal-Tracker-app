@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -24,15 +23,16 @@ import static com.example.mealtrackerapp.SetupActivity.SETUP_PREF;
 public class MainActivity extends AppCompatActivity {
 
     //references to views on the layout
-    TextView caloricGoalValue, eatenValue, leftValue, breakfastValue, lunchValue, dinnerValue, extrasValue, waterValue, waterMinus, waterPlus;
+    TextView caloricGoalDisplay, eatenDisplay, caloriesLeftDisplay, breakfastDisplay, lunchDisplay, dinnerDisplay, extrasDisplay, waterDisplay, waterMinus, waterPlus;
     ProgressBar circularPG, carbsPG, proteinPG, fatPG;
     FloatingActionButton fabAdd;
     int caloricGoalInt;
 
     //counters
-    Counter eatenCounter, breakfastCounter, lunchCounter, dinnerCounter, extrasCounter, waterCounter;
+    Counter caloricCounter, breakfastCounter, lunchCounter, dinnerCounter, extrasCounter, waterCounter;
 
-
+    //shared preferences
+    SharedPreferences setupPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,23 +40,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         
         //get shared preferences
-        SharedPreferences setupPref = getSharedPreferences(SETUP_PREF, Activity.MODE_PRIVATE);
-        
+        setupPref = getSharedPreferences(SETUP_PREF, Activity.MODE_PRIVATE);
 
         //set caloric goal
-        caloricGoalValue = findViewById(R.id.txtCaloricGoalValue);
+        caloricGoalDisplay = findViewById(R.id.txtCaloricGoalValue);
+        circularPG = findViewById(R.id.circularProgressionBar);
         if (setupPref.contains(EXTRA_CALORIC_GOAL)) {
-            String test = setupPref.getString(EXTRA_CALORIC_GOAL, null);
-            caloricGoalValue.setText(test);
-            Log.d("test", test);
+            caloricGoalInt = setupPref.getInt(EXTRA_CALORIC_GOAL, 0);
+            caloricCounter = new Counter(0, 0, caloricGoalInt);
+            caloricGoalDisplay.setText(Integer.toString(caloricCounter.getMaxValue()));
+            circularPG.setMax(caloricGoalInt);
+            Log.d("test", "caloric goal display success");
         } else {
             Log.d("test", "onCreate: no value");
         }
 
+        //set calories left
+        caloriesLeftDisplay = findViewById(R.id.txtCaloriesLeftValue);
+        int caloriesLeftInt = caloricCounter.getMaxValue() - caloricCounter.getCount();
+        caloriesLeftDisplay.setText(Integer.toString(caloriesLeftInt));
+
         //water counter
         waterCounter = new Counter(0, 0, 100);
 
-        waterValue = findViewById(R.id.txtWaterCountValue);
+        waterDisplay = findViewById(R.id.txtWaterCountValue);
         waterMinus = findViewById(R.id.txtWaterMinus);
         waterPlus = findViewById(R.id.txtWaterPlus);
         updateWaterCount();
@@ -80,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateWaterCount() {
-        waterValue.setText(waterCounter.getCountString());
+        waterDisplay.setText(waterCounter.getCountString());
     }
 
     /**

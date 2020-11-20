@@ -214,7 +214,7 @@
         android:layout_marginRight="100dp"
         android:layout_marginBottom="90dp"
         android:padding="20dp"
-        android:progress="90"
+        android:progress="0"
         android:progressDrawable="@drawable/circle"
         android:rotation="90"
         android:rotationX="180"
