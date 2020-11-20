@@ -52,14 +52,14 @@ public class MainActivity extends AppCompatActivity {
             caloricGoalDisplay.setText(Integer.toString(caloricCounter.getMaxValue()));
             circularPG.setMax(caloricGoalInt);
             Log.d("test", "caloric goal display success");
+            //set calories left
+            caloriesLeftDisplay = findViewById(R.id.txtCaloriesLeftValue);
+            int caloriesLeftInt = caloricCounter.getMaxValue() - caloricCounter.getCount();
+            caloriesLeftDisplay.setText(Integer.toString(caloriesLeftInt));
         } else {
             Log.d("test", "onCreate: no value");
         }
 
-        //set calories left
-        caloriesLeftDisplay = findViewById(R.id.txtCaloriesLeftValue);
-        int caloriesLeftInt = caloricCounter.getMaxValue() - caloricCounter.getCount();
-        caloriesLeftDisplay.setText(Integer.toString(caloriesLeftInt));
 
         //water counter
         waterCounter = new Counter(0, 0, 100);
@@ -86,7 +86,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        //floating action button to food entry
+        fabAdd = findViewById(R.id.fabBtnAdd);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FoodEntryActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

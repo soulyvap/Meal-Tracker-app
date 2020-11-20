@@ -152,14 +152,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:gravity="center"
         android:inputType="textPersonName"
         android:text=" "
         android:textSize="14sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/textfirstname"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/guideline8"
-        android:gravity="center" />
+        app:layout_constraintStart_toStartOf="@+id/guideline8" />
 
     <Button
         android:id="@+id/btnSaveSetup"
@@ -202,9 +202,7 @@
         android:layout_height="49dp"
         android:src="@drawable/ic_baseline_calendar_today_24"
         app:layout_constraintBottom_toTopOf="@+id/etxtSetHeight"
-        app:layout_constraintEnd_toEndOf="@id/guideline9"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/guideline8"
+        app:layout_constraintEnd_toEndOf="@+id/etxtSetLastname"
         app:layout_constraintTop_toBottomOf="@+id/etxtSetLastname" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -279,6 +277,15 @@
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtBirthdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please select date:"
+        app:layout_constraintBottom_toTopOf="@+id/etxtSetHeight"
+        app:layout_constraintStart_toStartOf="@+id/etxtSetLastname"
+        app:layout_constraintTop_toBottomOf="@+id/etxtSetLastname" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -54,7 +54,7 @@ public class SetupActivity extends AppCompatActivity {
                     Log.d("test", "adding sharedPref successful");
                     startActivity(intent);
                 } catch (Exception e) {
-                    Toast.makeText(SetupActivity.this, "Please fill in compulsory fields :)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SetupActivity.this, "Please fill in mandatory fields :)", Toast.LENGTH_SHORT).show();
                 }
 
             }
