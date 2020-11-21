@@ -31,47 +31,47 @@
         app:layout_constraintTop_toTopOf="@+id/guideline11"
         app:srcCompat="@drawable/ic_baseline_access_time_24" />
 
-    <EditText
-        android:id="@+id/editTextTextPersonName"
+    <Spinner
+        android:id="@+id/spinnerMeal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName2"
+        app:layout_constraintBottom_toTopOf="@+id/etxtFoodName"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
         app:layout_constraintTop_toBottomOf="@+id/etxtTime" />
 
     <EditText
-        android:id="@+id/editTextNumber"
+        android:id="@+id/etxtFoodCalories"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center"
         android:inputType="number"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName3"
+        app:layout_constraintBottom_toTopOf="@+id/etxtFoodCarbs"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        app:layout_constraintTop_toBottomOf="@+id/etxtFoodName" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/etxtFoodName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumber"
+        app:layout_constraintBottom_toTopOf="@+id/etxtFoodCalories"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerMeal" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName3"
+        android:id="@+id/etxtFoodCarbs"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -79,36 +79,36 @@
         android:inputType="number"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTextPersonName4"
+        app:layout_constraintEnd_toStartOf="@+id/etxtFoodProtein"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/etxtFoodCalories" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName4"
+        android:id="@+id/etxtFoodProtein"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center"
         android:inputType="number"
         android:textSize="14sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextTextPersonName3"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTextPersonName5"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxtFoodCarbs"
+        app:layout_constraintEnd_toStartOf="@+id/etxtFoodFat"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName3" />
+        app:layout_constraintStart_toEndOf="@+id/etxtFoodCarbs" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName5"
+        android:id="@+id/etxtFoodFat"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center"
         android:inputType="number"
         android:textSize="14sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextTextPersonName4"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxtFoodProtein"
         app:layout_constraintEnd_toEndOf="@id/guideline7"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName4" />
+        app:layout_constraintStart_toEndOf="@+id/etxtFoodProtein" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"
@@ -138,7 +138,7 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintGuide_percent="0.8"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName3" />
+        app:layout_constraintTop_toBottomOf="@+id/etxtFoodCarbs" />
 
     <TextView
         android:id="@+id/textView"
@@ -155,15 +155,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Meal"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextTextPersonName"
-        app:layout_constraintStart_toStartOf="@+id/textView" />
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/spinnerMeal" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Food name"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextTextPersonName2"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxtFoodName"
         app:layout_constraintStart_toStartOf="@+id/textView2" />
 
     <TextView
@@ -171,7 +171,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Calories"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextNumber"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxtFoodCalories"
         app:layout_constraintStart_toStartOf="@+id/textView3" />
 
     <TextView
@@ -179,6 +179,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Macronutrients"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextTextPersonName3"
+        app:layout_constraintBaseline_toBaselineOf="@+id/etxtFoodCarbs"
         app:layout_constraintStart_toStartOf="@+id/textView4" />
 </androidx.constraintlayout.widget.ConstraintLayout>
