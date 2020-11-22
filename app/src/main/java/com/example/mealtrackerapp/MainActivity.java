@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences setupPref;
 
     //foodDairy
-    FoodDairy foodDairy;
+    FoodDairy foodDairy = new FoodDairy();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,11 @@ public class MainActivity extends AppCompatActivity {
             FoodLog foodLog = (FoodLog) intent.getSerializableExtra(EXTRA_FOOD_LOG);
             caloricCounter.add(foodLog.getCalories());
             updateCaloricCountersDisplay();
+//            foodDairy.add(foodLog);
+            DataBaseHelper dbHelper = new DataBaseHelper(MainActivity.this);
+            boolean success = dbHelper.addOne(foodLog);
 
+            Toast.makeText(MainActivity.this, "Success = " + success, Toast.LENGTH_SHORT).show();
         }
     }
 
