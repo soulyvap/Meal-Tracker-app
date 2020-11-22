@@ -28,6 +28,7 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
     public static final String EXTRA_FOOD_PROTEIN = "extraFoodProtein";
     public static final String EXTRA_FOOD_FAT = "extraFoodFat";
     public static final String MEAL_SPINNER_DEFAULT = "Choose meal ...";
+    public static final String EXTRA_FOOD_LOG = "extraFoodlog";
     EditText timeEditTxt, foodEditTxt, foodCaloriesEditTxt, foodCarbsEditTxt, foodProteinEditTxt, foodFatEditTxt;
     Spinner mealSpinner;
     ImageView btnClock;
@@ -107,14 +108,17 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                     int protein = Integer.parseInt(foodProteinEditTxt.getText().toString());
                     int fat = Integer.parseInt(foodFatEditTxt.getText().toString());
 
+                    FoodLog foodLog = new FoodLog(foodName, mealSelected, time, calories, carbs, protein, fat);
+
                     Intent intent = new Intent(FoodEntryActivity.this, MainActivity.class);
-                    intent.putExtra(EXTRA_TIME, time);
-                    intent.putExtra(EXTRA_MEAL, mealSelected);
-                    intent.putExtra(EXTRA_FOOD_NAME, foodName);
-                    intent.putExtra(EXTRA_FOOD_CALORIES, calories);
-                    intent.putExtra(EXTRA_FOOD_CARBS, carbs);
-                    intent.putExtra(EXTRA_FOOD_PROTEIN, protein);
-                    intent.putExtra(EXTRA_FOOD_FAT, fat);
+                    intent.putExtra(EXTRA_FOOD_LOG, foodLog);
+//                    intent.putExtra(EXTRA_TIME, time);
+//                    intent.putExtra(EXTRA_MEAL, mealSelected);
+//                    intent.putExtra(EXTRA_FOOD_NAME, foodName);
+//                    intent.putExtra(EXTRA_FOOD_CALORIES, calories);
+//                    intent.putExtra(EXTRA_FOOD_CARBS, carbs);
+//                    intent.putExtra(EXTRA_FOOD_PROTEIN, protein);
+//                    intent.putExtra(EXTRA_FOOD_FAT, fat);
                     startActivity(intent);
                 }
 

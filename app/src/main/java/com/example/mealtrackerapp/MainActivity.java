@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import static com.example.mealtrackerapp.FoodEntryActivity.EXTRA_FOOD_LOG;
 import static com.example.mealtrackerapp.SetupActivity.PREF_CALORIC_GOAL;
 import static com.example.mealtrackerapp.SetupActivity.SETUP_PREF;
 
@@ -35,16 +36,23 @@ public class MainActivity extends AppCompatActivity {
     //shared preferences
     SharedPreferences setupPref;
 
+    //foodDairy
+    FoodDairy foodDairy;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //references to caloric counters display
+        caloricGoalDisplay = findViewById(R.id.txtCaloricGoalValue);
+        eatenDisplay = findViewById(R.id.txtCaloriesEatenValue);
+        caloriesLeftDisplay = findViewById(R.id.txtCaloriesLeftValue);
         
         //get shared preferences
         setupPref = getSharedPreferences(SETUP_PREF, Activity.MODE_PRIVATE);
 
         //set caloric goal
-        caloricGoalDisplay = findViewById(R.id.txtCaloricGoalValue);
         circularPG = findViewById(R.id.circularProgressionBar);
         if (setupPref.contains(PREF_CALORIC_GOAL)) {
             caloricGoalInt = setupPref.getInt(PREF_CALORIC_GOAL, 0);
@@ -53,9 +61,7 @@ public class MainActivity extends AppCompatActivity {
             circularPG.setMax(caloricGoalInt);
             Log.d("test", "caloric goal display success");
             //set calories left
-            caloriesLeftDisplay = findViewById(R.id.txtCaloriesLeftValue);
-            int caloriesLeftInt = caloricCounter.getMaxValue() - caloricCounter.getCount();
-            caloriesLeftDisplay.setText(Integer.toString(caloriesLeftInt));
+            updateCaloricCountersDisplay();
         } else {
             Log.d("test", "onCreate: no value");
         }
@@ -95,6 +101,23 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //update caloric status if intent contains foodLog object + add to food diary
+        Intent intent = getIntent();
+        //check if intent has foodLog extra
+        if (intent.hasExtra(EXTRA_FOOD_LOG)){
+            FoodLog foodLog = (FoodLog) intent.getSerializableExtra(EXTRA_FOOD_LOG);
+            caloricCounter.add(foodLog.getCalories());
+            updateCaloricCountersDisplay();
+
+        }
+    }
+
+    private void updateCaloricCountersDisplay() {
+        String caloriesLeft = Integer.toString(caloricCounter.getMaxValue() - caloricCounter.getCount());
+        eatenDisplay.setText(caloricCounter.getCountString());
+        caloriesLeftDisplay.setText(caloriesLeft);
+        circularPG.setProgress(caloricCounter.getCount());
     }
 
     @Override
@@ -108,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateWaterCount() {
         waterDisplay.setText(waterCounter.getCountString());
     }
+
 
     /**
      * Inflating menu object (reading xml and making menu visible in app)

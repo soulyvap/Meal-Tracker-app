@@ -1,6 +1,8 @@
 package com.example.mealtrackerapp;
 
-public class Food {
+import java.io.Serializable;
+
+public class FoodLog implements Serializable {
     private String name;
     private String meal;
     private String time;
@@ -65,7 +67,7 @@ public class Food {
         this.fat = fat;
     }
 
-    public Food(String name, String meal, String time, int calories, int carbs, int protein, int fat) {
+    public FoodLog(String name, String meal, String time, int calories, int carbs, int protein, int fat) {
         this.name = name;
         this.meal = meal;
         this.time = time;
