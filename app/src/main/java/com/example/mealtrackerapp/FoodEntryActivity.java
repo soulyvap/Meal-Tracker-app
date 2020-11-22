@@ -53,6 +53,9 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         //meal selection with spinner
         mealSpinner = findViewById(R.id.spinnerMeal);
 
+        //set click listener
+        mealSpinner.setOnItemSelectedListener(this);
+
         //creating arrayList with meal choice
         ArrayList<String> meals = new ArrayList<>();
         meals.add(MEAL_SPINNER_DEFAULT);
@@ -71,7 +74,8 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
 
         hour = calendar.get(Calendar.HOUR_OF_DAY);
         minutes = calendar.get(Calendar.MINUTE);
-        timeEditTxt.setText(getTimeString(hour, minutes));
+        time = getTimeString(hour, minutes);
+        timeEditTxt.setText(time);
 
 
         btnClock = findViewById(R.id.btnClock);
@@ -102,23 +106,16 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                         editTextIsEmpty(foodFatEditTxt)) {
                     Toast.makeText(FoodEntryActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 } else {
-                    String foodName = foodEditTxt.getText().toString();
-                    int calories = Integer.parseInt(foodCaloriesEditTxt.getText().toString());
-                    int carbs = Integer.parseInt(foodCarbsEditTxt.getText().toString());
-                    int protein = Integer.parseInt(foodProteinEditTxt.getText().toString());
-                    int fat = Integer.parseInt(foodFatEditTxt.getText().toString());
+                    String foodName = foodEditTxt.getText().toString().trim();
+                    int calories = Integer.parseInt(foodCaloriesEditTxt.getText().toString().trim());
+                    int carbs = Integer.parseInt(foodCarbsEditTxt.getText().toString().trim());
+                    int protein = Integer.parseInt(foodProteinEditTxt.getText().toString().trim());
+                    int fat = Integer.parseInt(foodFatEditTxt.getText().toString().trim());
 
                     FoodLog foodLog = new FoodLog(foodName, mealSelected, time, calories, carbs, protein, fat);
 
                     Intent intent = new Intent(FoodEntryActivity.this, MainActivity.class);
                     intent.putExtra(EXTRA_FOOD_LOG, foodLog);
-//                    intent.putExtra(EXTRA_TIME, time);
-//                    intent.putExtra(EXTRA_MEAL, mealSelected);
-//                    intent.putExtra(EXTRA_FOOD_NAME, foodName);
-//                    intent.putExtra(EXTRA_FOOD_CALORIES, calories);
-//                    intent.putExtra(EXTRA_FOOD_CARBS, carbs);
-//                    intent.putExtra(EXTRA_FOOD_PROTEIN, protein);
-//                    intent.putExtra(EXTRA_FOOD_FAT, fat);
                     startActivity(intent);
                 }
 
