@@ -98,13 +98,18 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (time == MEAL_SPINNER_DEFAULT ||
-                        editTextIsEmpty(foodEditTxt) ||
-                        editTextIsEmpty(foodCaloriesEditTxt) ||
-                        editTextIsEmpty(foodCarbsEditTxt) ||
-                        editTextIsEmpty(foodProteinEditTxt) ||
-                        editTextIsEmpty(foodFatEditTxt)) {
-                    Toast.makeText(FoodEntryActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                if (mealSelected == MEAL_SPINNER_DEFAULT) {
+                    Toast.makeText(FoodEntryActivity.this, "Please select meal", Toast.LENGTH_SHORT).show();
+                } if (editTextIsEmpty(foodEditTxt)) {
+                    foodEditTxt.setError("Please enter food name");
+                } if (editTextIsEmpty(foodCaloriesEditTxt)) {
+                    foodCaloriesEditTxt.setError("Please enter calorie amount");
+                } if (editTextIsEmpty(foodCarbsEditTxt)) {
+                    foodCarbsEditTxt.setError("Please enter carbohydrate amount");
+                } if (editTextIsEmpty(foodProteinEditTxt)) {
+//                    foodProteinEditTxt.setError("Please enter protein amount");
+                } if (editTextIsEmpty(foodFatEditTxt)) {
+//                    foodFatEditTxt.setError("Please enter fat amount");
                 } else {
                     String foodName = foodEditTxt.getText().toString().trim();
                     int calories = Integer.parseInt(foodCaloriesEditTxt.getText().toString().trim());
@@ -149,11 +154,11 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         //storing meal item selected to a string
         mealSelected = parent.getItemAtPosition(position).toString();
-        Toast.makeText(this, mealSelected, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
 
     }
 
