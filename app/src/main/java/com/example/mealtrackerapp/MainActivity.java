@@ -2,7 +2,6 @@ package com.example.mealtrackerapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,6 +23,9 @@ import java.util.List;
 
 import static com.example.mealtrackerapp.FoodEntryActivity.EXTRA_FOOD_LOG;
 import static com.example.mealtrackerapp.SetupActivity.PREF_CALORIC_GOAL;
+import static com.example.mealtrackerapp.SetupActivity.PREF_CARBS;
+import static com.example.mealtrackerapp.SetupActivity.PREF_FAT;
+import static com.example.mealtrackerapp.SetupActivity.PREF_PROTEIN;
 import static com.example.mealtrackerapp.SetupActivity.SETUP_PREF;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,25 +34,27 @@ public class MainActivity extends AppCompatActivity {
     public static final String CALORIC_COUNTER_VALUE = "caloricCounterValue";
     //references to views on the layout
     TextView caloricGoalDisplay, eatenDisplay, caloriesLeftDisplay, breakfastDisplay, lunchDisplay, dinnerDisplay, extrasDisplay, waterDisplay, waterMinus, waterPlus;
-    ProgressBar circularPG, carbsPG, proteinPG, fatPG;
+    ProgressBar circularPB, carbsPB, proteinPB, fatPB;
     FloatingActionButton fabAdd, fabUpdate;
-    int caloricGoalInt;
+    int caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, carbShare, proteinShare, fatShare;
     ListView lvFoodLogs;
 
     //counters
-    Counter caloricCounter, breakfastCounter, lunchCounter, dinnerCounter, extrasCounter, waterCounter;
+    Counter caloricCounter, breakfastCounter, lunchCounter, dinnerCounter, extrasCounter, waterCounter, carbsCounter, proteinCounter, fatCounter;
 
     //shared preferences
     SharedPreferences setupPref;
     SharedPreferences.Editor prefEditor;
 
     //foodDairy
-    FoodDairy foodDairy = new FoodDairy();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //time control
+
 
         //references to caloric counters display
         caloricGoalDisplay = findViewById(R.id.txtCaloricGoalValue);
@@ -65,14 +68,29 @@ public class MainActivity extends AppCompatActivity {
         //reference to list view
         lvFoodLogs = findViewById(R.id.lvFoodLogs);
 
+        //reference to progress bars
+        circularPB = findViewById(R.id.circularProgressionBar);
+        carbsPB = findViewById(R.id.carbPB);
+        proteinPB = findViewById(R.id.proteinPB);
+        fatPB = findViewById(R.id.fatPB);
+
+        //create counters
+        caloricCounter = new Counter();
+        waterCounter = new Counter();
+        breakfastCounter = new Counter();
+        lunchCounter = new Counter();
+        dinnerCounter = new Counter();
+        extrasCounter = new Counter();
+        carbsCounter = new Counter();
+        proteinCounter = new Counter();
+        fatCounter = new Counter();
+
         //set caloric goal
-        circularPG = findViewById(R.id.circularProgressionBar);
-        caloricCounter = new Counter(0, 0, 0);
         if (setupPref.contains(PREF_CALORIC_GOAL)) {
             caloricGoalInt = setupPref.getInt(PREF_CALORIC_GOAL, 0);
             caloricCounter.setMaxValue(caloricGoalInt);
             caloricGoalDisplay.setText(Integer.toString(caloricCounter.getMaxValue()));
-            circularPG.setMax(caloricGoalInt);
+            circularPB.setMax(caloricGoalInt);
             Log.d("test", "caloric goal display success");
             //set calories left
             updateCaloricCountersDisplay();
@@ -80,9 +98,10 @@ public class MainActivity extends AppCompatActivity {
             Log.d("test", "onCreate: no value");
         }
 
+        //set macronutrient goals
+
 
         //water counter
-        waterCounter = new Counter(0, 0, 100);
         if (setupPref.contains(PREF_WATER)) {
             waterCounter.setCount(setupPref.getInt(PREF_WATER, 0));
         }
@@ -136,38 +155,49 @@ public class MainActivity extends AppCompatActivity {
             updateCaloricCountersDisplay();
             prefEditor.putInt(CALORIC_COUNTER_VALUE, caloricCounter.getCount());
             prefEditor.apply();
+            //update meal counters
         }
 
-//        //button to update food dairy
-//        fabUpdate = findViewById(R.id.fabBtnUpdateList);
-//        fabUpdate.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                DataBaseHelper dbHelper = new DataBaseHelper(MainActivity.this);
-//                List<FoodLog> foodLogs = dbHelper.getFoodLog();
-////                Toast.makeText(MainActivity.this, foodLogs.toString(), Toast.LENGTH_SHORT).show();
-//                ArrayAdapter<FoodLog> foodLogArrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, foodLogs);
-//                lvFoodLogs.setAdapter(foodLogArrayAdapter);
-//            }
-//        });
     }
 
     private void updateCaloricCountersDisplay() {
         String caloriesLeft = Integer.toString(caloricCounter.getMaxValue() - caloricCounter.getCount());
         eatenDisplay.setText(caloricCounter.getCountString());
         caloriesLeftDisplay.setText(caloriesLeft);
-        circularPG.setProgress(caloricCounter.getCount());
+        circularPB.setProgress(caloricCounter.getCount());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        //retrieve shared preferences
+        //set macronutrient PBs
+        if (setupPref.contains(PREF_CARBS)){
+            carbGoalInt = setupPref.getInt(PREF_CARBS, 0);
+            carbShare = (carbGoalInt/100) * caloricCounter.getMaxValue();
+            carbsCounter.setMaxValue(carbShare);
+            carbsPB.setMax(carbsCounter.getMaxValue());
+            Log.d("PB", Integer.toString(carbShare));
+        } if (setupPref.contains(PREF_PROTEIN)){
+            proteinGoalInt = setupPref.getInt(PREF_PROTEIN, 0);
+            proteinShare = (proteinGoalInt/100) * caloricCounter.getMaxValue();
+            proteinCounter.setMaxValue(proteinShare);
+            proteinPB.setMax(proteinCounter.getMaxValue());
+            Log.d("PB", Integer.toString(proteinShare));
+        } if (setupPref.contains(PREF_FAT)){
+            fatGoalInt = setupPref.getInt(PREF_FAT, 0);
+            fatShare = (fatShare/100) * caloricCounter.getMaxValue();
+            fatCounter.setMaxValue(fatShare);
+            fatPB.setMax(fatCounter.getMaxValue());
+            Log.d("PB", Integer.toString(fatShare));
+        }
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        //save counters
         prefEditor = setupPref.edit();
         prefEditor.putInt(PREF_WATER, waterCounter.getCount());
         prefEditor.putInt(CALORIC_COUNTER_VALUE, caloricCounter.getCount());
@@ -177,9 +207,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        DataBaseHelper dbHelper = new DataBaseHelper(MainActivity.this);
+
+        //update food diary
+        FoodLogDBH dbHelper = new FoodLogDBH(MainActivity.this);
         List<FoodLog> foodLogs = dbHelper.getFoodLog();
-//                Toast.makeText(MainActivity.this, foodLogs.toString(), Toast.LENGTH_SHORT).show();
         ArrayAdapter<FoodLog> foodLogArrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, foodLogs);
         lvFoodLogs.setAdapter(foodLogArrayAdapter);
     }
