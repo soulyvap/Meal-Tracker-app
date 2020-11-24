@@ -190,17 +190,6 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ring" />
 
-    <TextView
-        android:id="@+id/txtLunch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="@string/txt_lunch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
-        app:layout_constraintTop_toBottomOf="@+id/txtBreakfastValue" />
-
     <ProgressBar
         android:id="@+id/circularProgressionBar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -216,10 +205,22 @@
         android:rotation="90"
         android:rotationX="180"
         android:rotationY="180"
+        app:layout_constraintBottom_toBottomOf="@+id/progressionbarBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtCaloricGoalValue" />
+
+    <TextView
+        android:id="@+id/txtLunch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="@string/txt_lunch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
+        app:layout_constraintTop_toBottomOf="@+id/txtBreakfastValue" />
 
     <TextView
         android:id="@+id/txtBreakfastValue"

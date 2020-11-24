@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     //shared preferences
     SharedPreferences setupPref;
+    SharedPreferences.Editor prefEditor;
 
     //foodDairy
     FoodDairy foodDairy = new FoodDairy();
@@ -59,15 +60,17 @@ public class MainActivity extends AppCompatActivity {
         
         //get shared preferences
         setupPref = getSharedPreferences(SETUP_PREF, Activity.MODE_PRIVATE);
+        prefEditor = setupPref.edit();
 
         //reference to list view
         lvFoodLogs = findViewById(R.id.lvFoodLogs);
 
         //set caloric goal
         circularPG = findViewById(R.id.circularProgressionBar);
+        caloricCounter = new Counter(0, 0, 0);
         if (setupPref.contains(PREF_CALORIC_GOAL)) {
             caloricGoalInt = setupPref.getInt(PREF_CALORIC_GOAL, 0);
-            caloricCounter = new Counter(0, 0, caloricGoalInt);
+            caloricCounter.setMaxValue(caloricGoalInt);
             caloricGoalDisplay.setText(Integer.toString(caloricCounter.getMaxValue()));
             circularPG.setMax(caloricGoalInt);
             Log.d("test", "caloric goal display success");
@@ -93,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 waterCounter.remove(1);
                 updateWaterCount();
+                prefEditor.putInt(PREF_WATER, waterCounter.getCount());
+                prefEditor.apply();
             }
         });
         waterPlus.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 waterCounter.add(1);
                 updateWaterCount();
+                prefEditor.putInt(PREF_WATER, waterCounter.getCount());
+                prefEditor.apply();
             }
         });
 
@@ -127,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
             FoodLog foodLog = (FoodLog) intent.getSerializableExtra(EXTRA_FOOD_LOG);
             caloricCounter.add(foodLog.getCalories());
             updateCaloricCountersDisplay();
+            prefEditor.putInt(CALORIC_COUNTER_VALUE, caloricCounter.getCount());
+            prefEditor.apply();
         }
 
 //        //button to update food dairy
@@ -151,12 +160,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-        SharedPreferences.Editor prefEditor = setupPref.edit();
+        prefEditor = setupPref.edit();
         prefEditor.putInt(PREF_WATER, waterCounter.getCount());
         prefEditor.putInt(CALORIC_COUNTER_VALUE, caloricCounter.getCount());
-        prefEditor.commit();
+        prefEditor.apply();
     }
 
     @Override
@@ -169,10 +184,21 @@ public class MainActivity extends AppCompatActivity {
         lvFoodLogs.setAdapter(foodLogArrayAdapter);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
     private void updateWaterCount() {
         waterDisplay.setText(waterCounter.getCountString());
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
 
     /**
      * Inflating menu object (reading xml and making menu visible in app)
