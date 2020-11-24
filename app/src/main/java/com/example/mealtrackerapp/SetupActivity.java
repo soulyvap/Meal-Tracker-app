@@ -25,7 +25,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     public static final String PREF_WATER = "extra_water";
     public static final String SETUP_PREF = "setupPref";
     EditText firstName, LastName, height, weight, caloricGoal, carbsPercent, proteinPercent,
-            fatPercent, waterGoal,etxtSetFirstname,etxtSetLastname,txtBirthdate,etxtSetHeight,etxtSetWightValue,etxtSetCaloricValue,etxtSetCarbs,etxtSetProtein,etxtSetFat,etxtSetWater;
+            fatPercent, waterGoal,etxtSetFirstname,etxtSetLastname,txtBirthdate,etxtSetHeight,etxtSetWightValue,etxtSetCaloricValue,etxtSetCarbs,etxtSetProtein,etxtSetFat,etxtSetWater,etxtSetBirthdate;
     Button btnCalendar, btnSave;
     ImageView btnBirthdateCalendar;
 
@@ -49,6 +49,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         etxtSetProtein = findViewById(R.id.etxtSetProtein);
         etxtSetFat = findViewById(R.id.etxtSetFat);
         etxtSetWater= findViewById(R.id.etxtSetWater);
+        etxtSetBirthdate = findViewById(R.id.etxtSetBirthdate);
 
 
 
@@ -75,8 +76,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     etxtSetFirstname.setError("Please enter first name");
                 } if (editTextIsEmpty(etxtSetLastname)) {
                     etxtSetLastname.setError("Please enter last name");
-                } if (editTextIsEmpty(txtBirthdate)) {
-                    txtBirthdate.setError("Please enter Birth date");
+                } if (editTextIsEmpty(etxtSetBirthdate)) {
+                    etxtSetBirthdate.setError("Please enter Birth date");
                 } if (editTextIsEmpty(etxtSetHeight)) {
                     etxtSetHeight.setError("Please enter Height");
                 } if (editTextIsEmpty(etxtSetWightValue)) {
