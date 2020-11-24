@@ -25,6 +25,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     public static final String PREF_FAT = "extra_fat";
     public static final String PREF_WATER = "extra_water";
     public static final String SETUP_PREF = "setupPref";
+    public static final String PREF_FIRSTNAME = "PREF_FIRSTNAME";
+    public static final String PREF_LASTNAME ="PREF_LASTNAME";
+    public static final String PREF_BIRTHDATE = "PREF_BIRTHDATE";
+    public static final String PREF_HEIGHT ="PREF_HEIGHT";
+    public static final String PREF_WEIGHT = "PREF_WEIGHT";
     EditText firstName, LastName, height, weight, caloricGoal, carbsPercent, proteinPercent,
             fatPercent, waterGoal,etxtSetFirstname,etxtSetLastname,txtBirthdate,etxtSetHeight,etxtSetWightValue,etxtSetCaloricValue,etxtSetCarbs,etxtSetProtein,etxtSetFat,etxtSetWater,txtSetBirthdate;
     Button btnCalendar, btnSave;
@@ -95,12 +100,18 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 } if (editTextIsEmpty(etxtSetProtein)) {
                     etxtSetProtein.setError("Please enter Protein amount");
                 } if (editTextIsEmpty(etxtSetFat)) {
+
                     etxtSetFat.setError("Please enter Fat amount");
                 } if (editTextIsEmpty(etxtSetWater)) {
                     etxtSetWater.setError("Please enter water glass");
                 } else if(carbs+protein+fat!=100) {
                     Toast.makeText(SetupActivity.this, "sum of macro should be 100", Toast.LENGTH_SHORT).show();
                 } else{
+                    prefEditor.putString(PREF_FIRSTNAME,etxtSetFirstname.getText().toString());
+                    prefEditor.putString(PREF_LASTNAME,etxtSetLastname.getText().toString());
+                    prefEditor.putString(PREF_BIRTHDATE,txtSetBirthdate.getText().toString());
+                    prefEditor.putInt(PREF_HEIGHT, Integer.parseInt(height.getText().toString().trim()));
+                    prefEditor.putInt(PREF_WEIGHT, Integer.parseInt(weight.getText().toString().trim()));
                     prefEditor.putInt(PREF_CALORIC_GOAL, Integer.parseInt(caloricGoal.getText().toString().trim()));
                     prefEditor.putInt(PREF_CARBS, Integer.parseInt(carbsPercent.getText().toString().trim()));
                     prefEditor.putInt(PREF_PROTEIN, Integer.parseInt(proteinPercent.getText().toString().trim()));
