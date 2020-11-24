@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -25,7 +26,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     public static final String PREF_WATER = "extra_water";
     public static final String SETUP_PREF = "setupPref";
     EditText firstName, LastName, height, weight, caloricGoal, carbsPercent, proteinPercent,
-            fatPercent, waterGoal,etxtSetFirstname,etxtSetLastname,txtBirthdate,etxtSetHeight,etxtSetWightValue,etxtSetCaloricValue,etxtSetCarbs,etxtSetProtein,etxtSetFat,etxtSetWater,etxtSetBirthdate;
+            fatPercent, waterGoal,etxtSetFirstname,etxtSetLastname,txtBirthdate,etxtSetHeight,etxtSetWightValue,etxtSetCaloricValue,etxtSetCarbs,etxtSetProtein,etxtSetFat,etxtSetWater,txtSetBirthdate;
     Button btnCalendar, btnSave;
     ImageView btnBirthdateCalendar;
 
@@ -49,7 +50,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         etxtSetProtein = findViewById(R.id.etxtSetProtein);
         etxtSetFat = findViewById(R.id.etxtSetFat);
         etxtSetWater= findViewById(R.id.etxtSetWater);
-        etxtSetBirthdate = findViewById(R.id.etxtSetBirthdate);
+        txtSetBirthdate = findViewById(R.id.txtSetBirthdate);
+        txtSetBirthdate.getText().toString();
 
 
 
@@ -69,6 +71,10 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 proteinPercent = findViewById(R.id.etxtSetProtein);
                 fatPercent = findViewById(R.id.etxtSetFat);
                 waterGoal = findViewById(R.id.etxtSetWater);
+                int carbs = Integer.parseInt(etxtSetCarbs.getText().toString());
+                int protein = Integer.parseInt(etxtSetProtein.getText().toString());
+                int fat = Integer.parseInt(etxtSetFat.getText().toString());
+
 
 
 
@@ -76,8 +82,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     etxtSetFirstname.setError("Please enter first name");
                 } if (editTextIsEmpty(etxtSetLastname)) {
                     etxtSetLastname.setError("Please enter last name");
-                } if (editTextIsEmpty(etxtSetBirthdate)) {
-                    etxtSetBirthdate.setError("Please enter Birth date");
+                } if (txtSetBirthdate.getText().toString()=="Please select date"); {
+                    txtSetBirthdate.setError("Please enter Birth date");
                 } if (editTextIsEmpty(etxtSetHeight)) {
                     etxtSetHeight.setError("Please enter Height");
                 } if (editTextIsEmpty(etxtSetWightValue)) {
@@ -92,6 +98,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     etxtSetFat.setError("Please enter Fat amount");
                 } if (editTextIsEmpty(etxtSetWater)) {
                     etxtSetWater.setError("Please enter water glass");
+                } else if(carbs+protein+fat!=100) {
+                    Toast.makeText(SetupActivity.this, "sum of macro should be 100", Toast.LENGTH_SHORT).show();
                 } else{
                     prefEditor.putInt(PREF_CALORIC_GOAL, Integer.parseInt(caloricGoal.getText().toString().trim()));
                     prefEditor.putInt(PREF_CARBS, Integer.parseInt(carbsPercent.getText().toString().trim()));

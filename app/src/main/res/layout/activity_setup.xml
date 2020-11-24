@@ -96,7 +96,7 @@
         android:hint="cm"
         android:inputType="number"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/etxtSetValue"
+        app:layout_constraintBottom_toTopOf="@+id/etxtSetWightValue"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline8"
@@ -116,7 +116,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline8"
-        app:layout_constraintTop_toBottomOf="@+id/etxtSetValue" />
+        app:layout_constraintTop_toBottomOf="@+id/etxtSetWightValue" />
 
     <EditText
         android:id="@+id/etxtSetWater"
@@ -133,7 +133,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline8" />
 
     <EditText
-        android:id="@+id/etxtSetValue"
+        android:id="@+id/etxtSetWightValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -278,14 +278,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txtBirthdate"
+    <EditText
+        android:id="@+id/txtSetBirthdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Please select date:"
+        android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/etxtSetHeight"
         app:layout_constraintStart_toStartOf="@+id/etxtSetLastname"
-        app:layout_constraintTop_toBottomOf="@+id/etxtSetLastname" />
+        app:layout_constraintTop_toBottomOf="@+id/etxtSetLastname"
+        app:layout_constraintVertical_bias="0.565" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
