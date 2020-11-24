@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataBaseHelper extends SQLiteOpenHelper {
+public class FoodLogDBH extends SQLiteOpenHelper {
     public static final String COLUMN_FOOD = "FOOD";
     public static final String FOODLOGS_TABLE = COLUMN_FOOD + "LOGS_TABLE";
     public static final String COLUMN_MEAL = "MEAL";
@@ -22,7 +22,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PROTEIN = "PROTEIN";
     public static final String COLUMN_FAT = "FAT";
 
-    public DataBaseHelper(@Nullable Context context) {
+    public FoodLogDBH(@Nullable Context context) {
         super(context, "test1.db", null, 1);
     }
 
