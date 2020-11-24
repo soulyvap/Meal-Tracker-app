@@ -118,7 +118,7 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                     int fat = Integer.parseInt(foodFatEditTxt.getText().toString().trim());
 
                     FoodLog foodLog = new FoodLog(foodName, mealSelected, time, calories, carbs, protein, fat);
-                    DataBaseHelper dbHelper = new DataBaseHelper(FoodEntryActivity.this);
+                    FoodLogDBH dbHelper = new FoodLogDBH(FoodEntryActivity.this);
                     boolean success = dbHelper.addOne(foodLog);
 
 //
