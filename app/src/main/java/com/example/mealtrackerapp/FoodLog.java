@@ -11,6 +11,16 @@ public class FoodLog implements Serializable {
     private int protein;
     private int fat;
 
+    public FoodLog(String name, String meal, String time, int calories, int carbs, int protein, int fat) {
+        this.name = name;
+        this.meal = meal;
+        this.time = time;
+        this.calories = calories;
+        this.carbs = carbs;
+        this.protein = protein;
+        this.fat = fat;
+    }
+
     public String getName() {
         return name;
     }
@@ -67,15 +77,8 @@ public class FoodLog implements Serializable {
         this.fat = fat;
     }
 
-    public FoodLog(String name, String meal, String time, int calories, int carbs, int protein, int fat) {
-        this.name = name;
-        this.meal = meal;
-        this.time = time;
-        this.calories = calories;
-        this.carbs = carbs;
-        this.protein = protein;
-        this.fat = fat;
-
-
+    @Override
+    public String toString() {
+        return time + "  " + meal + "  " + name + "  " + calories;
     }
 }

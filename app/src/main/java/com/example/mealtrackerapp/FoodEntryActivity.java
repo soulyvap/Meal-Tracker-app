@@ -105,11 +105,11 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                 } if (editTextIsEmpty(foodCaloriesEditTxt)) {
                     foodCaloriesEditTxt.setError("Please enter calorie amount");
                 } if (editTextIsEmpty(foodCarbsEditTxt)) {
-                    foodCarbsEditTxt.setError("Please enter carbohydrate amount");
+                    foodCarbsEditTxt.setError("Please enter carbohydrate/protein/fat amount");
                 } if (editTextIsEmpty(foodProteinEditTxt)) {
-//                    foodProteinEditTxt.setError("Please enter protein amount");
+                    foodProteinEditTxt.setError("Please enter carbohydrate/protein/fat amount");
                 } if (editTextIsEmpty(foodFatEditTxt)) {
-//                    foodFatEditTxt.setError("Please enter fat amount");
+                    foodFatEditTxt.setError("Please enter carbohydrate/protein/fat amount");
                 } else {
                     String foodName = foodEditTxt.getText().toString().trim();
                     int calories = Integer.parseInt(foodCaloriesEditTxt.getText().toString().trim());
@@ -118,6 +118,10 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                     int fat = Integer.parseInt(foodFatEditTxt.getText().toString().trim());
 
                     FoodLog foodLog = new FoodLog(foodName, mealSelected, time, calories, carbs, protein, fat);
+                    DataBaseHelper dbHelper = new DataBaseHelper(FoodEntryActivity.this);
+                    boolean success = dbHelper.addOne(foodLog);
+
+//
 
                     Intent intent = new Intent(FoodEntryActivity.this, MainActivity.class);
                     intent.putExtra(EXTRA_FOOD_LOG, foodLog);
