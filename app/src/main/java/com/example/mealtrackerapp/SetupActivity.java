@@ -14,7 +14,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -26,12 +25,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     public static final String PREF_WATER = "extra_water";
     public static final String SETUP_PREF = "setupPref";
     EditText firstName, LastName, height, weight, caloricGoal, carbsPercent, proteinPercent,
-            fatPercent, waterGoal;
+            fatPercent, waterGoal,etxtSetFirstname,etxtSetLastname,txtBirthdate,etxtSetHeight,etxtSetWightValue,etxtSetCaloricValue,etxtSetCarbs,etxtSetProtein,etxtSetFat,etxtSetWater;
     Button btnCalendar, btnSave;
     ImageView btnBirthdateCalendar;
 
     private int mYear, mMonth, mDay, mHour, mMinute;
-    TextView txtBirthdate;
+    TextView textBirthdate;
 
 
     @Override
@@ -40,8 +39,19 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_setup);
 
         btnBirthdateCalendar = findViewById(R.id.btnBirthdateCalendar);
-        txtBirthdate = findViewById(R.id.txtBirthdate);
         btnBirthdateCalendar.setOnClickListener(this);
+        etxtSetFirstname = findViewById(R.id.etxtSetFirstname);
+        etxtSetLastname = findViewById(R.id.etxtSetLastname);
+        etxtSetHeight = findViewById(R.id.etxtSetHeight);
+        etxtSetWightValue = findViewById(R.id.etxtSetWightValue);
+        etxtSetCaloricValue = findViewById(R.id.etxtSetCaloricValue);
+        etxtSetCarbs = findViewById(R.id.etxtSetCarbs);
+        etxtSetProtein = findViewById(R.id.etxtSetProtein);
+        etxtSetFat = findViewById(R.id.etxtSetFat);
+        etxtSetWater= findViewById(R.id.etxtSetWater);
+
+
+
 
         btnSave = findViewById(R.id.btnSaveSetup);
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +69,29 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 fatPercent = findViewById(R.id.etxtSetFat);
                 waterGoal = findViewById(R.id.etxtSetWater);
 
-                try {
+
+
+                if (editTextIsEmpty(etxtSetFirstname)) {
+                    etxtSetFirstname.setError("Please enter first name");
+                } if (editTextIsEmpty(etxtSetLastname)) {
+                    etxtSetLastname.setError("Please enter last name");
+                } if (editTextIsEmpty(txtBirthdate)) {
+                    txtBirthdate.setError("Please enter Birth date");
+                } if (editTextIsEmpty(etxtSetHeight)) {
+                    etxtSetHeight.setError("Please enter Height");
+                } if (editTextIsEmpty(etxtSetWightValue)) {
+                    etxtSetWightValue.setError("Please enter weight");
+                } if (editTextIsEmpty(etxtSetCaloricValue)) {
+                    etxtSetCaloricValue.setError("Please enter Daily caloric goal");
+                } if (editTextIsEmpty(etxtSetCarbs)) {
+                    etxtSetCarbs.setError("Please enter Carbs amount");
+                } if (editTextIsEmpty(etxtSetProtein)) {
+                    etxtSetProtein.setError("Please enter Protein amount");
+                } if (editTextIsEmpty(etxtSetFat)) {
+                    etxtSetFat.setError("Please enter Fat amount");
+                } if (editTextIsEmpty(etxtSetWater)) {
+                    etxtSetWater.setError("Please enter water glass");
+                } else{
                     prefEditor.putInt(PREF_CALORIC_GOAL, Integer.parseInt(caloricGoal.getText().toString().trim()));
                     prefEditor.putInt(PREF_CARBS, Integer.parseInt(carbsPercent.getText().toString().trim()));
                     prefEditor.putInt(PREF_PROTEIN, Integer.parseInt(proteinPercent.getText().toString().trim()));
@@ -68,13 +100,20 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     prefEditor.commit();
                     Log.d("test", "adding sharedPref successful");
                     startActivity(intent);
-                } catch (Exception e) {
-                    Toast.makeText(SetupActivity.this, "Please fill in mandatory fields :)", Toast.LENGTH_SHORT).show();
+
                 }
+
+
+
 
             }
         });
     }
+
+
+
+
+
 
     @Override
     public void onClick(View v) {
@@ -109,4 +148,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
 
     }
+        public boolean editTextIsEmpty(EditText editText) {
+            return editText.getText().toString().trim().length() == 0;
+        }
 }
+
+
