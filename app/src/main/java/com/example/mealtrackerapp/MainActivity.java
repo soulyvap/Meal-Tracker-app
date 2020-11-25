@@ -2,6 +2,7 @@ package com.example.mealtrackerapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import static com.example.mealtrackerapp.SetupActivity.PREF_CALORIC_GOAL;
 import static com.example.mealtrackerapp.SetupActivity.PREF_CARBS;
 import static com.example.mealtrackerapp.SetupActivity.PREF_FAT;
 import static com.example.mealtrackerapp.SetupActivity.PREF_PROTEIN;
+import static com.example.mealtrackerapp.SetupActivity.PREF_WATER_GOAL;
 import static com.example.mealtrackerapp.SetupActivity.SETUP_PREF;
 
 public class MainActivity extends AppCompatActivity {
@@ -85,30 +87,14 @@ public class MainActivity extends AppCompatActivity {
         proteinCounter = new Counter();
         fatCounter = new Counter();
 
-        //set caloric goal
-        if (setupPref.contains(PREF_CALORIC_GOAL)) {
-            caloricGoalInt = setupPref.getInt(PREF_CALORIC_GOAL, 0);
-            caloricCounter.setMaxValue(caloricGoalInt);
-            caloricGoalDisplay.setText(Integer.toString(caloricCounter.getMaxValue()));
-            circularPB.setMax(caloricGoalInt);
-            Log.d("test", "caloric goal display success");
-            //set calories left
-            updateCaloricCountersDisplay();
-        } else {
-            Log.d("test", "onCreate: no value");
-        }
-
-        //set macronutrient goals
-
 
         //water counter
-        if (setupPref.contains(PREF_WATER)) {
-            waterCounter.setCount(setupPref.getInt(PREF_WATER, 0));
-        }
         waterDisplay = findViewById(R.id.txtWaterCountValue);
+
         waterMinus = findViewById(R.id.txtWaterMinus);
         waterPlus = findViewById(R.id.txtWaterPlus);
         updateWaterCount();
+
 
         waterMinus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,24 +125,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //get previous caloric counter value if it exists
-
-        if (setupPref.contains(CALORIC_COUNTER_VALUE)) {
-            caloricCounter.setCount(setupPref.getInt(CALORIC_COUNTER_VALUE, 0));
-            updateCaloricCountersDisplay();
-        }
-
-        //update caloric status if intent contains foodLog object + add to food diary
-        Intent intent = getIntent();
-        //check if intent has foodLog extra
-        if (intent.hasExtra(EXTRA_FOOD_LOG)){
-            FoodLog foodLog = (FoodLog) intent.getSerializableExtra(EXTRA_FOOD_LOG);
-            caloricCounter.add(foodLog.getCalories());
-            updateCaloricCountersDisplay();
-            prefEditor.putInt(CALORIC_COUNTER_VALUE, caloricCounter.getCount());
-            prefEditor.apply();
-            //update meal counters
-        }
 
     }
 
@@ -171,27 +139,45 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //retrieve shared preferences
+        //set caloric goal
+        if (setupPref.contains(PREF_CALORIC_GOAL)) {
+            caloricGoalInt = setupPref.getInt(PREF_CALORIC_GOAL, 0);
+            caloricCounter.setMaxValue(caloricGoalInt);
+            caloricGoalDisplay.setText(Integer.toString(caloricCounter.getMaxValue()));
+            circularPB.setMax(caloricGoalInt);
+            Log.d("test", "caloric goal display success");
+            //set calories left
+            updateCaloricCountersDisplay();
+        } else {
+            Log.d("test", "onCreate: no value");
+        }
+
         //set macronutrient PBs
         if (setupPref.contains(PREF_CARBS)){
             carbGoalInt = setupPref.getInt(PREF_CARBS, 0);
-            carbShare = (carbGoalInt/100) * caloricCounter.getMaxValue();
+            carbShare = (carbGoalInt * caloricCounter.getMaxValue())/100;
             carbsCounter.setMaxValue(carbShare);
             carbsPB.setMax(carbsCounter.getMaxValue());
             Log.d("PB", Integer.toString(carbShare));
         } if (setupPref.contains(PREF_PROTEIN)){
             proteinGoalInt = setupPref.getInt(PREF_PROTEIN, 0);
-            proteinShare = (proteinGoalInt/100) * caloricCounter.getMaxValue();
+            proteinShare = (proteinGoalInt * caloricCounter.getMaxValue())/100;
             proteinCounter.setMaxValue(proteinShare);
             proteinPB.setMax(proteinCounter.getMaxValue());
             Log.d("PB", Integer.toString(proteinShare));
         } if (setupPref.contains(PREF_FAT)){
             fatGoalInt = setupPref.getInt(PREF_FAT, 0);
-            fatShare = (fatShare/100) * caloricCounter.getMaxValue();
+            fatShare = (fatGoalInt * caloricCounter.getMaxValue())/100;
             fatCounter.setMaxValue(fatShare);
             fatPB.setMax(fatCounter.getMaxValue());
             Log.d("PB", Integer.toString(fatShare));
         }
-
+        //set water count
+        if (setupPref.contains(PREF_WATER)) {
+            waterCounter.setCount(setupPref.getInt(PREF_WATER, 0));
+            updateWaterCount();
+            waterGoalInt = setupPref.getInt(PREF_WATER_GOAL, 0);
+        }
     }
 
     @Override
@@ -207,7 +193,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        //update caloric status if intent contains foodLog object
+        Intent intent = getIntent();
+        //check if intent has foodLog extra
+        if (intent.hasExtra(EXTRA_FOOD_LOG)){
+            FoodLog foodLog = (FoodLog) intent.getSerializableExtra(EXTRA_FOOD_LOG);
+            caloricCounter.add(foodLog.getCalories());
+            updateCaloricCountersDisplay();
+            prefEditor.putInt(CALORIC_COUNTER_VALUE, caloricCounter.getCount());
+            prefEditor.apply();
+            //update meal counters
+        }
         //update food diary
         FoodLogDBH dbHelper = new FoodLogDBH(MainActivity.this);
         List<FoodLog> foodLogs = dbHelper.getFoodLog();
@@ -223,6 +219,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateWaterCount() {
         waterDisplay.setText(waterCounter.getCountString());
+        if (setupPref.contains(PREF_WATER_GOAL)){
+            if (waterCounter.getCount() >= waterGoalInt) {
+                waterDisplay.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.green));
+            } else {
+                waterDisplay.setTextColor(ContextCompat.getColor(MainActivity.this, R.color.red));
+            }
+        }
     }
 
     @Override
