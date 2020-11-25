@@ -24,7 +24,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     public static final String PREF_CARBS = "pref_carbs";
     public static final String PREF_PROTEIN = "pref_protein";
     public static final String PREF_FAT = "pref_fat";
-    public static final String PREF_WATER = "pref_water";
+    public static final String PREF_WATER_GOAL = "pref_watergoal";
     public static final String SETUP_PREF = "sharedpref_setupPref";
     public static final String PREF_FIRSTNAME = "pref_firstname";
     public static final String PREF_LASTNAME ="pref_lastname";
@@ -115,7 +115,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                         prefEditor.putInt(PREF_CARBS, Integer.parseInt(etxtSetCarbs.getText().toString().trim()));
                         prefEditor.putInt(PREF_PROTEIN, Integer.parseInt(etxtSetProtein.getText().toString().trim()));
                         prefEditor.putInt(PREF_FAT, Integer.parseInt(etxtSetFat.getText().toString().trim()));
-                        prefEditor.putInt(PREF_WATER, Integer.parseInt(etxtSetWater.getText().toString().trim()));
+                        prefEditor.putInt(PREF_WATER_GOAL, Integer.parseInt(etxtSetWater.getText().toString().trim()));
                         prefEditor.commit();
                         Log.d("test", "adding sharedPref successful");
                         startActivity(intent);
@@ -139,7 +139,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             carbsGoal = setupPref.getInt(PREF_CARBS, 0);
             proteinGoal = setupPref.getInt(PREF_PROTEIN, 0);
             fatGoal = setupPref.getInt(PREF_FAT, 0);
-            waterGoal = setupPref.getInt(PREF_WATER, 0);
+            waterGoal = setupPref.getInt(PREF_WATER_GOAL, 0);
 
             etxtSetFirstname.setText(firstname);
             etxtSetLastname.setText(lastname);
@@ -174,7 +174,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         today = mDay + "-" + mMonth + "-" + mYear;
 
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, android.R.style.Theme_Holo_InputMethod,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
