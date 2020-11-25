@@ -13,6 +13,10 @@ public class Counter {
         this.maxValue = maxValue;
     }
 
+    public Counter() {
+        this(0, 0, 100);
+    }
+
     public int getCount() {
         return count;
     }

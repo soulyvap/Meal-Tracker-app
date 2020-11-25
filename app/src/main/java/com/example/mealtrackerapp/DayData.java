@@ -1,31 +1,45 @@
 package com.example.mealtrackerapp;
 
-import java.util.Date;
-
 public class DayData {
-    private Date date;
+    private String date;
     private int weight;
     private int caloricGoal;
     private int carbPercent;
     private int proteinPercent;
     private int fatPercent;
-    private int waterAmount;
+    private int waterGoal;
+    private int caloricIntake;
+    private int carbIntake;
+    private int proteinIntake;
+    private int fatIntake;
+    private int breakfastIntake;
+    private int lunchIntake;
+    private int dinnerIntake;
+    private int ExtrasIntake;
 
-    public DayData(Date date, int weight, int caloricGoal, int carbPercent, int proteinPercent, int fatPercent, int waterAmount) {
+    public DayData(String date, int weight, int caloricGoal, int carbPercent, int proteinPercent, int fatPercent, int waterGoal, int caloricIntake, int carbIntake, int proteinIntake, int fatIntake, int breakfastIntake, int lunchIntake, int dinnerIntake, int extrasIntake) {
         this.date = date;
         this.weight = weight;
         this.caloricGoal = caloricGoal;
         this.carbPercent = carbPercent;
         this.proteinPercent = proteinPercent;
         this.fatPercent = fatPercent;
-        this.waterAmount = waterAmount;
+        this.waterGoal = waterGoal;
+        this.caloricIntake = caloricIntake;
+        this.carbIntake = carbIntake;
+        this.proteinIntake = proteinIntake;
+        this.fatIntake = fatIntake;
+        this.breakfastIntake = breakfastIntake;
+        this.lunchIntake = lunchIntake;
+        this.dinnerIntake = dinnerIntake;
+        ExtrasIntake = extrasIntake;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -69,11 +83,75 @@ public class DayData {
         this.fatPercent = fatPercent;
     }
 
-    public int getWaterAmount() {
-        return waterAmount;
+    public int getWaterGoal() {
+        return waterGoal;
     }
 
-    public void setWaterAmount(int waterAmount) {
-        this.waterAmount = waterAmount;
+    public void setWaterGoal(int waterGoal) {
+        this.waterGoal = waterGoal;
+    }
+
+    public int getCaloricIntake() {
+        return caloricIntake;
+    }
+
+    public void setCaloricIntake(int caloricIntake) {
+        this.caloricIntake = caloricIntake;
+    }
+
+    public int getCarbIntake() {
+        return carbIntake;
+    }
+
+    public void setCarbIntake(int carbIntake) {
+        this.carbIntake = carbIntake;
+    }
+
+    public int getProteinIntake() {
+        return proteinIntake;
+    }
+
+    public void setProteinIntake(int proteinIntake) {
+        this.proteinIntake = proteinIntake;
+    }
+
+    public int getFatIntake() {
+        return fatIntake;
+    }
+
+    public void setFatIntake(int fatIntake) {
+        this.fatIntake = fatIntake;
+    }
+
+    public int getBreakfastIntake() {
+        return breakfastIntake;
+    }
+
+    public void setBreakfastIntake(int breakfastIntake) {
+        this.breakfastIntake = breakfastIntake;
+    }
+
+    public int getLunchIntake() {
+        return lunchIntake;
+    }
+
+    public void setLunchIntake(int lunchIntake) {
+        this.lunchIntake = lunchIntake;
+    }
+
+    public int getDinnerIntake() {
+        return dinnerIntake;
+    }
+
+    public void setDinnerIntake(int dinnerIntake) {
+        this.dinnerIntake = dinnerIntake;
+    }
+
+    public int getExtrasIntake() {
+        return ExtrasIntake;
+    }
+
+    public void setExtrasIntake(int extrasIntake) {
+        ExtrasIntake = extrasIntake;
     }
 }
