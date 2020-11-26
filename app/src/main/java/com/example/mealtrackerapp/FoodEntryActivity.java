@@ -59,10 +59,10 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         //creating arrayList with meal choice
         ArrayList<String> meals = new ArrayList<>();
         meals.add(MEAL_SPINNER_DEFAULT);
-        meals.add("Breakfast");
-        meals.add("Lunch");
-        meals.add("Dinner");
-        meals.add("Extras");
+        meals.add("breakfast");
+        meals.add("lunch");
+        meals.add("dinner");
+        meals.add("extras");
 
         //setting up arrayAdapter for spinner with elements of the arrayList and attaching adapter to spinner object
         ArrayAdapter<String> mealSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item_center, meals);

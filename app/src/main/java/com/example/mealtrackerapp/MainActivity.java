@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //first launch
-        Boolean isFirstLaunch = getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).getBoolean(IS_FIRST_LAUNCH_PREF, true);
-        if (isFirstLaunch) {
-            Intent intent = new Intent(MainActivity.this, Welcome.class);
-        }
-        getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).edit().putBoolean(IS_FIRST_LAUNCH_PREF, false).commit();
+//        //first launch
+//        Boolean isFirstLaunch = getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).getBoolean(IS_FIRST_LAUNCH_PREF, true);
+//        if (isFirstLaunch) {
+        Intent intent = new Intent(MainActivity.this, Welcome.class);
+//        }
+//        getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).edit().putBoolean(IS_FIRST_LAUNCH_PREF, false).commit();
 
         //references to caloric counters display
         caloricGoalDisplay = findViewById(R.id.txtCaloricGoalValue);
