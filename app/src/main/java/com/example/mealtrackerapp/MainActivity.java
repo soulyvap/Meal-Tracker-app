@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.strictmode.IntentReceiverLeakedViolation;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +35,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String PREF_WATER = "pref_water";
     public static final String CALORIC_COUNTER_VALUE = "caloricCounterValue";
+    public static final String PREF_BREAKFAST_CALORIES = "pref_breakfast_calories";
+    public static final String PREF_LUNCH_CALORIES = "pref_lunch_calories";
+    public static final String PREF_DINNER_CALORIES = "pref_dinner_calories";
+    public static final String PREF_EXTRAS_CALORIES = "pref_extras_calories";
+    public static final String FIRST_TIME_PREF = "first_time_pref";
+    public static final String IS_FIRST_LAUNCH_PREF = "isFirstLaunch";
     //references to views on the layout
     TextView caloricGoalDisplay, eatenDisplay, caloriesLeftDisplay, breakfastDisplay, lunchDisplay, dinnerDisplay, extrasDisplay, waterDisplay, waterMinus, waterPlus;
     ProgressBar circularPB, carbsPB, proteinPB, fatPB;
@@ -55,13 +62,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //time control
-
+        //first launch
+        Boolean isFirstLaunch = getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).getBoolean(IS_FIRST_LAUNCH_PREF, true);
+        if (isFirstLaunch) {
+            Intent intent = new Intent(MainActivity.this, Welcome.class);
+        }
+        getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).edit().putBoolean(IS_FIRST_LAUNCH_PREF, false).commit();
 
         //references to caloric counters display
         caloricGoalDisplay = findViewById(R.id.txtCaloricGoalValue);
         eatenDisplay = findViewById(R.id.txtCaloriesEatenValue);
         caloriesLeftDisplay = findViewById(R.id.txtCaloriesLeftValue);
+        breakfastDisplay = findViewById(R.id.txtBreakfastValue);
+        lunchDisplay = findViewById(R.id.txtLunchValue);
+        dinnerDisplay = findViewById(R.id.txtDinnerValue);
+        extrasDisplay = findViewById(R.id.txtExtrasValue);
         
         //get shared preferences
         setupPref = getSharedPreferences(SETUP_PREF, Activity.MODE_PRIVATE);
@@ -148,9 +163,24 @@ public class MainActivity extends AppCompatActivity {
             Log.d("test", "caloric goal display success");
             //set calories left
             updateCaloricCountersDisplay();
+            //retrieve caloric count
+        } if (setupPref.contains(CALORIC_COUNTER_VALUE)){
+            caloricCounter.setCount(setupPref.getInt(CALORIC_COUNTER_VALUE, 0));
+            updateCaloricCountersDisplay();
         } else {
             Log.d("test", "onCreate: no value");
         }
+        //retrieve meal counters
+        if (setupPref.contains(PREF_BREAKFAST_CALORIES)) {
+            breakfastCounter.setCount(setupPref.getInt(PREF_BREAKFAST_CALORIES, 0));
+        }  if (setupPref.contains(PREF_BREAKFAST_CALORIES)) {
+            breakfastCounter.setCount(setupPref.getInt(PREF_BREAKFAST_CALORIES, 0));
+        }  if (setupPref.contains(PREF_BREAKFAST_CALORIES)) {
+            breakfastCounter.setCount(setupPref.getInt(PREF_BREAKFAST_CALORIES, 0));
+        }  if (setupPref.contains(PREF_BREAKFAST_CALORIES)) {
+            breakfastCounter.setCount(setupPref.getInt(PREF_BREAKFAST_CALORIES, 0));
+        }
+        updateMealDisplays();
 
         //set macronutrient PBs
         if (setupPref.contains(PREF_CARBS)){
@@ -180,6 +210,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void updateMealDisplays() {
+        breakfastDisplay.setText(breakfastCounter.getCountString());
+        lunchDisplay.setText(lunchCounter.getCountString());
+        dinnerDisplay.setText(dinnerCounter.getCountString());
+        extrasDisplay.setText(extrasCounter.getCountString());
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -193,22 +230,46 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         //update caloric status if intent contains foodLog object
         Intent intent = getIntent();
         //check if intent has foodLog extra
         if (intent.hasExtra(EXTRA_FOOD_LOG)){
+            //update caloric counter
             FoodLog foodLog = (FoodLog) intent.getSerializableExtra(EXTRA_FOOD_LOG);
             caloricCounter.add(foodLog.getCalories());
             updateCaloricCountersDisplay();
             prefEditor.putInt(CALORIC_COUNTER_VALUE, caloricCounter.getCount());
+            //update meals counters
+            updateMealCounters(foodLog);
             prefEditor.apply();
-            //update meal counters
         }
         //update food diary
         FoodLogDBH dbHelper = new FoodLogDBH(MainActivity.this);
         List<FoodLog> foodLogs = dbHelper.getFoodLog();
         ArrayAdapter<FoodLog> foodLogArrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, foodLogs);
         lvFoodLogs.setAdapter(foodLogArrayAdapter);
+    }
+
+    private void updateMealCounters(FoodLog foodLog) {
+        if (foodLog.getMeal().equals("breakfast")){
+            int breakfastCalories = foodLog.getCalories();
+            breakfastCounter.add(breakfastCalories);
+            prefEditor.putInt(PREF_BREAKFAST_CALORIES, breakfastCounter.getCount());
+        } if (foodLog.getMeal().equals("lunch")){
+            int lunchCalories = foodLog.getCalories();
+            lunchCounter.add(lunchCalories);
+            prefEditor.putInt(PREF_LUNCH_CALORIES, lunchCounter.getCount());
+        } if (foodLog.getMeal().equals("dinner")){
+            int dinnerCalories = foodLog.getCalories();
+            dinnerCounter.add(dinnerCalories);
+            prefEditor.putInt(PREF_DINNER_CALORIES, dinnerCounter.getCount());
+        } if (foodLog.getMeal().equals("extras")){
+            int extrasCalories = foodLog.getCalories();
+            extrasCounter.add(extrasCalories);
+            prefEditor.putInt(PREF_EXTRAS_CALORIES, extrasCounter.getCount());
+        }
+        updateMealDisplays();
     }
 
     @Override
