@@ -12,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FoodLogDBH extends SQLiteOpenHelper {
+    public static final String COLUMN_DATE = "DATE";
     public static final String COLUMN_FOOD = "FOOD";
-    public static final String FOODLOGS_TABLE = COLUMN_FOOD + "LOGS_TABLE";
+    public static final String FOODLOGS_TABLE = "FOODLOGS_TABLE";
     public static final String COLUMN_MEAL = "MEAL";
     public static final String COLUMN_ID = "ID";
     public static final String COLUMN_TIME = "TIME";
@@ -23,13 +24,13 @@ public class FoodLogDBH extends SQLiteOpenHelper {
     public static final String COLUMN_FAT = "FAT";
 
     public FoodLogDBH(@Nullable Context context) {
-        super(context, "test1.db", null, 1);
+        super(context, "foodLogs.db", null, 1);
     }
 
     //called the first time a database is accessed
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableString = "CREATE TABLE " + FOODLOGS_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_FOOD + " TEXT, " + COLUMN_MEAL + " TEXT, " + COLUMN_TIME + " TEXT, " + COLUMN_CALORIES + " INTEGER, " + COLUMN_CARBS + " INTEGER, " + COLUMN_PROTEIN + " INTEGER, " + COLUMN_FAT + " INTEGER)";
+        String createTableString = "CREATE TABLE " + FOODLOGS_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_DATE + " TEXT, " + COLUMN_FOOD + " TEXT, " + COLUMN_MEAL + " TEXT, " + COLUMN_TIME + " TEXT, " + COLUMN_CALORIES + " INTEGER, " + COLUMN_CARBS + " INTEGER, " + COLUMN_PROTEIN + " INTEGER, " + COLUMN_FAT + " INTEGER)";
 
         db.execSQL(createTableString);
     }
@@ -43,6 +44,7 @@ public class FoodLogDBH extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
+        cv.put(COLUMN_DATE, foodLog.getDate());
         cv.put(COLUMN_FOOD, foodLog.getName());
         cv.put(COLUMN_MEAL, foodLog.getMeal());
         cv.put(COLUMN_TIME, foodLog.getTime());
@@ -71,15 +73,16 @@ public class FoodLogDBH extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             //loop through cursor (result set) and create new foodLog object. then add them to the return array
             do {
-                String food = cursor.getString(1);
-                String meal = cursor.getString(2);
-                String time = cursor.getString(3);
-                int calories = cursor.getInt(4);
-                int carbs = cursor.getInt(5);
-                int protein = cursor.getInt(6);
-                int fat = cursor.getInt(7);
+                String date = cursor.getString(1);
+                String food = cursor.getString(2);
+                String meal = cursor.getString(3);
+                String time = cursor.getString(4);
+                int calories = cursor.getInt(5);
+                int carbs = cursor.getInt(6);
+                int protein = cursor.getInt(7);
+                int fat = cursor.getInt(8);
 
-                FoodLog foodLog = new FoodLog(food, meal, time, calories, carbs, protein, fat);
+                FoodLog foodLog = new FoodLog(date, food, meal, time, calories, carbs, protein, fat);
                 foodLogList.add(foodLog);
 
             } while (cursor.moveToNext());

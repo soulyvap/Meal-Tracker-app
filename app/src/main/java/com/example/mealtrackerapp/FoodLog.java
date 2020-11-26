@@ -3,6 +3,7 @@ package com.example.mealtrackerapp;
 import java.io.Serializable;
 
 public class FoodLog implements Serializable {
+    private String date;
     private String name;
     private String meal;
     private String time;
@@ -11,7 +12,8 @@ public class FoodLog implements Serializable {
     private int protein;
     private int fat;
 
-    public FoodLog(String name, String meal, String time, int calories, int carbs, int protein, int fat) {
+    public FoodLog(String date, String name, String meal, String time, int calories, int carbs, int protein, int fat) {
+        this.date = date;
         this.name = name;
         this.meal = meal;
         this.time = time;
@@ -19,6 +21,14 @@ public class FoodLog implements Serializable {
         this.carbs = carbs;
         this.protein = protein;
         this.fat = fat;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getName() {
