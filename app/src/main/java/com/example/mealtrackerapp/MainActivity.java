@@ -5,22 +5,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.strictmode.IntentReceiverLeakedViolation;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static com.example.mealtrackerapp.FoodEntryActivity.EXTRA_FOOD_LOG;
@@ -31,7 +33,7 @@ import static com.example.mealtrackerapp.SetupActivity.PREF_PROTEIN;
 import static com.example.mealtrackerapp.SetupActivity.PREF_WATER_GOAL;
 import static com.example.mealtrackerapp.SetupActivity.SETUP_PREF;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String PREF_WATER = "pref_water";
     public static final String CALORIC_COUNTER_VALUE = "caloricCounterValue";
@@ -42,34 +44,44 @@ public class MainActivity extends AppCompatActivity {
     public static final String FIRST_TIME_PREF = "first_time_pref";
     public static final String IS_FIRST_LAUNCH_PREF = "isFirstLaunch";
     //references to views on the layout
-    TextView caloricGoalDisplay, eatenDisplay, caloriesLeftDisplay, breakfastDisplay, lunchDisplay, dinnerDisplay, extrasDisplay, waterDisplay, waterMinus, waterPlus;
+    TextView caloricGoalDisplay, eatenDisplay, caloriesLeftDisplay, breakfastDisplay, lunchDisplay,
+            dinnerDisplay, extrasDisplay, waterDisplay, waterMinus, waterPlus, dateNowDisplay;
     ProgressBar circularPB, carbsPB, proteinPB, fatPB;
-    FloatingActionButton fabAdd, fabUpdate;
-    int caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, carbShare, proteinShare, fatShare;
+    FloatingActionButton fabAdd, fabDatePicker;
+    int caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, carbShare,
+            proteinShare, fatShare;
     ListView lvFoodLogs;
 
     //counters
-    Counter caloricCounter, breakfastCounter, lunchCounter, dinnerCounter, extrasCounter, waterCounter, carbsCounter, proteinCounter, fatCounter;
+    Counter caloricCounter, breakfastCounter, lunchCounter, dinnerCounter, extrasCounter,
+            waterCounter, carbsCounter, proteinCounter, fatCounter;
 
     //shared preferences
     SharedPreferences setupPref;
     SharedPreferences.Editor prefEditor;
 
-    //foodDairy
+    //date picker variables
+    Calendar calendar;
+    int dayDisplayed, monthDisplayed, yearDisplayed;
+    String dateDisplayed, datePicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+
+
 //        //first launch
 //        Boolean isFirstLaunch = getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).getBoolean(IS_FIRST_LAUNCH_PREF, true);
 //        if (isFirstLaunch) {
-        Intent intent = new Intent(MainActivity.this, Welcome.class);
+//        Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
 //        }
 //        getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).edit().putBoolean(IS_FIRST_LAUNCH_PREF, false).commit();
 
-        //references to caloric counters display
+        //references to caloric counters display and date display
         caloricGoalDisplay = findViewById(R.id.txtCaloricGoalValue);
         eatenDisplay = findViewById(R.id.txtCaloriesEatenValue);
         caloriesLeftDisplay = findViewById(R.id.txtCaloriesLeftValue);
@@ -77,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         lunchDisplay = findViewById(R.id.txtLunchValue);
         dinnerDisplay = findViewById(R.id.txtDinnerValue);
         extrasDisplay = findViewById(R.id.txtExtrasValue);
+        dateNowDisplay = findViewById(R.id.txtDateNow);
         
         //get shared preferences
         setupPref = getSharedPreferences(SETUP_PREF, Activity.MODE_PRIVATE);
@@ -102,6 +115,13 @@ public class MainActivity extends AppCompatActivity {
         proteinCounter = new Counter();
         fatCounter = new Counter();
 
+        //set date
+        calendar = Calendar.getInstance();
+        yearDisplayed = calendar.get(Calendar.YEAR);
+        monthDisplayed = calendar.get(Calendar.MONTH);
+        dayDisplayed = calendar.get(Calendar.DAY_OF_MONTH);
+        dateDisplayed = dayDisplayed + "-" + monthDisplayed + "-" + yearDisplayed;
+        dateNowDisplay.setText(dateDisplayed);
 
         //water counter
         waterDisplay = findViewById(R.id.txtWaterCountValue);
@@ -140,6 +160,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //date picker
+        fabDatePicker = findViewById(R.id.fabBtnDate);
+        fabDatePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateDialog();
+            }
+        });
 
     }
 
@@ -320,5 +348,30 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showDateDialog() {
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                        datePicked = dayOfMonth + "-" + monthOfYear + "-" + year;
+                        dateNowDisplay.setText(datePicked);
+                    }
+                }, yearDisplayed, monthDisplayed, dayDisplayed);
+        datePickerDialog.show();
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fabBtnDate:
+                showDateDialog();
+                break;
+        }
     }
 }
