@@ -4,35 +4,49 @@ public class DayData {
     private String date;
     private int weight;
     private int caloricGoal;
-    private int carbPercent;
-    private int proteinPercent;
-    private int fatPercent;
+    private int carbsGoal;
+    private int proteinGoal;
+    private int fatGoal;
     private int waterGoal;
     private int caloricIntake;
-    private int carbIntake;
+    private int carbsIntake;
     private int proteinIntake;
     private int fatIntake;
     private int breakfastIntake;
     private int lunchIntake;
     private int dinnerIntake;
-    private int ExtrasIntake;
+    private int extrasIntake;
+    private int waterIntake;
 
-    public DayData(String date, int weight, int caloricGoal, int carbPercent, int proteinPercent, int fatPercent, int waterGoal, int caloricIntake, int carbIntake, int proteinIntake, int fatIntake, int breakfastIntake, int lunchIntake, int dinnerIntake, int extrasIntake) {
+    public DayData(String date, int weight, int caloricGoal, int carbGoal, int proteinGoal,
+                   int fatGoal, int waterGoal, int caloricIntake, int carbsIntake, int proteinIntake,
+                   int fatIntake, int breakfastIntake, int lunchIntake, int dinnerIntake,
+                   int extrasIntake, int waterIntake) {
         this.date = date;
         this.weight = weight;
         this.caloricGoal = caloricGoal;
-        this.carbPercent = carbPercent;
-        this.proteinPercent = proteinPercent;
-        this.fatPercent = fatPercent;
+        this.carbsGoal = carbGoal;
+        this.proteinGoal = proteinGoal;
+        this.fatGoal = fatGoal;
         this.waterGoal = waterGoal;
         this.caloricIntake = caloricIntake;
-        this.carbIntake = carbIntake;
+        this.carbsIntake = carbsIntake;
         this.proteinIntake = proteinIntake;
         this.fatIntake = fatIntake;
         this.breakfastIntake = breakfastIntake;
         this.lunchIntake = lunchIntake;
         this.dinnerIntake = dinnerIntake;
-        ExtrasIntake = extrasIntake;
+        this.extrasIntake = extrasIntake;
+        this.waterIntake = waterIntake;
+    }
+
+    public DayData(String date, int weight, int caloricGoal, int carbGoal, int proteinGoal, int fatGoal, int waterGoal) {
+        this(date, weight, caloricGoal, carbGoal, proteinGoal, fatGoal, waterGoal, 0, 0, 0 , 0 , 0 , 0, 0, 0, 0);
+
+    }
+
+    public DayData(String date) {
+        this(date, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     public String getDate() {
@@ -59,28 +73,28 @@ public class DayData {
         this.caloricGoal = caloricGoal;
     }
 
-    public int getCarbPercent() {
-        return carbPercent;
+    public int getCarbsGoal() {
+        return carbsGoal;
     }
 
-    public void setCarbPercent(int carbPercent) {
-        this.carbPercent = carbPercent;
+    public void setCarbsGoal(int carbsGoal) {
+        this.carbsGoal = carbsGoal;
     }
 
-    public int getProteinPercent() {
-        return proteinPercent;
+    public int getProteinGoal() {
+        return proteinGoal;
     }
 
-    public void setProteinPercent(int proteinPercent) {
-        this.proteinPercent = proteinPercent;
+    public void setProteinGoal(int proteinGoal) {
+        this.proteinGoal = proteinGoal;
     }
 
-    public int getFatPercent() {
-        return fatPercent;
+    public int getFatGoal() {
+        return fatGoal;
     }
 
-    public void setFatPercent(int fatPercent) {
-        this.fatPercent = fatPercent;
+    public void setFatGoal(int fatGoal) {
+        this.fatGoal = fatGoal;
     }
 
     public int getWaterGoal() {
@@ -99,12 +113,12 @@ public class DayData {
         this.caloricIntake = caloricIntake;
     }
 
-    public int getCarbIntake() {
-        return carbIntake;
+    public int getCarbsIntake() {
+        return carbsIntake;
     }
 
-    public void setCarbIntake(int carbIntake) {
-        this.carbIntake = carbIntake;
+    public void setCarbsIntake(int carbsIntake) {
+        this.carbsIntake = carbsIntake;
     }
 
     public int getProteinIntake() {
@@ -148,10 +162,18 @@ public class DayData {
     }
 
     public int getExtrasIntake() {
-        return ExtrasIntake;
+        return extrasIntake;
     }
 
     public void setExtrasIntake(int extrasIntake) {
-        ExtrasIntake = extrasIntake;
+        this.extrasIntake = extrasIntake;
+    }
+
+    public int getWaterIntake() {
+        return waterIntake;
+    }
+
+    public void setWaterIntake(int waterIntake) {
+        this.waterIntake = waterIntake;
     }
 }
