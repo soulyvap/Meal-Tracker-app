@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String PREF_EXTRAS_CALORIES = "pref_extras_calories";
     public static final String FIRST_TIME_PREF = "first_time_pref";
     public static final String IS_FIRST_LAUNCH_PREF = "isFirstLaunch";
+    public static final String EXTRA_DISPLAYED_DATE = "extra_displayed_date";
     //references to views on the layout
     TextView caloricGoalDisplay, eatenDisplay, caloriesLeftDisplay, breakfastDisplay, lunchDisplay,
             dinnerDisplay, extrasDisplay, waterDisplay, waterMinus, waterPlus, dateNowDisplay;
@@ -105,12 +107,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fatPB = findViewById(R.id.fatPB);
 
         //create counters
-        caloricCounter = new Counter();
+        caloricCounter = new Counter(0);
         waterCounter = new Counter();
-        breakfastCounter = new Counter();
-        lunchCounter = new Counter();
-        dinnerCounter = new Counter();
-        extrasCounter = new Counter();
+        breakfastCounter = new Counter(99999);
+        lunchCounter = new Counter(99999);
+        dinnerCounter = new Counter(99999);
+        extrasCounter = new Counter(99999);
         carbsCounter = new Counter();
         proteinCounter = new Counter();
         fatCounter = new Counter();
@@ -120,8 +122,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         yearDisplayed = calendar.get(Calendar.YEAR);
         monthDisplayed = calendar.get(Calendar.MONTH);
         dayDisplayed = calendar.get(Calendar.DAY_OF_MONTH);
-        dateDisplayed = dayDisplayed + "-" + monthDisplayed + "-" + yearDisplayed;
+        dateDisplayed = dayDisplayed + "-" + (monthDisplayed+1) + "-" + yearDisplayed;
         dateNowDisplay.setText(dateDisplayed);
+
+        //update food diary
+        updateFoodDiary();
 
         //water counter
         waterDisplay = findViewById(R.id.txtWaterCountValue);
@@ -156,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FoodEntryActivity.class);
+                intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
                 startActivity(intent);
             }
         });
@@ -233,8 +239,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //set water count
         if (setupPref.contains(PREF_WATER)) {
             waterCounter.setCount(setupPref.getInt(PREF_WATER, 0));
-            updateWaterCount();
             waterGoalInt = setupPref.getInt(PREF_WATER_GOAL, 0);
+            updateWaterCount();
         }
     }
 
@@ -271,10 +277,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //update meals counters
             updateMealCounters(foodLog);
             prefEditor.apply();
+            //keep same date
+            dateDisplayed = foodLog.getDate();
+            dateNowDisplay.setText(dateDisplayed);
         }
-        //update food diary
+        //update food diary from db
+        updateFoodDiary();
+    }
+
+    private void updateFoodDiary() {
         FoodLogDBH dbHelper = new FoodLogDBH(MainActivity.this);
-        List<FoodLog> foodLogs = dbHelper.getFoodLog();
+        List<FoodLog> foodLogs = dbHelper.getFoodLog(dateDisplayed);
         ArrayAdapter<FoodLog> foodLogArrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, foodLogs);
         lvFoodLogs.setAdapter(foodLogArrayAdapter);
     }
@@ -352,14 +365,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showDateDialog() {
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-                        datePicked = dayOfMonth + "-" + monthOfYear + "-" + year;
+                        datePicked = dayOfMonth + "-" + (monthOfYear+1) + "-" + year;
+                        dateDisplayed = datePicked;
                         dateNowDisplay.setText(datePicked);
+                        updateFoodDiary();
                     }
                 }, yearDisplayed, monthDisplayed, dayDisplayed);
         datePickerDialog.show();

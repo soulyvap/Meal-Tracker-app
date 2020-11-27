@@ -60,11 +60,13 @@ public class FoodLogDBH extends SQLiteOpenHelper {
             return true;
         }
     }
-    public List<FoodLog> getFoodLog() {
+    public List<FoodLog> getFoodLog(String dateDisplayed) {
         List<FoodLog> foodLogList = new ArrayList<>();
 
+//        + " WHERE " + COLUMN_DATE + "=" + dateDisplayed
+
         //get data from db
-        String query = "SELECT * FROM " + FOODLOGS_TABLE;
+        String query = "SELECT * FROM " + FOODLOGS_TABLE  + " WHERE " + COLUMN_DATE + " LIKE \'" + dateDisplayed + "\' ORDER BY " + COLUMN_TIME + " DESC";
 
         SQLiteDatabase db = this.getReadableDatabase();
 

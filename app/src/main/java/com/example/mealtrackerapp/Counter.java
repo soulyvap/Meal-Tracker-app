@@ -17,6 +17,10 @@ public class Counter {
         this(0, 0, 100);
     }
 
+    public Counter(int maxValue) {
+        this(0, 0, maxValue);
+    }
+
     public int getCount() {
         return count;
     }

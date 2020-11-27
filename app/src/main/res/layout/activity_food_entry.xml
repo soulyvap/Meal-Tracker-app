@@ -215,4 +215,12 @@
         android:text="Macronutrients(g)"
         app:layout_constraintBaseline_toBaselineOf="@+id/etxtFoodCarbs"
         app:layout_constraintStart_toStartOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/txtEntryDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/txtFoodEntry"
+        app:layout_constraintEnd_toEndOf="@+id/btnClock" />
 </androidx.constraintlayout.widget.ConstraintLayout>

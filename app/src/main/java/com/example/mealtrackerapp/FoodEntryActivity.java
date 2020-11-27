@@ -12,28 +12,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DATE;
+
 public class FoodEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    public static final String EXTRA_TIME = "extraTime";
-    public static final String EXTRA_MEAL = "extraMeal";
-    public static final String EXTRA_FOOD_NAME = "extraFoodName";
-    public static final String EXTRA_FOOD_CALORIES = "extraFoodCalories";
-    public static final String EXTRA_FOOD_CARBS = "extraFoodCarbs";
-    public static final String EXTRA_FOOD_PROTEIN = "extraFoodProtein";
-    public static final String EXTRA_FOOD_FAT = "extraFoodFat";
     public static final String MEAL_SPINNER_DEFAULT = "Choose meal ...";
     public static final String EXTRA_FOOD_LOG = "extraFoodlog";
-    EditText timeEditTxt, foodEditTxt, foodCaloriesEditTxt, foodCarbsEditTxt, foodProteinEditTxt, foodFatEditTxt;
+    EditText timeEditTxt, foodEditTxt, foodCaloriesEditTxt, foodCarbsEditTxt, foodProteinEditTxt,
+            foodFatEditTxt;
+    TextView dateDisplay;
     Spinner mealSpinner;
     ImageView btnClock;
     int hour, minutes;
-    String mealSelected, time;
+    String mealSelected, time, date, hourString, minutesString;
     Button btnAdd;
 
 
@@ -42,15 +40,24 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_entry);
 
+        //get intent
+        Intent intent = getIntent();
+
+        //get date
+        date = intent.getStringExtra(EXTRA_DISPLAYED_DATE);
+        dateDisplay = findViewById(R.id.txtEntryDate);
+        dateDisplay.setText(date);
+
         //refer EditText
         timeEditTxt = findViewById(R.id.etxtTime);
         foodEditTxt = findViewById(R.id.etxtFoodName);
         foodCaloriesEditTxt = findViewById(R.id.etxtFoodCalories);
-        foodCarbsEditTxt = findViewById(R.id.etxtFoodProtein);
+        foodCarbsEditTxt = findViewById(R.id.etxtFoodCarbs);
         foodProteinEditTxt = findViewById(R.id.etxtFoodProtein);
-        foodFatEditTxt = findViewById(R.id.etxtFoodProtein);
+        foodFatEditTxt = findViewById(R.id.etxtFoodFat);
 
-        //meal selection with spinner
+
+        //refer spinner spinner
         mealSpinner = findViewById(R.id.spinnerMeal);
 
         //set click listener
@@ -117,7 +124,7 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                     int protein = Integer.parseInt(foodProteinEditTxt.getText().toString().trim());
                     int fat = Integer.parseInt(foodFatEditTxt.getText().toString().trim());
 
-                    FoodLog foodLog = new FoodLog(foodName, mealSelected, time, calories, carbs, protein, fat);
+                    FoodLog foodLog = new FoodLog(date, foodName, mealSelected, time, calories, carbs, protein, fat);
                     FoodLogDBH dbHelper = new FoodLogDBH(FoodEntryActivity.this);
                     boolean success = dbHelper.addOne(foodLog);
 
@@ -139,12 +146,18 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
      * @return
      */
     public String getTimeString(int hour, int minutes) {
-        if (minutes < 10){
-             String timeString = hour + ":" + 0 + minutes;
-             return timeString;
+
+        if (hour < 10) {
+            hourString = "0" + hour;
         } else {
-            return hour + ":" + minutes;
+            hourString = Integer.toString(hour);
         }
+        if (minutes < 10) {
+            minutesString = "0" + minutes;
+        } else {
+            minutesString = Integer.toString(minutes);
+        }
+        return hourString + ":" + minutesString;
     }
 
     /**
