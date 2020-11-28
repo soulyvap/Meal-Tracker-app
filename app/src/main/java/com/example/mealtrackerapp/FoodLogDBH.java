@@ -30,7 +30,10 @@ public class FoodLogDBH extends SQLiteOpenHelper {
     //called the first time a database is accessed
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableString = "CREATE TABLE " + FOODLOGS_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_DATE + " TEXT, " + COLUMN_FOOD + " TEXT, " + COLUMN_MEAL + " TEXT, " + COLUMN_TIME + " TEXT, " + COLUMN_CALORIES + " INTEGER, " + COLUMN_CARBS + " INTEGER, " + COLUMN_PROTEIN + " INTEGER, " + COLUMN_FAT + " INTEGER)";
+        String createTableString = "CREATE TABLE " + FOODLOGS_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_DATE + " TEXT, " + COLUMN_FOOD + " TEXT, " + COLUMN_MEAL + " TEXT, " +
+                COLUMN_TIME + " TEXT, " + COLUMN_CALORIES + " INTEGER, " + COLUMN_CARBS + " INTEGER, " +
+                COLUMN_PROTEIN + " INTEGER, " + COLUMN_FAT + " INTEGER)";
 
         db.execSQL(createTableString);
     }
@@ -63,8 +66,6 @@ public class FoodLogDBH extends SQLiteOpenHelper {
     public List<FoodLog> getFoodLog(String dateDisplayed) {
         List<FoodLog> foodLogList = new ArrayList<>();
 
-//        + " WHERE " + COLUMN_DATE + "=" + dateDisplayed
-
         //get data from db
         String query = "SELECT * FROM " + FOODLOGS_TABLE  + " WHERE " + COLUMN_DATE + " LIKE \'" + dateDisplayed + "\' ORDER BY " + COLUMN_TIME + " DESC";
 
@@ -96,5 +97,56 @@ public class FoodLogDBH extends SQLiteOpenHelper {
         db.close();
 
         return foodLogList;
+    }
+
+    public int getCaloriesByDate(String date) {
+        int sumOfCalories;
+
+        String query = "SELECT SUM(" + COLUMN_CALORIES + ") FROM " + FOODLOGS_TABLE + " WHERE " + COLUMN_DATE + " LIKE \'" + date + "\'";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            sumOfCalories = cursor.getInt(0);
+        } else {
+            sumOfCalories = 0;
+        }
+        return sumOfCalories;
+    }
+
+    public int getCaloriesByMealByDate(String meal, String date) {
+        int sumOfCalories;
+
+        String query = "SELECT SUM(" + COLUMN_CALORIES + ") FROM " + FOODLOGS_TABLE + " WHERE " + COLUMN_MEAL + " LIKE \'" + meal + "\' AND " + COLUMN_DATE + " LIKE \'" + date + "\'";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            sumOfCalories = cursor.getInt(0);
+        } else {
+            sumOfCalories = 0;
+        }
+        return sumOfCalories;
+    }
+
+    public int getSumByDate(String column, String date) {
+        int returnSum;
+
+        String query = "SELECT SUM(" + column + ") FROM " + FOODLOGS_TABLE + " WHERE " + COLUMN_DATE + " LIKE \'" + date + "\'" ;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            returnSum = cursor.getInt(cursor.getColumnIndex(column));
+        } else {
+            returnSum = 0;
+        }
+        return returnSum;
     }
 }
