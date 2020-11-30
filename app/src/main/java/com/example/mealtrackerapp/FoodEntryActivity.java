@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DATE;
+import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DAY;
+import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_MONTH;
+import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_YEAR;
 
 public class FoodEntryActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -30,7 +33,7 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
     TextView dateDisplay;
     Spinner mealSpinner;
     ImageView btnClock;
-    int hour, minutes;
+    int hour, minutes, day, month, year;
     String mealSelected, time, date, hourString, minutesString;
     Button btnAdd;
 
@@ -40,14 +43,6 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_entry);
 
-        //get intent
-        Intent intent = getIntent();
-
-        //get date
-        date = intent.getStringExtra(EXTRA_DISPLAYED_DATE);
-        dateDisplay = findViewById(R.id.txtEntryDate);
-        dateDisplay.setText(date);
-
         //refer EditText
         timeEditTxt = findViewById(R.id.etxtTime);
         foodEditTxt = findViewById(R.id.etxtFoodName);
@@ -55,7 +50,6 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         foodCarbsEditTxt = findViewById(R.id.etxtFoodCarbs);
         foodProteinEditTxt = findViewById(R.id.etxtFoodProtein);
         foodFatEditTxt = findViewById(R.id.etxtFoodFat);
-
 
         //refer spinner spinner
         mealSpinner = findViewById(R.id.spinnerMeal);
@@ -75,15 +69,6 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         ArrayAdapter<String> mealSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item_center, meals);
         mealSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mealSpinner.setAdapter(mealSpinnerAdapter);
-
-        //time selection with time picker dialog
-        Calendar calendar = Calendar.getInstance();
-
-        hour = calendar.get(Calendar.HOUR_OF_DAY);
-        minutes = calendar.get(Calendar.MINUTE);
-        time = getTimeString(hour, minutes);
-        timeEditTxt.setText(time);
-
 
         btnClock = findViewById(R.id.btnClock);
         btnClock.setOnClickListener(new View.OnClickListener() {
@@ -118,25 +103,50 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                 } if (editTextIsEmpty(foodFatEditTxt)) {
                     foodFatEditTxt.setError("Please enter carbohydrate/protein/fat amount");
                 } else {
-                    String foodName = foodEditTxt.getText().toString().trim();
-                    int calories = Integer.parseInt(foodCaloriesEditTxt.getText().toString().trim());
-                    int carbs = Integer.parseInt(foodCarbsEditTxt.getText().toString().trim());
-                    int protein = Integer.parseInt(foodProteinEditTxt.getText().toString().trim());
-                    int fat = Integer.parseInt(foodFatEditTxt.getText().toString().trim());
+                    String foodName = foodEditTxt.getText().toString();
+                    int calories = editTextToInt(foodCaloriesEditTxt);
+                    int carbs = editTextToInt(foodCarbsEditTxt);
+                    int protein = editTextToInt(foodProteinEditTxt);
+                    int fat = editTextToInt(foodFatEditTxt);
 
                     FoodLog foodLog = new FoodLog(date, foodName, mealSelected, time, calories, carbs, protein, fat);
-                    FoodLogDBH dbHelper = new FoodLogDBH(FoodEntryActivity.this);
-                    boolean success = dbHelper.addOne(foodLog);
-
+                    FoodLogDBH foodLogDBH = new FoodLogDBH(FoodEntryActivity.this);
+                    boolean success = foodLogDBH.addOne(foodLog);
 //
-
                     Intent intent = new Intent(FoodEntryActivity.this, MainActivity.class);
                     intent.putExtra(EXTRA_FOOD_LOG, foodLog);
+                    intent.putExtra(EXTRA_DISPLAYED_DAY, day);
+                    intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
+                    intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
                     startActivity(intent);
                 }
 
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //time selection with time picker dialog
+        Calendar calendar = Calendar.getInstance();
+
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        minutes = calendar.get(Calendar.MINUTE);
+        time = getTimeString(hour, minutes);
+        timeEditTxt.setText(time);
+
+        //get intent
+        Intent intent = getIntent();
+
+        //get date
+        date = intent.getStringExtra(EXTRA_DISPLAYED_DATE);
+        day = intent.getIntExtra(EXTRA_DISPLAYED_DAY, 0);
+        month = intent.getIntExtra(EXTRA_DISPLAYED_MONTH, 0);
+        year = intent.getIntExtra(EXTRA_DISPLAYED_YEAR, 0);
+        dateDisplay = findViewById(R.id.txtEntryDate);
+        dateDisplay.setText(date);
     }
 
     /**
@@ -183,4 +193,7 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         return editText.getText().toString().trim().length() == 0;
     }
 
+    private int editTextToInt (EditText editText) {
+        return Integer.parseInt(editText.getText().toString().trim());
+    }
 }

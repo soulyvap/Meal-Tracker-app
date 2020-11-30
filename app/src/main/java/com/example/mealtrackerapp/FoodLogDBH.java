@@ -92,7 +92,6 @@ public class FoodLogDBH extends SQLiteOpenHelper {
         } else {
 
         }
-
         cursor.close();
         db.close();
 
@@ -113,6 +112,9 @@ public class FoodLogDBH extends SQLiteOpenHelper {
         } else {
             sumOfCalories = 0;
         }
+        cursor.close();
+        db.close();
+
         return sumOfCalories;
     }
 
@@ -130,6 +132,9 @@ public class FoodLogDBH extends SQLiteOpenHelper {
         } else {
             sumOfCalories = 0;
         }
+        cursor.close();
+        db.close();
+
         return sumOfCalories;
     }
 
@@ -143,10 +148,13 @@ public class FoodLogDBH extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
-            returnSum = cursor.getInt(cursor.getColumnIndex(column));
+            returnSum = cursor.getInt(0);
         } else {
             returnSum = 0;
         }
+        cursor.close();
+        db.close();
+
         return returnSum;
     }
 }

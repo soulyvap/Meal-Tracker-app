@@ -293,5 +293,13 @@
         app:layout_constraintEnd_toEndOf="@+id/etxtSetLastname"
         app:layout_constraintTop_toBottomOf="@+id/etxtSetLastname" />
 
+    <TextView
+        android:id="@+id/txtDateForSetup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/txtSetup"
+        app:layout_constraintEnd_toEndOf="@+id/etxtSetFirstname" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

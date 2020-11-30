@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+
+import static com.example.mealtrackerapp.DayDataDHB.COLUMN_CALORIC_GOAL;
+import static com.example.mealtrackerapp.DayDataDHB.COLUMN_CARBS_GOAL;
+import static com.example.mealtrackerapp.DayDataDHB.COLUMN_FAT_GOAL;
+import static com.example.mealtrackerapp.DayDataDHB.COLUMN_PROTEIN_GOAL;
+import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WATER_GOAL;
+import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WEIGHT;
+import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DATE;
+import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DAY;
+import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_MONTH;
+import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_YEAR;
+import static com.example.mealtrackerapp.MainActivity.FIRST_TIME_PREF;
+import static com.example.mealtrackerapp.MainActivity.IS_FIRST_LAUNCH_PREF;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String PREF_CALORIC_GOAL = "pref_caloricGoal";
@@ -36,10 +50,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     Button btnSave;
     ImageView btnBirthdateCalendar;
     TextView txtSetBirthdate;
-    String firstname, lastname, birthdate = " ", today;
+    String firstname, lastname, birthdate = " ", today, dateDisplayed;
     int height, weight, caloricGoal, carbsGoal, proteinGoal, fatGoal, waterGoal;
+    Calendar c;
+    TextView txtDate;
 
-    private int mYear, mMonth, mDay;
+    private int mYear, mMonth, mDay, year, month, day;
 
     SharedPreferences setupPref;
     SharedPreferences.Editor prefEditor;
@@ -48,6 +64,15 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
+
+        //get current date and display it
+        c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        today = mDay + "-" + mMonth + "-" + mYear;
+        dateDisplayed = today;
 
         //reference to layout elements
         btnBirthdateCalendar = findViewById(R.id.btnBirthdateCalendar);
@@ -67,14 +92,12 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         setupPref = getSharedPreferences(SETUP_PREF, Activity.MODE_PRIVATE);
         prefEditor = setupPref.edit();
 
-
         btnSave = findViewById(R.id.btnSaveSetup);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(SetupActivity.this, MainActivity.class);
-
 
                 if (birthdate.equals(" ")) {
                     Toast.makeText(SetupActivity.this, "Please enter birth date", Toast.LENGTH_SHORT).show();
@@ -109,15 +132,19 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                         prefEditor.putString(PREF_FIRSTNAME, etxtSetFirstname.getText().toString());
                         prefEditor.putString(PREF_LASTNAME, etxtSetLastname.getText().toString());
                         prefEditor.putString(PREF_BIRTHDATE, birthdate);
-                        prefEditor.putInt(PREF_HEIGHT, Integer.parseInt(etxtSetHeight.getText().toString().trim()));
-                        prefEditor.putInt(PREF_WEIGHT, Integer.parseInt(etxtSetWeightValue.getText().toString().trim()));
-                        prefEditor.putInt(PREF_CALORIC_GOAL, Integer.parseInt(etxtSetCaloricValue.getText().toString().trim()));
-                        prefEditor.putInt(PREF_CARBS, Integer.parseInt(etxtSetCarbs.getText().toString().trim()));
-                        prefEditor.putInt(PREF_PROTEIN, Integer.parseInt(etxtSetProtein.getText().toString().trim()));
-                        prefEditor.putInt(PREF_FAT, Integer.parseInt(etxtSetFat.getText().toString().trim()));
-                        prefEditor.putInt(PREF_WATER_GOAL, Integer.parseInt(etxtSetWater.getText().toString().trim()));
+                        prefEditor.putInt(PREF_HEIGHT, editTextToInt(etxtSetHeight));
+                        prefEditor.putInt(PREF_WEIGHT, editTextToInt(etxtSetWeightValue));
+                        prefEditor.putInt(PREF_CALORIC_GOAL, editTextToInt(etxtSetCaloricValue));
+                        prefEditor.putInt(PREF_CARBS, editTextToInt(etxtSetCarbs));
+                        prefEditor.putInt(PREF_PROTEIN, editTextToInt(etxtSetProtein));
+                        prefEditor.putInt(PREF_FAT, editTextToInt(etxtSetFat));
+                        prefEditor.putInt(PREF_WATER_GOAL, editTextToInt(etxtSetWater));
                         prefEditor.commit();
                         Log.d("test", "adding sharedPref successful");
+                        intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
+                        intent.putExtra(EXTRA_DISPLAYED_DAY, day);
+                        intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
+                        intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
                         startActivity(intent);
                     }
                 }
@@ -128,71 +155,86 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
+
+        //call daydata.db helper
+        DayDataDHB dayDataDHB = new DayDataDHB(SetupActivity.this);
+
+        //get date displayed on main activity (date of today if first launch of the app) and display it
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_DISPLAYED_DATE)) {
+            dateDisplayed = intent.getStringExtra(EXTRA_DISPLAYED_DATE);
+            day = intent.getIntExtra(EXTRA_DISPLAYED_DAY, 0);
+            month = intent.getIntExtra(EXTRA_DISPLAYED_MONTH, 0);
+            year = intent.getIntExtra(EXTRA_DISPLAYED_YEAR, 0);
+        }
+        txtDate = findViewById(R.id.txtDateForSetup);
+        txtDate.setText(dateDisplayed);
+
         //retrieve shared preferences
-        if (setupPref.contains(PREF_CALORIC_GOAL)) {
+        if (setupPref.contains(PREF_FIRSTNAME)) {
             firstname = setupPref.getString(PREF_FIRSTNAME, "");
             lastname = setupPref.getString(PREF_LASTNAME, "");
             birthdate = setupPref.getString(PREF_BIRTHDATE, "");
             height = setupPref.getInt(PREF_HEIGHT, 0);
-            weight = setupPref.getInt(PREF_WEIGHT, 0);
-            caloricGoal = setupPref.getInt(PREF_CALORIC_GOAL, 0);
-            carbsGoal = setupPref.getInt(PREF_CARBS, 0);
-            proteinGoal = setupPref.getInt(PREF_PROTEIN, 0);
-            fatGoal = setupPref.getInt(PREF_FAT, 0);
-            waterGoal = setupPref.getInt(PREF_WATER_GOAL, 0);
 
             etxtSetFirstname.setText(firstname);
             etxtSetLastname.setText(lastname);
             txtSetBirthdate.setText(birthdate);
-            etxtSetHeight.setText(Integer.toString(height));
-            etxtSetWeightValue.setText(Integer.toString(weight));
-            etxtSetCaloricValue.setText(Integer.toString(caloricGoal));
-            etxtSetCarbs.setText(Integer.toString(carbsGoal));
-            etxtSetProtein.setText(Integer.toString(proteinGoal));
-            etxtSetFat.setText(Integer.toString(fatGoal));
-            etxtSetWater.setText(Integer.toString(waterGoal));
+            etxtSetHeight.setText(String.valueOf(height));
         }
+
+        weight = dayDataDHB.getIntByDate(COLUMN_WEIGHT, dateDisplayed);
+        caloricGoal = dayDataDHB.getIntByDate(COLUMN_CALORIC_GOAL, dateDisplayed);
+        carbsGoal = dayDataDHB.getIntByDate(COLUMN_CARBS_GOAL, dateDisplayed);
+        proteinGoal = dayDataDHB.getIntByDate(COLUMN_PROTEIN_GOAL, dateDisplayed);
+        fatGoal = dayDataDHB.getIntByDate(COLUMN_FAT_GOAL, dateDisplayed);
+        waterGoal = dayDataDHB.getIntByDate(COLUMN_WATER_GOAL, dateDisplayed);
+
+        etxtSetWeightValue.setText(String.valueOf(weight));
+        etxtSetCaloricValue.setText(String.valueOf(caloricGoal));
+        etxtSetCarbs.setText(String.valueOf(carbsGoal));
+        etxtSetProtein.setText(String.valueOf(proteinGoal));
+        etxtSetFat.setText(String.valueOf(fatGoal));
+        etxtSetWater.setText(String.valueOf(waterGoal));
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnBirthdateCalendar:
-                ShowDateDialog();
+                showDateDialog();
                 break;
         }
     }
 
-    private void ShowDateDialog() {
+    private void showDateDialog() {
 
-        // Get Current Date
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-
-        today = mDay + "-" + mMonth + "-" + mYear;
-
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, android.R.style.Theme_Holo_InputMethod,
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, AlertDialog.THEME_HOLO_DARK,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        birthdate = dayOfMonth + "-" + monthOfYear + "-" + year;
+                        birthdate = dayOfMonth + "-" + (monthOfYear+1) + "-" + year;
                         txtSetBirthdate.setText(birthdate);
                         txtSetBirthdate.setTextColor(ContextCompat.getColor(SetupActivity.this, R.color.black));
+                        mYear = year;
+                        mMonth = monthOfYear;
+                        mDay = dayOfMonth;
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
 
 
     }
-        public boolean editTextIsEmpty(EditText editText) {
-            return editText.getText().toString().trim().length() == 0;
-        }
+    public boolean editTextIsEmpty(EditText editText) {
+        return editText.getText().toString().trim().length() == 0;
+    }
+    private int editTextToInt (EditText editText) {
+        return Integer.parseInt(editText.getText().toString().trim());
+    }
+
 }
 
 
