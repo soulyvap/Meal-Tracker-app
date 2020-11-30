@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -56,6 +57,8 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     TextView txtDate;
 
     private int mYear, mMonth, mDay, year, month, day;
+
+    DayDataDHB dayDataDHB;
 
     SharedPreferences setupPref;
     SharedPreferences.Editor prefEditor;
@@ -129,22 +132,31 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     if (carbs + protein + fat != 100) {
                         Toast.makeText(SetupActivity.this, "sum of macro should be 100", Toast.LENGTH_SHORT).show();
                     } else {
+                        weight = editTextToInt(etxtSetWeightValue);
+                        caloricGoal = editTextToInt(etxtSetCaloricValue);
+                        carbsGoal = editTextToInt(etxtSetCarbs);
+                        proteinGoal = editTextToInt(etxtSetProtein);
+                        fatGoal = editTextToInt(etxtSetFat);
+                        waterGoal = editTextToInt(etxtSetWater);
+
                         prefEditor.putString(PREF_FIRSTNAME, etxtSetFirstname.getText().toString());
                         prefEditor.putString(PREF_LASTNAME, etxtSetLastname.getText().toString());
                         prefEditor.putString(PREF_BIRTHDATE, birthdate);
                         prefEditor.putInt(PREF_HEIGHT, editTextToInt(etxtSetHeight));
-                        prefEditor.putInt(PREF_WEIGHT, editTextToInt(etxtSetWeightValue));
-                        prefEditor.putInt(PREF_CALORIC_GOAL, editTextToInt(etxtSetCaloricValue));
-                        prefEditor.putInt(PREF_CARBS, editTextToInt(etxtSetCarbs));
-                        prefEditor.putInt(PREF_PROTEIN, editTextToInt(etxtSetProtein));
-                        prefEditor.putInt(PREF_FAT, editTextToInt(etxtSetFat));
-                        prefEditor.putInt(PREF_WATER_GOAL, editTextToInt(etxtSetWater));
+                        prefEditor.putInt(PREF_WEIGHT, weight);
+                        prefEditor.putInt(PREF_CALORIC_GOAL, caloricGoal);
+                        prefEditor.putInt(PREF_CARBS, carbsGoal);
+                        prefEditor.putInt(PREF_PROTEIN, proteinGoal);
+                        prefEditor.putInt(PREF_FAT, fatGoal);
+                        prefEditor.putInt(PREF_WATER_GOAL, waterGoal);
                         prefEditor.commit();
-                        Log.d("test", "adding sharedPref successful");
+
                         intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
                         intent.putExtra(EXTRA_DISPLAYED_DAY, day);
                         intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
                         intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
+
+                        dayDataDHB.updateGoals(dateDisplayed, weight, caloricGoal, carbsGoal, proteinGoal, fatGoal, waterGoal);
                         startActivity(intent);
                     }
                 }
@@ -157,7 +169,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         super.onStart();
 
         //call daydata.db helper
-        DayDataDHB dayDataDHB = new DayDataDHB(SetupActivity.this);
+        dayDataDHB = new DayDataDHB(SetupActivity.this);
 
         //get date displayed on main activity (date of today if first launch of the app) and display it
         Intent intent = getIntent();

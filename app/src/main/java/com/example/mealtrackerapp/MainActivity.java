@@ -32,12 +32,12 @@ import static com.example.mealtrackerapp.DayDataDHB.COLUMN_FAT_GOAL;
 import static com.example.mealtrackerapp.DayDataDHB.COLUMN_PROTEIN_GOAL;
 import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WATER_GOAL;
 import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WATER_INTAKE;
-import static com.example.mealtrackerapp.FoodEntryActivity.EXTRA_FOOD_LOG;
 import static com.example.mealtrackerapp.FoodLogDBH.COLUMN_CARBS;
 import static com.example.mealtrackerapp.FoodLogDBH.COLUMN_FAT;
 import static com.example.mealtrackerapp.FoodLogDBH.COLUMN_PROTEIN;
 import static com.example.mealtrackerapp.SetupActivity.PREF_CALORIC_GOAL;
 import static com.example.mealtrackerapp.SetupActivity.PREF_CARBS;
+import static com.example.mealtrackerapp.SetupActivity.PREF_FAT;
 import static com.example.mealtrackerapp.SetupActivity.PREF_PROTEIN;
 import static com.example.mealtrackerapp.SetupActivity.PREF_WATER_GOAL;
 import static com.example.mealtrackerapp.SetupActivity.PREF_WEIGHT;
@@ -124,43 +124,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         proteinPB = findViewById(R.id.proteinPB);
         fatPB = findViewById(R.id.fatPB);
 
-        //get today's date and display it
-        calendar = Calendar.getInstance();
-        dayToday = calendar.get(Calendar.DAY_OF_MONTH);
-        monthToday = calendar.get(Calendar.MONTH);
-        yearToday = calendar.get(Calendar.YEAR);
-
-        dayDisplayed = dayToday;
-        monthDisplayed = monthToday;
-        yearDisplayed = yearToday;
-        
-        dateToday = dayToday + "-" + (monthToday + 1) + "-" + yearToday;
-        dateNowDisplay.setText(dateToday);
-        dateDisplayed = dateToday;
-
-        //create waterCounter
-        waterCounter = new Counter();
-
         //water counter buttons and functions
         waterMinus = findViewById(R.id.txtWaterMinus);
         waterPlus = findViewById(R.id.txtWaterPlus);
-
-        waterMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                waterCounter.remove(1);
-                dayDataDHB.updateColumnWhereDateTo(COLUMN_WATER_INTAKE, dateDisplayed, waterCounter.getCount());
-                updateWaterDisplay(dateDisplayed);
-            }
-        });
-        waterPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                waterCounter.add(1);
-                dayDataDHB.updateColumnWhereDateTo(COLUMN_WATER_INTAKE, dateDisplayed, waterCounter.getCount());
-                updateWaterDisplay(dateDisplayed);
-            }
-        });
 
         //floating action button add to food entry
         fabAdd = findViewById(R.id.fabBtnAdd);
@@ -181,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fabDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dayDataDHB.addOneReplace(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, waterIntake);
                 showDateDialog();
             }
         });
@@ -194,12 +161,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //get intent
         Intent intent = getIntent();
 
+        //get today's date and display it
+        calendar = Calendar.getInstance();
+        dayToday = calendar.get(Calendar.DAY_OF_MONTH);
+        monthToday = calendar.get(Calendar.MONTH);
+        yearToday = calendar.get(Calendar.YEAR);
+
+        dayDisplayed = dayToday;
+        monthDisplayed = monthToday;
+        yearDisplayed = yearToday;
+
+        dateToday = dayToday + "-" + (monthToday + 1) + "-" + yearToday;
+        dateNowDisplay.setText(dateToday);
+        dateDisplayed = dateToday;
+
         //retrieve date from intent
         if (intent.hasExtra(EXTRA_DISPLAYED_DATE)){
             dateDisplayed = intent.getStringExtra(EXTRA_DISPLAYED_DATE);
             dayDisplayed = intent.getIntExtra(EXTRA_DISPLAYED_DAY, dayToday);
             monthDisplayed = intent.getIntExtra(EXTRA_DISPLAYED_MONTH, monthToday);
             yearDisplayed = intent.getIntExtra(EXTRA_DISPLAYED_YEAR, yearToday);
+            dateNowDisplay.setText(dateDisplayed);
         }
         
 
@@ -211,15 +193,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         caloricGoalInt = setupPref.getInt(PREF_CALORIC_GOAL, 0);
         carbGoalInt = setupPref.getInt(PREF_CARBS, 0);
         proteinGoalInt = setupPref.getInt(PREF_PROTEIN, 0);
-        fatGoalInt = setupPref.getInt(PREF_PROTEIN, 0);
+        fatGoalInt = setupPref.getInt(PREF_FAT, 0);
         waterGoalInt = setupPref.getInt(PREF_WATER_GOAL, 0);
+
+        //create waterCounter
+        waterCounter = new Counter();
 
         //set water count
         waterCounter.setCount(dayDataDHB.getIntByDate(COLUMN_WATER_INTAKE, dateDisplayed));
         waterIntake = waterCounter.getCount();
 
-        //store goals and weight to daydata.db
-        dayDataDHB.addOne(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, waterIntake);
+        //store goals and weight to daydata.db only if there is no data yet
+        dayDataDHB.addOneIgnore(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, 0);
 
         //set displayed caloric counter (goal, eaten and left) values
         //set calories per meal
@@ -227,13 +212,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //set progress bar max values
         //set food diary
         setValuesTo(dateDisplayed);
+
+        waterMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                waterCounter.remove(1);
+                dayDataDHB.updateColumnWhereDateTo(COLUMN_WATER_INTAKE, dateDisplayed, waterCounter.getCount());
+                updateWaterDisplay(dateDisplayed);
+            }
+        });
+        waterPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                waterCounter.add(1);
+                dayDataDHB.updateColumnWhereDateTo(COLUMN_WATER_INTAKE, dateDisplayed, waterCounter.getCount());
+                updateWaterDisplay(dateDisplayed);
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         //save dayData into daydata.db
-        dayDataDHB.addOne(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, waterIntake);
+        dayDataDHB.addOneReplace(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, waterIntake);
     }
 
     @Override
@@ -381,15 +383,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
                         datePicked = dayOfMonth + "-" + (monthOfYear+1) + "-" + year;
                         dateDisplayed = datePicked;
                         yearDisplayed = year;
                         monthDisplayed = monthOfYear;
                         dayDisplayed = dayOfMonth;
                         dateNowDisplay.setText(datePicked);
+                        dayDataDHB.addOneIgnore(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, 0);
+                        waterCounter.setCount(dayDataDHB.getIntByDate(COLUMN_WATER_INTAKE, dateDisplayed));
                         setValuesTo(dateDisplayed);
-
                     }
                 }, yearDisplayed, monthDisplayed, dayDisplayed);
         datePickerDialog.show();

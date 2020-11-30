@@ -30,7 +30,7 @@ public class DayDataDHB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableString = "CREATE TABLE " + DAYDATA_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_DATE + " TEXT UNIQUE, " +
+        String createTableString = "CREATE TABLE " + DAYDATA_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_DATE + " TEXT UNIQUE NOT NULL, " +
                 COLUMN_WEIGHT + " INTEGER, " + COLUMN_CALORIC_GOAL + " INTEGER, " + COLUMN_CARBS_GOAL + " INTEGER, " +
                 COLUMN_PROTEIN_GOAL + " INTEGER, " + COLUMN_FAT_GOAL + " INTEGER, " + COLUMN_WATER_GOAL + " INTEGER, " +
                 COLUMN_WATER_INTAKE + " INTEGER)";
@@ -42,8 +42,7 @@ public class DayDataDHB extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-    public boolean addOne(String date, int weight, int caloricGoal, int carbsGoal, int proteinGoal, int fatGoal, int waterGoal, int waterIntake) {
-        Log.d("add row", "addOne: ");
+    public boolean addOneReplace(String date, int weight, int caloricGoal, int carbsGoal, int proteinGoal, int fatGoal, int waterGoal, int waterIntake) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -60,9 +59,57 @@ public class DayDataDHB extends SQLiteOpenHelper {
         if (insert == -1) {
             return false;
         } else {
+//            ContentValues waterCV = new ContentValues();
+//            waterCV.put(COLUMN_WATER_INTAKE, 0);
+//            db.update(DAYDATA_TABLE, waterCV, COLUMN_DATE + " LIKE \'" + date + "\'", null);
             return true;
         }
 
+    }
+
+    public boolean updateGoals(String date, int weight, int caloricGoal, int carbsGoal, int proteinGoal, int fatGoal, int waterGoal) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_DATE, date);
+        cv.put(COLUMN_WEIGHT, weight);
+        cv.put(COLUMN_CALORIC_GOAL, caloricGoal);
+        cv.put(COLUMN_CARBS_GOAL, carbsGoal);
+        cv.put(COLUMN_PROTEIN_GOAL, proteinGoal);
+        cv.put(COLUMN_FAT_GOAL, fatGoal);
+        cv.put(COLUMN_WATER_GOAL, waterGoal);
+
+        long insert = db.insertWithOnConflict(DAYDATA_TABLE, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+        if (insert == -1) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    public boolean addOneIgnore(String date, int weight, int caloricGoal, int carbsGoal, int proteinGoal, int fatGoal, int waterGoal, int waterIntake) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_DATE, date);
+        cv.put(COLUMN_WEIGHT, weight);
+        cv.put(COLUMN_CALORIC_GOAL, caloricGoal);
+        cv.put(COLUMN_CARBS_GOAL, carbsGoal);
+        cv.put(COLUMN_PROTEIN_GOAL, proteinGoal);
+        cv.put(COLUMN_FAT_GOAL, fatGoal);
+        cv.put(COLUMN_WATER_GOAL, waterGoal);
+        cv.put(COLUMN_WATER_INTAKE, waterIntake);
+
+        long insert = db.insertWithOnConflict(DAYDATA_TABLE, null, cv, SQLiteDatabase.CONFLICT_IGNORE);
+        if (insert == -1) {
+            return false;
+        } else {
+//            ContentValues waterCV = new ContentValues();
+//            waterCV.put(COLUMN_WATER_INTAKE, 0);
+//            db.update(DAYDATA_TABLE, waterCV, COLUMN_DATE + " LIKE \'" + date + "\'", null);
+            return true;
+        }
     }
 
     public int getIntByDate(String column, String date) {
