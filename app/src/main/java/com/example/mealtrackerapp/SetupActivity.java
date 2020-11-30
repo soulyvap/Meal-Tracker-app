@@ -26,6 +26,7 @@ import static com.example.mealtrackerapp.DayDataDHB.COLUMN_CARBS_GOAL;
 import static com.example.mealtrackerapp.DayDataDHB.COLUMN_FAT_GOAL;
 import static com.example.mealtrackerapp.DayDataDHB.COLUMN_PROTEIN_GOAL;
 import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WATER_GOAL;
+import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WATER_INTAKE;
 import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WEIGHT;
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DATE;
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DAY;
@@ -52,7 +53,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     ImageView btnBirthdateCalendar;
     TextView txtSetBirthdate;
     String firstname, lastname, birthdate = " ", today, dateDisplayed;
-    int height, weight, caloricGoal, carbsGoal, proteinGoal, fatGoal, waterGoal;
+    int height, weight, caloricGoal, carbsGoal, proteinGoal, fatGoal, waterGoal, waterIntake;
     Calendar c;
     TextView txtDate;
 
@@ -74,7 +75,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
-        today = mDay + "-" + mMonth + "-" + mYear;
+        today = mDay + "-" + (mMonth + 1) + "-" + mYear;
         dateDisplayed = today;
 
         //reference to layout elements
@@ -111,9 +112,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     etxtSetLastname.setError("Please enter last name");
                 } if (editTextIsEmpty(etxtSetHeight)) {
                     etxtSetHeight.setError("Please enter height");
-                } if (editTextIsEmpty(etxtSetWeightValue)) {
+                } if (editTextIsEmpty(etxtSetWeightValue) || editTextIsZero(etxtSetWeightValue)) {
                     etxtSetWeightValue.setError("Please enter weight");
-                } if (editTextIsEmpty(etxtSetCaloricValue)) {
+                } if (editTextIsEmpty(etxtSetCaloricValue) || editTextIsZero(etxtSetCaloricValue)) {
                     etxtSetCaloricValue.setError("Please enter daily caloric goal");
                 } if (editTextIsEmpty(etxtSetCarbs)) {
                     etxtSetCarbs.setError("Please enter carbs amount");
@@ -122,7 +123,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 } if (editTextIsEmpty(etxtSetFat)) {
                     etxtSetFat.setError("Please enter fat amount");
                 } if (editTextIsEmpty(etxtSetWater)) {
-                    etxtSetWater.setError("Please enter water glass");
+                    etxtSetWater.setError("Please enter number of water glasses");
                 } else if (!editTextIsEmpty(etxtSetCarbs) &&
                         !editTextIsEmpty(etxtSetCarbs) &&
                         !editTextIsEmpty(etxtSetCarbs)) {
@@ -156,7 +157,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                         intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
                         intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
 
-                        dayDataDHB.updateGoals(dateDisplayed, weight, caloricGoal, carbsGoal, proteinGoal, fatGoal, waterGoal);
+                        dayDataDHB.addOneReplace(dateDisplayed, weight, caloricGoal, carbsGoal, proteinGoal, fatGoal, waterGoal, waterIntake);
                         startActivity(intent);
                     }
                 }
@@ -201,13 +202,19 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         proteinGoal = dayDataDHB.getIntByDate(COLUMN_PROTEIN_GOAL, dateDisplayed);
         fatGoal = dayDataDHB.getIntByDate(COLUMN_FAT_GOAL, dateDisplayed);
         waterGoal = dayDataDHB.getIntByDate(COLUMN_WATER_GOAL, dateDisplayed);
+        waterIntake = dayDataDHB.getIntByDate(COLUMN_WATER_INTAKE, dateDisplayed);
 
-        etxtSetWeightValue.setText(String.valueOf(weight));
-        etxtSetCaloricValue.setText(String.valueOf(caloricGoal));
-        etxtSetCarbs.setText(String.valueOf(carbsGoal));
-        etxtSetProtein.setText(String.valueOf(proteinGoal));
-        etxtSetFat.setText(String.valueOf(fatGoal));
-        etxtSetWater.setText(String.valueOf(waterGoal));
+        if (caloricGoal == 0) {
+
+        } else {
+            etxtSetWeightValue.setText(String.valueOf(weight));
+            etxtSetCaloricValue.setText(String.valueOf(caloricGoal));
+            etxtSetCarbs.setText(String.valueOf(carbsGoal));
+            etxtSetProtein.setText(String.valueOf(proteinGoal));
+            etxtSetFat.setText(String.valueOf(fatGoal));
+            etxtSetWater.setText(String.valueOf(waterGoal));
+        }
+
     }
 
     @Override
@@ -242,6 +249,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     }
     public boolean editTextIsEmpty(EditText editText) {
         return editText.getText().toString().trim().length() == 0;
+    }
+    public boolean editTextIsZero(EditText editText) {
+        return editText.getText().toString().trim().equals("0");
     }
     private int editTextToInt (EditText editText) {
         return Integer.parseInt(editText.getText().toString().trim());

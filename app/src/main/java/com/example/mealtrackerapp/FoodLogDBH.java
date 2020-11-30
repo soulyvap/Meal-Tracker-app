@@ -63,6 +63,28 @@ public class FoodLogDBH extends SQLiteOpenHelper {
             return true;
         }
     }
+
+    public void updateOne(FoodLog foodLog, String name, String meal, String time, int calories, int carbs, int protein, int fat) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_FOOD, name);
+        cv.put(COLUMN_MEAL, meal);
+        cv.put(COLUMN_TIME, time);
+        cv.put(COLUMN_CALORIES, calories);
+        cv.put(COLUMN_CARBS, carbs);
+        cv.put(COLUMN_PROTEIN, protein);
+        cv.put(COLUMN_FAT, fat);
+
+        db.update(FOODLOGS_TABLE, cv, COLUMN_ID + " = " + foodLog.getId(), null);
+    }
+
+    public void deleteOne(FoodLog foodlog) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(FOODLOGS_TABLE, COLUMN_ID + " = " + foodlog.getId(), null);
+    }
+
     public List<FoodLog> getFoodLog(String dateDisplayed) {
         List<FoodLog> foodLogList = new ArrayList<>();
 
@@ -76,6 +98,7 @@ public class FoodLogDBH extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             //loop through cursor (result set) and create new foodLog object. then add them to the return array
             do {
+                int id = cursor.getInt(0);
                 String date = cursor.getString(1);
                 String food = cursor.getString(2);
                 String meal = cursor.getString(3);
@@ -85,7 +108,7 @@ public class FoodLogDBH extends SQLiteOpenHelper {
                 int protein = cursor.getInt(7);
                 int fat = cursor.getInt(8);
 
-                FoodLog foodLog = new FoodLog(date, food, meal, time, calories, carbs, protein, fat);
+                FoodLog foodLog = new FoodLog(id, date, food, meal, time, calories, carbs, protein, fat);
                 foodLogList.add(foodLog);
 
             } while (cursor.moveToNext());
