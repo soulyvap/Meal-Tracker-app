@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,7 @@ import static com.example.mealtrackerapp.DayDataDHB.COLUMN_CARBS_GOAL;
 import static com.example.mealtrackerapp.DayDataDHB.COLUMN_FAT_GOAL;
 import static com.example.mealtrackerapp.DayDataDHB.COLUMN_PROTEIN_GOAL;
 import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WATER_GOAL;
+import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WATER_INTAKE;
 import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WEIGHT;
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DATE;
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DAY;
@@ -51,11 +53,13 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     ImageView btnBirthdateCalendar;
     TextView txtSetBirthdate;
     String firstname, lastname, birthdate = " ", today, dateDisplayed;
-    int height, weight, caloricGoal, carbsGoal, proteinGoal, fatGoal, waterGoal;
+    int height, weight, caloricGoal, carbsGoal, proteinGoal, fatGoal, waterGoal, waterIntake;
     Calendar c;
     TextView txtDate;
 
     private int mYear, mMonth, mDay, year, month, day;
+
+    DayDataDHB dayDataDHB;
 
     SharedPreferences setupPref;
     SharedPreferences.Editor prefEditor;
@@ -71,7 +75,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
-        today = mDay + "-" + mMonth + "-" + mYear;
+        today = mDay + "-" + (mMonth + 1) + "-" + mYear;
         dateDisplayed = today;
 
         //reference to layout elements
@@ -108,9 +112,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     etxtSetLastname.setError("Please enter last name");
                 } if (editTextIsEmpty(etxtSetHeight)) {
                     etxtSetHeight.setError("Please enter height");
-                } if (editTextIsEmpty(etxtSetWeightValue)) {
+                } if (editTextIsEmpty(etxtSetWeightValue) || editTextIsZero(etxtSetWeightValue)) {
                     etxtSetWeightValue.setError("Please enter weight");
-                } if (editTextIsEmpty(etxtSetCaloricValue)) {
+                } if (editTextIsEmpty(etxtSetCaloricValue) || editTextIsZero(etxtSetCaloricValue)) {
                     etxtSetCaloricValue.setError("Please enter daily caloric goal");
                 } if (editTextIsEmpty(etxtSetCarbs)) {
                     etxtSetCarbs.setError("Please enter carbs amount");
@@ -119,7 +123,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 } if (editTextIsEmpty(etxtSetFat)) {
                     etxtSetFat.setError("Please enter fat amount");
                 } if (editTextIsEmpty(etxtSetWater)) {
-                    etxtSetWater.setError("Please enter water glass");
+                    etxtSetWater.setError("Please enter number of water glasses");
                 } else if (!editTextIsEmpty(etxtSetCarbs) &&
                         !editTextIsEmpty(etxtSetCarbs) &&
                         !editTextIsEmpty(etxtSetCarbs)) {
@@ -129,22 +133,31 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     if (carbs + protein + fat != 100) {
                         Toast.makeText(SetupActivity.this, "sum of macro should be 100", Toast.LENGTH_SHORT).show();
                     } else {
+                        weight = editTextToInt(etxtSetWeightValue);
+                        caloricGoal = editTextToInt(etxtSetCaloricValue);
+                        carbsGoal = editTextToInt(etxtSetCarbs);
+                        proteinGoal = editTextToInt(etxtSetProtein);
+                        fatGoal = editTextToInt(etxtSetFat);
+                        waterGoal = editTextToInt(etxtSetWater);
+
                         prefEditor.putString(PREF_FIRSTNAME, etxtSetFirstname.getText().toString());
                         prefEditor.putString(PREF_LASTNAME, etxtSetLastname.getText().toString());
                         prefEditor.putString(PREF_BIRTHDATE, birthdate);
                         prefEditor.putInt(PREF_HEIGHT, editTextToInt(etxtSetHeight));
-                        prefEditor.putInt(PREF_WEIGHT, editTextToInt(etxtSetWeightValue));
-                        prefEditor.putInt(PREF_CALORIC_GOAL, editTextToInt(etxtSetCaloricValue));
-                        prefEditor.putInt(PREF_CARBS, editTextToInt(etxtSetCarbs));
-                        prefEditor.putInt(PREF_PROTEIN, editTextToInt(etxtSetProtein));
-                        prefEditor.putInt(PREF_FAT, editTextToInt(etxtSetFat));
-                        prefEditor.putInt(PREF_WATER_GOAL, editTextToInt(etxtSetWater));
+                        prefEditor.putInt(PREF_WEIGHT, weight);
+                        prefEditor.putInt(PREF_CALORIC_GOAL, caloricGoal);
+                        prefEditor.putInt(PREF_CARBS, carbsGoal);
+                        prefEditor.putInt(PREF_PROTEIN, proteinGoal);
+                        prefEditor.putInt(PREF_FAT, fatGoal);
+                        prefEditor.putInt(PREF_WATER_GOAL, waterGoal);
                         prefEditor.commit();
-                        Log.d("test", "adding sharedPref successful");
+
                         intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
                         intent.putExtra(EXTRA_DISPLAYED_DAY, day);
                         intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
                         intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
+
+                        dayDataDHB.addOneReplace(dateDisplayed, weight, caloricGoal, carbsGoal, proteinGoal, fatGoal, waterGoal, waterIntake);
                         startActivity(intent);
                     }
                 }
@@ -157,7 +170,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         super.onStart();
 
         //call daydata.db helper
-        DayDataDHB dayDataDHB = new DayDataDHB(SetupActivity.this);
+        dayDataDHB = new DayDataDHB(SetupActivity.this);
 
         //get date displayed on main activity (date of today if first launch of the app) and display it
         Intent intent = getIntent();
@@ -189,13 +202,19 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         proteinGoal = dayDataDHB.getIntByDate(COLUMN_PROTEIN_GOAL, dateDisplayed);
         fatGoal = dayDataDHB.getIntByDate(COLUMN_FAT_GOAL, dateDisplayed);
         waterGoal = dayDataDHB.getIntByDate(COLUMN_WATER_GOAL, dateDisplayed);
+        waterIntake = dayDataDHB.getIntByDate(COLUMN_WATER_INTAKE, dateDisplayed);
 
-        etxtSetWeightValue.setText(String.valueOf(weight));
-        etxtSetCaloricValue.setText(String.valueOf(caloricGoal));
-        etxtSetCarbs.setText(String.valueOf(carbsGoal));
-        etxtSetProtein.setText(String.valueOf(proteinGoal));
-        etxtSetFat.setText(String.valueOf(fatGoal));
-        etxtSetWater.setText(String.valueOf(waterGoal));
+        if (caloricGoal == 0) {
+
+        } else {
+            etxtSetWeightValue.setText(String.valueOf(weight));
+            etxtSetCaloricValue.setText(String.valueOf(caloricGoal));
+            etxtSetCarbs.setText(String.valueOf(carbsGoal));
+            etxtSetProtein.setText(String.valueOf(proteinGoal));
+            etxtSetFat.setText(String.valueOf(fatGoal));
+            etxtSetWater.setText(String.valueOf(waterGoal));
+        }
+
     }
 
     @Override
@@ -230,6 +249,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     }
     public boolean editTextIsEmpty(EditText editText) {
         return editText.getText().toString().trim().length() == 0;
+    }
+    public boolean editTextIsZero(EditText editText) {
+        return editText.getText().toString().trim().equals("0");
     }
     private int editTextToInt (EditText editText) {
         return Integer.parseInt(editText.getText().toString().trim());

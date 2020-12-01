@@ -264,7 +264,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="36dp"
         android:text="Setup"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -297,9 +297,10 @@
         android:id="@+id/txtDateForSetup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/txtSetup"
-        app:layout_constraintEnd_toEndOf="@+id/etxtSetFirstname" />
+        app:layout_constraintStart_toStartOf="@+id/txtSetup"
+        app:layout_constraintTop_toBottomOf="@+id/txtSetup" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

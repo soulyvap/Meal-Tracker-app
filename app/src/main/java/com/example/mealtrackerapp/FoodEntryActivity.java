@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -36,6 +37,10 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
     int hour, minutes, day, month, year;
     String mealSelected, time, date, hourString, minutesString;
     Button btnAdd;
+    ImageButton btnDelete;
+    FoodLog selectedFoodlog;
+    FoodLogDBH foodLogDBH;
+    ArrayList<String> meals;
 
 
     @Override
@@ -51,6 +56,11 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         foodProteinEditTxt = findViewById(R.id.etxtFoodProtein);
         foodFatEditTxt = findViewById(R.id.etxtFoodFat);
 
+        //refer buttons
+        btnDelete = findViewById(R.id.btnDelete);
+        btnClock = findViewById(R.id.btnClock);
+        btnAdd = findViewById(R.id.btnAddFood);
+
         //refer spinner spinner
         mealSpinner = findViewById(R.id.spinnerMeal);
 
@@ -58,7 +68,7 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         mealSpinner.setOnItemSelectedListener(this);
 
         //creating arrayList with meal choice
-        ArrayList<String> meals = new ArrayList<>();
+        meals = new ArrayList<>();
         meals.add(MEAL_SPINNER_DEFAULT);
         meals.add("breakfast");
         meals.add("lunch");
@@ -70,7 +80,6 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         mealSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mealSpinner.setAdapter(mealSpinnerAdapter);
 
-        btnClock = findViewById(R.id.btnClock);
         btnClock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,12 +95,12 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         });
 
         //when press add button, gather information and return to main activity with extras
-        btnAdd = findViewById(R.id.btnAddFood);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mealSelected == MEAL_SPINNER_DEFAULT) {
                     Toast.makeText(FoodEntryActivity.this, "Please select meal", Toast.LENGTH_SHORT).show();
+                    mealSpinner.requestFocus();
                 } if (editTextIsEmpty(foodEditTxt)) {
                     foodEditTxt.setError("Please enter food name");
                 } if (editTextIsEmpty(foodCaloriesEditTxt)) {
@@ -109,12 +118,16 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                     int protein = editTextToInt(foodProteinEditTxt);
                     int fat = editTextToInt(foodFatEditTxt);
 
-                    FoodLog foodLog = new FoodLog(date, foodName, mealSelected, time, calories, carbs, protein, fat);
-                    FoodLogDBH foodLogDBH = new FoodLogDBH(FoodEntryActivity.this);
-                    boolean success = foodLogDBH.addOne(foodLog);
-//
+                    foodLogDBH = new FoodLogDBH(FoodEntryActivity.this);
+                    if (getIntent().hasExtra(EXTRA_FOOD_LOG)){
+                        foodLogDBH.updateOne(selectedFoodlog, foodName, mealSelected, time, calories, carbs, protein, fat);
+                    } else {
+                        FoodLog foodLog = new FoodLog(-1, date, foodName, mealSelected, time, calories, carbs, protein, fat);
+                        foodLogDBH.addOne(foodLog);
+                    }
+
                     Intent intent = new Intent(FoodEntryActivity.this, MainActivity.class);
-                    intent.putExtra(EXTRA_FOOD_LOG, foodLog);
+                    intent.putExtra(EXTRA_DISPLAYED_DATE, date);
                     intent.putExtra(EXTRA_DISPLAYED_DAY, day);
                     intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
                     intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
@@ -123,11 +136,32 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
 
             }
         });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                foodLogDBH = new FoodLogDBH(FoodEntryActivity.this);
+                foodLogDBH.deleteOne(selectedFoodlog);
+                Intent intent = new Intent(FoodEntryActivity.this, MainActivity.class);
+                intent.putExtra(EXTRA_DISPLAYED_DATE, date);
+                intent.putExtra(EXTRA_DISPLAYED_DAY, day);
+                intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
+                intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
+                Toast.makeText(FoodEntryActivity.this, "Food log deleted", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        //hide delete button
+        btnDelete.setVisibility(ImageButton.GONE);
+
+        //get intent
+        Intent intent = getIntent();
 
         //time selection with time picker dialog
         Calendar calendar = Calendar.getInstance();
@@ -137,8 +171,21 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         time = getTimeString(hour, minutes);
         timeEditTxt.setText(time);
 
-        //get intent
-        Intent intent = getIntent();
+        //show delete button if existing entry selected
+        if (intent.hasExtra(EXTRA_FOOD_LOG)) {
+            selectedFoodlog = (FoodLog) intent.getSerializableExtra(EXTRA_FOOD_LOG);
+            btnDelete.setVisibility(ImageButton.VISIBLE);
+            btnAdd.setText("Save");
+            hour = timeStringToInt(selectedFoodlog.getTime(), "hour");
+            minutes = timeStringToInt(selectedFoodlog.getTime(),"minutes");
+            timeEditTxt.setText(selectedFoodlog.getTime());
+            mealSpinner.setSelection(meals.indexOf(selectedFoodlog.getMeal()));
+            foodEditTxt.setText(selectedFoodlog.getName());
+            foodCaloriesEditTxt.setText(String.valueOf(selectedFoodlog.getCalories()));
+            foodCarbsEditTxt.setText(String.valueOf(selectedFoodlog.getCarbs()));
+            foodProteinEditTxt.setText((String.valueOf(selectedFoodlog.getProtein())));
+            foodFatEditTxt.setText(String.valueOf(selectedFoodlog.getFat()));
+        }
 
         //get date
         date = intent.getStringExtra(EXTRA_DISPLAYED_DATE);
@@ -195,5 +242,17 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
 
     private int editTextToInt (EditText editText) {
         return Integer.parseInt(editText.getText().toString().trim());
+    }
+
+    public int timeStringToInt (String time, String option) {
+        String[] array = time.split(":");
+        String hourExtracted = array[0];
+        String minutesExtracted = array[1];
+
+        if (option.equals("minutes")){
+            return Integer.parseInt(minutesExtracted);
+        } else {
+            return Integer.parseInt(hourExtracted);
+        }
     }
 }
