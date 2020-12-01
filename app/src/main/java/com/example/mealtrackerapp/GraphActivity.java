@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class GraphActivity extends AppCompatActivity {
-
+// reference for MPAndroidChart: https://github.com/PhilJay/MPAndroidChart
     BarChart barChart;
     BarData barData;
     BarDataSet barDataSet;
@@ -43,9 +43,11 @@ public class GraphActivity extends AppCompatActivity {
         barEntries.add(new BarEntry(1f,2));
         barEntries.add(new BarEntry(2f,2));
         barEntries.add(new BarEntry(3f,2));
+        barEntries.add(new BarEntry(4f,2));
         barEntries.add(new BarEntry(5f,2));
         barEntries.add(new BarEntry(6f,2));
         barEntries.add(new BarEntry(7f,2));
+
 
 
 
