@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DayDataDHB extends SQLiteOpenHelper {
+public class DayDataDBH extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "ID";
     public static final String DAYDATA_TABLE = "DAYDATA_TABLE";
     public static final String COLUMN_DATE = "DATE";
@@ -24,7 +24,7 @@ public class DayDataDHB extends SQLiteOpenHelper {
     public static final String COLUMN_WATER_GOAL = "WATER_GOAL";
     public static final String COLUMN_WATER_INTAKE = "WATER_INTAKE";
 
-    public DayDataDHB(@Nullable Context context) {
+    public DayDataDBH(@Nullable Context context) {
         super(context, "daydata.db", null, 1);
     }
 

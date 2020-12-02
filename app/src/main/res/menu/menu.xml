@@ -4,4 +4,7 @@
     <item
         android:id="@+id/menuItemSetup"
         android:title="Setup" />
+    <item
+        android:id="@+id/menuItemStats"
+        android:title="Stats" />
 </menu>

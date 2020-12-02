@@ -1,25 +1,16 @@
 package com.example.mealtrackerapp;
 
-
-import java.io.Serializable;
-
-public class FoodLog implements Serializable {
+public class FoodNutrients {
     private int id;
-    private String date;
     private String name;
-    private String meal;
-    private String time;
     private int calories;
     private double carbs;
     private double protein;
     private double fat;
 
-    public FoodLog(int id, String date, String name, String meal, String time, int calories, double carbs, double protein, double fat) {
+    public FoodNutrients(int id, String name, int calories, double carbs, double protein, double fat) {
         this.id = id;
-        this.date = date;
         this.name = name;
-        this.meal = meal;
-        this.time = time;
         this.calories = calories;
         this.carbs = carbs;
         this.protein = protein;
@@ -34,36 +25,12 @@ public class FoodLog implements Serializable {
         this.id = id;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getMeal() {
-        return meal;
-    }
-
-    public void setMeal(String meal) {
-        this.meal = meal;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public int getCalories() {
@@ -78,7 +45,7 @@ public class FoodLog implements Serializable {
         return carbs;
     }
 
-    public void setCarbs(int carbs) {
+    public void setCarbs(double carbs) {
         this.carbs = carbs;
     }
 
@@ -86,7 +53,7 @@ public class FoodLog implements Serializable {
         return protein;
     }
 
-    public void setProtein(int protein) {
+    public void setProtein(double protein) {
         this.protein = protein;
     }
 
@@ -94,12 +61,12 @@ public class FoodLog implements Serializable {
         return fat;
     }
 
-    public void setFat(int fat) {
+    public void setFat(double fat) {
         this.fat = fat;
     }
 
     @Override
     public String toString() {
-        return time + " | " + meal + " | " + name + " : " + calories + " kcal (" + (carbs*4) + "/" + (protein*4) + "/" + (fat*8) + ")";
+        return name;
     }
 }

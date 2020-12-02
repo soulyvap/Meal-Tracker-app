@@ -150,7 +150,7 @@
         android:id="@+id/txtDinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:text="@string/txt_dinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.511"
@@ -161,7 +161,7 @@
         android:id="@+id/txtExtras"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="16dp"
         android:text="@string/txt_extras"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.511"
@@ -204,15 +204,16 @@
         android:rotationY="180"
         app:layout_constraintBottom_toBottomOf="@+id/progressionbarBackground"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtCaloricGoalValue" />
+        app:layout_constraintTop_toBottomOf="@id/txtCaloricGoalValue"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/txtLunch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:text="@string/txt_lunch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.511"
@@ -256,12 +257,11 @@
         android:id="@+id/txtBreakfast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="43dp"
         android:text="@string/txt_breakfast"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/txtCaloricGoal" />
 
     <TextView
         android:id="@+id/txtDinnerValue"
@@ -425,6 +425,37 @@
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintStart_toStartOf="@+id/toolbar"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <Button
+        android:id="@+id/btnWeight"
+        style="@android:style/Widget.Holo.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="20sp"
+        android:padding="2sp"
+        android:text="Weight"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtExtras"
+        app:layout_constraintStart_toStartOf="@+id/txtExtras"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+
+    <TextView
+        android:id="@+id/txtWeightValue"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="numberDecimal"
+        android:text="00"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="@+id/txtExtras"
+        app:layout_constraintStart_toStartOf="@+id/txtExtras"
+        app:layout_constraintTop_toBottomOf="@+id/btnWeight" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="btnWeight,txtWeightValue" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

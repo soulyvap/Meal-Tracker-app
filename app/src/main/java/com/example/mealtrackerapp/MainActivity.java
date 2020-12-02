@@ -10,7 +10,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,12 +26,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_CALORIC_GOAL;
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_CARBS_GOAL;
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_FAT_GOAL;
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_PROTEIN_GOAL;
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WATER_GOAL;
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WATER_INTAKE;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_CALORIC_GOAL;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_CARBS_GOAL;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_FAT_GOAL;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_PROTEIN_GOAL;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_WATER_GOAL;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_WATER_INTAKE;
 import static com.example.mealtrackerapp.FoodEntryActivity.EXTRA_FOOD_LOG;
 import static com.example.mealtrackerapp.FoodLogDBH.COLUMN_CARBS;
 import static com.example.mealtrackerapp.FoodLogDBH.COLUMN_FAT;
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String dateToday, dateDisplayed, datePicked;
 
     //database helpers
-    DayDataDHB dayDataDHB;
+    DayDataDBH dayDataDHB;
     FoodLogDBH foodLogDBH;
 
     //dayData
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).edit().putBoolean(IS_FIRST_LAUNCH_PREF, false).apply();
 
         //create databases for day data
-        dayDataDHB = new DayDataDHB(MainActivity.this);
+        dayDataDHB = new DayDataDBH(MainActivity.this);
         foodLogDBH = new FoodLogDBH(MainActivity.this);
 
         //references to caloric counters display, date display and water count
@@ -368,13 +367,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuItemSetup:
-                dayDataDHB.updateColumnWhereDateTo(COLUMN_WATER_INTAKE, dateDisplayed, waterCounter.getCount());
                 Intent intent = new Intent(MainActivity.this, SetupActivity.class);
                 intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
                 intent.putExtra(EXTRA_DISPLAYED_DAY, dayDisplayed);
                 intent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
                 intent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
                 startActivity(intent);
+            case R.id.menuItemStats:
+                Intent graphIntent = new Intent(MainActivity.this, GraphActivity.class);
+                graphIntent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
+                graphIntent.putExtra(EXTRA_DISPLAYED_DAY, dayDisplayed);
+                graphIntent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
+                graphIntent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
+                startActivity(graphIntent);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -8,9 +8,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -21,19 +19,17 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_CALORIC_GOAL;
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_CARBS_GOAL;
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_FAT_GOAL;
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_PROTEIN_GOAL;
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WATER_GOAL;
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WATER_INTAKE;
-import static com.example.mealtrackerapp.DayDataDHB.COLUMN_WEIGHT;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_CALORIC_GOAL;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_CARBS_GOAL;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_FAT_GOAL;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_PROTEIN_GOAL;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_WATER_GOAL;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_WATER_INTAKE;
+import static com.example.mealtrackerapp.DayDataDBH.COLUMN_WEIGHT;
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DATE;
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DAY;
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_MONTH;
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_YEAR;
-import static com.example.mealtrackerapp.MainActivity.FIRST_TIME_PREF;
-import static com.example.mealtrackerapp.MainActivity.IS_FIRST_LAUNCH_PREF;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String PREF_CALORIC_GOAL = "pref_caloricGoal";
@@ -59,7 +55,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
     private int mYear, mMonth, mDay, year, month, day;
 
-    DayDataDHB dayDataDHB;
+    DayDataDBH dayDataDHB;
 
     SharedPreferences setupPref;
     SharedPreferences.Editor prefEditor;
@@ -170,7 +166,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         super.onStart();
 
         //call daydata.db helper
-        dayDataDHB = new DayDataDHB(SetupActivity.this);
+        dayDataDHB = new DayDataDBH(SetupActivity.this);
 
         //get date displayed on main activity (date of today if first launch of the app) and display it
         Intent intent = getIntent();

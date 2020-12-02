@@ -84,14 +84,16 @@
         app:layout_constraintStart_toStartOf="@+id/guideline10"
         app:layout_constraintTop_toBottomOf="@+id/etxtFoodName" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/etxtFoodName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:completionThreshold="3"
         android:ems="10"
         android:gravity="center"
+        android:hint="Select food or input manually"
         android:inputType="textPersonName"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/etxtFoodCalories"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
@@ -232,4 +234,31 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="@+id/txtFoodEntry"
         app:srcCompat="@drawable/ic_baseline_delete_24" />
+
+    <EditText
+        android:id="@+id/editTextQuantity"
+        android:layout_width="56dp"
+        android:layout_height="37dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="grams"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/etxtFoodName"
+        app:layout_constraintTop_toBottomOf="@+id/etxtFoodName" />
+
+    <TextView
+        android:id="@+id/txtFoodExplanation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="(input grams only if using autocompletion)"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextQuantity"
+        app:layout_constraintEnd_toStartOf="@+id/etxtFoodName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

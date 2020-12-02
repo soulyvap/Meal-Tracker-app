@@ -32,8 +32,8 @@ public class FoodLogDBH extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createTableString = "CREATE TABLE " + FOODLOGS_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_DATE + " TEXT, " + COLUMN_FOOD + " TEXT, " + COLUMN_MEAL + " TEXT, " +
-                COLUMN_TIME + " TEXT, " + COLUMN_CALORIES + " INTEGER, " + COLUMN_CARBS + " INTEGER, " +
-                COLUMN_PROTEIN + " INTEGER, " + COLUMN_FAT + " INTEGER)";
+                COLUMN_TIME + " TEXT, " + COLUMN_CALORIES + " INTEGER, " + COLUMN_CARBS + " REAL, " +
+                COLUMN_PROTEIN + " REAL, " + COLUMN_FAT + " REAL)";
 
         db.execSQL(createTableString);
     }
@@ -64,7 +64,7 @@ public class FoodLogDBH extends SQLiteOpenHelper {
         }
     }
 
-    public void updateOne(FoodLog foodLog, String name, String meal, String time, int calories, int carbs, int protein, int fat) {
+    public void updateOne(FoodLog foodLog, String name, String meal, String time, int calories, double carbs, double protein, double fat) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -104,9 +104,9 @@ public class FoodLogDBH extends SQLiteOpenHelper {
                 String meal = cursor.getString(3);
                 String time = cursor.getString(4);
                 int calories = cursor.getInt(5);
-                int carbs = cursor.getInt(6);
-                int protein = cursor.getInt(7);
-                int fat = cursor.getInt(8);
+                double carbs = cursor.getInt(6);
+                double protein = cursor.getInt(7);
+                double fat = cursor.getInt(8);
 
                 FoodLog foodLog = new FoodLog(id, date, food, meal, time, calories, carbs, protein, fat);
                 foodLogList.add(foodLog);
