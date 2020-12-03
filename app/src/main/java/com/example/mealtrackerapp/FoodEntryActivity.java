@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -42,12 +43,16 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
     String mealSelected, time, date, hourString, minutesString;
     Button btnAdd;
     ImageButton btnDelete;
-    FoodLog selectedFoodlog;
+    ImageView btnAddLine;
+    FoodLog selectedFoodlog, clickedFoodLog;
     FoodLogDBH foodLogDBH;
     ArrayList<String> meals;
     FoodNutrientDB foodNutrientDB;
     FoodNutrients foodNutrientsSelected;
     AutoCompleteTextView foodEditTxt;
+    ArrayList<FoodLog> foodlogList;
+    ListView lvFoodlogEntry;
+    Boolean modifying = false, fromMain = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,13 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
         btnDelete = findViewById(R.id.btnDelete);
         btnClock = findViewById(R.id.btnClock);
         btnAdd = findViewById(R.id.btnAddFood);
+        btnAddLine = findViewById(R.id.btnAddNewLine);
+
+        //initialize foodlog array list
+        foodlogList = new ArrayList<FoodLog>();
+
+        //food log listView
+        lvFoodlogEntry = findViewById(R.id.lvEntryFoodlogs);
 
         //refer spinner spinner
         mealSpinner = findViewById(R.id.spinnerMeal);
@@ -143,8 +155,8 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
             }
         });
 
-        //when press add button, gather information and return to main activity with extras
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        //adding new foodlog line
+        btnAddLine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mealSelected.equals(MEAL_SPINNER_DEFAULT)) {
@@ -168,21 +180,100 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                     double protein = editTextToDouble(foodProteinEditTxt);
                     double fat = editTextToDouble(foodFatEditTxt);
 
-                    foodLogDBH = new FoodLogDBH(FoodEntryActivity.this);
-                    if (getIntent().hasExtra(EXTRA_FOOD_LOG)){
-                        foodLogDBH.updateOne(selectedFoodlog, foodName, mealSelected, time, calories, carbs, protein, fat);
+                    if (modifying) {
+                        clickedFoodLog.setDate(date);
+                        clickedFoodLog.setName(foodName);
+                        clickedFoodLog.setMeal(mealSelected);
+                        clickedFoodLog.setTime(time);
+                        clickedFoodLog.setCalories(calories);
+                        clickedFoodLog.setCarbs(carbs);
+                        clickedFoodLog.setProtein(protein);
+                        clickedFoodLog.setFat(fat);
+                        modifying = false;
                     } else {
-                        FoodLog foodLog = new FoodLog(-1, date, foodName, mealSelected, time, calories, carbs, protein, fat);
-                        foodLogDBH.addOne(foodLog);
+                        FoodLog newFoodlog = new FoodLog(-1, date, foodName, mealSelected, time, calories, carbs, protein, fat);
+                        foodlogList.add(newFoodlog);
+                        Toast.makeText(FoodEntryActivity.this, foodlogList.toString(), Toast.LENGTH_SHORT).show();
                     }
+                    ArrayAdapter foodLogAdapter = new CustomFoodAdapter(FoodEntryActivity.this, R.layout.list_item_with_delete, foodlogList);
+                    lvFoodlogEntry.setAdapter(foodLogAdapter);
 
-                    Intent intent = new Intent(FoodEntryActivity.this, MainActivity.class);
-                    intent.putExtra(EXTRA_DISPLAYED_DATE, date);
-                    intent.putExtra(EXTRA_DISPLAYED_DAY, day);
-                    intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
-                    intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
-                    startActivity(intent);
+                    foodEditTxt.setText("");
+                    foodQtyEditTxt.setText("");
+                    foodCaloriesEditTxt.setText("");
+                    foodCarbsEditTxt.setText("");
+                    foodProteinEditTxt.setText("");
+                    foodFatEditTxt.setText("");
                 }
+            }
+        });
+
+        lvFoodlogEntry.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                modifying = true;
+                clickedFoodLog = (FoodLog) parent.getItemAtPosition(position);
+                foodEditTxt.setText(clickedFoodLog.getName());
+                foodCaloriesEditTxt.setText(String.valueOf(clickedFoodLog.getCalories()));
+                foodCarbsEditTxt.setText(String.valueOf(clickedFoodLog.getCarbs()));
+                foodProteinEditTxt.setText(String.valueOf(clickedFoodLog.getProtein()));
+                foodFatEditTxt.setText(String.valueOf(clickedFoodLog.getFat()));
+            }
+        });
+
+        //when press add button, gather information and return to main activity with extras
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                foodLogDBH = new FoodLogDBH(FoodEntryActivity.this);
+
+
+                if (fromMain) {
+                    if (mealSelected.equals(MEAL_SPINNER_DEFAULT)) {
+                        Toast.makeText(FoodEntryActivity.this, "Please select meal", Toast.LENGTH_SHORT).show();
+                        mealSpinner.requestFocus();
+                        return;
+                    } if (actvIsEmpty(foodEditTxt)) {
+                        foodEditTxt.setError("Please enter food name");
+                    } if (editTextIsEmpty(foodCaloriesEditTxt)) {
+                        foodCaloriesEditTxt.setError("Please enter calorie amount");
+                    } if (editTextIsEmpty(foodCarbsEditTxt)) {
+                        foodCarbsEditTxt.setError("Please enter carbohydrate/protein/fat amount");
+                    } if (editTextIsEmpty(foodProteinEditTxt)) {
+                        foodProteinEditTxt.setError("Please enter carbohydrate/protein/fat amount");
+                    } if (editTextIsEmpty(foodFatEditTxt)) {
+                        foodFatEditTxt.setError("Please enter carbohydrate/protein/fat amount");
+                    } else {
+                        String foodName = foodEditTxt.getText().toString();
+                        int calories = editTextToInt(foodCaloriesEditTxt);
+                        double carbs = editTextToDouble(foodCarbsEditTxt);
+                        double protein = editTextToDouble(foodProteinEditTxt);
+                        double fat = editTextToDouble(foodFatEditTxt);
+                        foodLogDBH.updateOne(selectedFoodlog, foodName, mealSelected, time, calories, carbs, protein, fat);
+                        fromMain = false;
+                        Intent intent = new Intent(FoodEntryActivity.this, MainActivity.class);
+                        intent.putExtra(EXTRA_DISPLAYED_DATE, date);
+                        intent.putExtra(EXTRA_DISPLAYED_DAY, day);
+                        intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
+                        intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
+                        startActivity(intent);
+                    }
+                } else {
+                    if (foodlogList.size() == 0) {
+                        Toast.makeText(FoodEntryActivity.this, "Please enter at least one food", Toast.LENGTH_SHORT).show();
+                    } else {
+                        foodLogDBH.addArray(foodlogList);
+                        Intent intent = new Intent(FoodEntryActivity.this, MainActivity.class);
+                        intent.putExtra(EXTRA_DISPLAYED_DATE, date);
+                        intent.putExtra(EXTRA_DISPLAYED_DAY, day);
+                        intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
+                        intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
+                        startActivity(intent);
+                    }
+                }
+
+
 
             }
         });
@@ -226,6 +317,8 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
 
         //show delete button if existing entry selected
         if (intent.hasExtra(EXTRA_FOOD_LOG)) {
+
+            fromMain = true;
             selectedFoodlog = (FoodLog) intent.getSerializableExtra(EXTRA_FOOD_LOG);
             btnDelete.setVisibility(ImageButton.VISIBLE);
             btnAdd.setText("Save");
@@ -238,6 +331,9 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
             foodCarbsEditTxt.setText(String.valueOf(selectedFoodlog.getCarbs()));
             foodProteinEditTxt.setText((String.valueOf(selectedFoodlog.getProtein())));
             foodFatEditTxt.setText(String.valueOf(selectedFoodlog.getFat()));
+            btnAddLine.setVisibility(View.GONE);
+            lvFoodlogEntry.setVisibility(View.GONE);
+            foodNutrientsSelected = foodNutrientDB.getFoodNutrientsByName(selectedFoodlog.getName());
         }
 
         //get date

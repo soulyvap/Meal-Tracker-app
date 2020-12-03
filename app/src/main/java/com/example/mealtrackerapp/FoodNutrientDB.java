@@ -50,4 +50,29 @@ public class FoodNutrientDB extends SQLiteAssetHelper {
 
         return foodNutrientsList;
     }
+
+    public FoodNutrients getFoodNutrientsByName(String name) {
+        FoodNutrients foodNutrients;
+
+        String query = "SELECT * FROM " + "foodnutrients WHERE FOODNAME LIKE \'" + name + "\'";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(0);
+            String foodname = cursor.getString(1);
+            int calories = cursor.getInt(2);
+            double carbs = cursor.getDouble(3);
+            double protein = cursor.getDouble(4);
+            double fat = cursor.getDouble(5);
+
+            foodNutrients = new FoodNutrients(id, foodname, calories, carbs, protein, fat);
+        } else {
+            foodNutrients = new FoodNutrients();
+        }
+
+        return foodNutrients;
+    }
 }

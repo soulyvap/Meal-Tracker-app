@@ -78,7 +78,7 @@ public class FoodLog implements Serializable {
         return carbs;
     }
 
-    public void setCarbs(int carbs) {
+    public void setCarbs(double carbs) {
         this.carbs = carbs;
     }
 
@@ -86,7 +86,7 @@ public class FoodLog implements Serializable {
         return protein;
     }
 
-    public void setProtein(int protein) {
+    public void setProtein(double protein) {
         this.protein = protein;
     }
 
@@ -94,8 +94,12 @@ public class FoodLog implements Serializable {
         return fat;
     }
 
-    public void setFat(int fat) {
+    public void setFat(double fat) {
         this.fat = fat;
+    }
+
+    public String getStringGrams() {
+        return name + " : " + calories + " kcal (" + Math.round(carbs) + "g/" + Math.round(protein) + "g/" + Math.round(fat) + "g)";
     }
 
     @Override

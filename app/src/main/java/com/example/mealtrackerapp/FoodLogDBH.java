@@ -85,6 +85,23 @@ public class FoodLogDBH extends SQLiteOpenHelper {
         db.delete(FOODLOGS_TABLE, COLUMN_ID + " = " + foodlog.getId(), null);
     }
 
+    public void addArray(ArrayList<FoodLog> foodlogList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        for (FoodLog foodLog: foodlogList) {
+            cv.put(COLUMN_DATE, foodLog.getDate());
+            cv.put(COLUMN_FOOD, foodLog.getName());
+            cv.put(COLUMN_MEAL, foodLog.getMeal());
+            cv.put(COLUMN_TIME, foodLog.getTime());
+            cv.put(COLUMN_CALORIES, foodLog.getCalories());
+            cv.put(COLUMN_CARBS, foodLog.getCarbs());
+            cv.put(COLUMN_PROTEIN, foodLog.getProtein());
+            cv.put(COLUMN_FAT, foodLog.getFat());
+            db.insert(FOODLOGS_TABLE, null, cv);
+        }
+    }
+
     public List<FoodLog> getFoodLog(String dateDisplayed) {
         List<FoodLog> foodLogList = new ArrayList<>();
 

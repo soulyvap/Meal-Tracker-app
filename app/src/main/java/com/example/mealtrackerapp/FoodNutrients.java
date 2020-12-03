@@ -17,6 +17,9 @@ public class FoodNutrients {
         this.fat = fat;
     }
 
+    public FoodNutrients() {
+    }
+
     public int getId() {
         return id;
     }
