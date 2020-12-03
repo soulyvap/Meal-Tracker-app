@@ -2,6 +2,7 @@ package com.example.mealtrackerapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
@@ -9,6 +10,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +22,7 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -39,6 +42,7 @@ import static com.example.mealtrackerapp.FoodLogDBH.COLUMN_PROTEIN;
 import static com.example.mealtrackerapp.SetupActivity.PREF_CALORIC_GOAL;
 import static com.example.mealtrackerapp.SetupActivity.PREF_CARBS;
 import static com.example.mealtrackerapp.SetupActivity.PREF_FAT;
+import static com.example.mealtrackerapp.SetupActivity.PREF_FIRSTNAME;
 import static com.example.mealtrackerapp.SetupActivity.PREF_PROTEIN;
 import static com.example.mealtrackerapp.SetupActivity.PREF_WATER_GOAL;
 import static com.example.mealtrackerapp.SetupActivity.PREF_WEIGHT;
@@ -54,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String EXTRA_DISPLAYED_YEAR = "extra_displayed_year";
     //references to views on the layout
     TextView caloricGoalDisplay, eatenDisplay, caloriesLeftDisplay, breakfastDisplay, lunchDisplay,
-            dinnerDisplay, extrasDisplay, waterDisplay, waterMinus, waterPlus, dateNowDisplay;
+            dinnerDisplay, extrasDisplay, waterDisplay, waterMinus, waterPlus, dateNowDisplay,
+            txtCaloriesLeft, txtCarbs, txtProtein, txtFat, txtEatenDisplay;
     ProgressBar circularPB, carbsPB, proteinPB, fatPB;
     FloatingActionButton fabAdd, fabDatePicker;
     int weightInt, caloricGoalInt, caloriesLeftInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, carbShare,
@@ -84,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_main);
 
         //first launch
@@ -108,6 +114,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         extrasDisplay = findViewById(R.id.txtExtrasValue);
         dateNowDisplay = findViewById(R.id.txtDateNow);
         waterDisplay = findViewById(R.id.txtWaterCountValue);
+        txtCaloriesLeft = findViewById(R.id.txtCaloriesLeft);
+        txtCarbs = findViewById(R.id.txtCarbs);
+        txtProtein = findViewById(R.id.txtProteins);
+        txtFat = findViewById(R.id.txtFat);
+        txtEatenDisplay = findViewById(R.id.txtCaloriesEaten);
 
         //reference to list view
         lvFoodLogs = findViewById(R.id.lvFoodLogs);
@@ -280,9 +291,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         caloricGoalInt = dayDataDHB.getIntByDate(COLUMN_CALORIC_GOAL, date);
         caloriesLeftInt = caloricGoalInt - caloricIntake;
         //set caloric values to TextViews
-        eatenDisplay.setText(String.valueOf(caloricIntake));
+        if (caloricIntake <= caloricGoalInt) {
+            txtCaloriesLeft.setText("Left");
+            caloriesLeftDisplay.setText(String.valueOf(caloriesLeftInt));
+            eatenDisplay.setTextColor(getResources().getColor(android.R.color.tab_indicator_text));
+            txtEatenDisplay.setTextColor(getResources().getColor(android.R.color.tab_indicator_text));
+        } else {
+            txtCaloriesLeft.setText("Over");
+            caloriesLeftDisplay.setText(String.valueOf(Math.abs(caloriesLeftInt)));
+            eatenDisplay.setTextColor(getResources().getColor(R.color.orange_pastel));
+            txtEatenDisplay.setTextColor(getResources().getColor(R.color.orange_pastel));
+
+        }
         caloricGoalDisplay.setText(String.valueOf(caloricGoalInt));
-        caloriesLeftDisplay.setText(String.valueOf(caloriesLeftInt));
+        eatenDisplay.setText(String.valueOf(caloricIntake));
         //set circular caloric progress bar progress and max values
         circularPB.setMax(caloricGoalInt);
         circularPB.setProgress(caloricIntake);
@@ -301,6 +323,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         carbsIntake = foodLogDBH.getSumByDate(COLUMN_CARBS, date) * 4;
         proteinIntake = foodLogDBH.getSumByDate(COLUMN_PROTEIN, date) * 4;
         fatIntake = foodLogDBH.getSumByDate(COLUMN_FAT, date) * 8;
+        //change text color if daily limit reached
+        if (carbsIntake > carbShare) {
+            txtCarbs.setTextColor(getResources().getColor(R.color.orange_pastel));
+        } else {
+            txtCarbs.setTextColor(getResources().getColor(android.R.color.tab_indicator_text));
+        }
+        if (proteinIntake > proteinShare) {
+            txtProtein.setTextColor(getResources().getColor(R.color.orange_pastel));
+        } else {
+            txtProtein.setTextColor(getResources().getColor(android.R.color.tab_indicator_text));
+        }
+        if (fatIntake > fatShare) {
+            txtFat.setTextColor(getResources().getColor(R.color.orange_pastel));
+        } else {
+            txtFat.setTextColor(getResources().getColor(android.R.color.tab_indicator_text));
+        }
         //set macro progress bars
         carbsPB.setMax(carbShare);
         proteinPB.setMax(proteinShare);
@@ -314,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //get FoodLog list from foodlog.db
         List<FoodLog> foodLogs = foodLogDBH.getFoodLog(date);
         //create adapter for FoodLog list
-        ArrayAdapter<FoodLog> foodLogArrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, foodLogs);
+        ArrayAdapter<FoodLog> foodLogArrayAdapter = new ArrayAdapter<>(MainActivity.this, R.layout.list_item_small, foodLogs);
         //attach list to adapter
         lvFoodLogs.setAdapter(foodLogArrayAdapter);
     }
@@ -365,21 +403,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menuItemSetup:
-                Intent intent = new Intent(MainActivity.this, SetupActivity.class);
-                intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
-                intent.putExtra(EXTRA_DISPLAYED_DAY, dayDisplayed);
-                intent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
-                intent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
-                startActivity(intent);
-            case R.id.menuItemStats:
-                Intent graphIntent = new Intent(MainActivity.this, GraphActivity.class);
-                graphIntent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
-                graphIntent.putExtra(EXTRA_DISPLAYED_DAY, dayDisplayed);
-                graphIntent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
-                graphIntent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
-                startActivity(graphIntent);
+        int itemSelected = item.getItemId();
+        if (itemSelected == R.id.menuItemSetup) {
+            Intent intent = new Intent(MainActivity.this, SetupActivity.class);
+            intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
+            intent.putExtra(EXTRA_DISPLAYED_DAY, dayDisplayed);
+            intent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
+            intent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
+            startActivity(intent);
+        } if (itemSelected == R.id.menuItemStats){
+            Intent graphIntent = new Intent(MainActivity.this, GraphActivity.class);
+            graphIntent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
+            graphIntent.putExtra(EXTRA_DISPLAYED_DAY, dayDisplayed);
+            graphIntent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
+            graphIntent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
+            startActivity(graphIntent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -413,5 +451,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 showDateDialog();
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

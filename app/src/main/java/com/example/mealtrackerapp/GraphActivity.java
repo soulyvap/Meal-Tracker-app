@@ -96,6 +96,7 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
         barChart.getLegend().setEnabled(false);
         barChart.getDescription().setEnabled(false);
         barChart.invalidate();
+        barDataSet.setColor(Color.rgb(249, 155, 130));
         barDataSet.setValueTextColor(Color.BLACK);
         barDataSet.setValueTextSize(10f);
 

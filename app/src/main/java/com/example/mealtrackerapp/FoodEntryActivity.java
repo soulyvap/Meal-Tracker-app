@@ -150,6 +150,7 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                 if (mealSelected.equals(MEAL_SPINNER_DEFAULT)) {
                     Toast.makeText(FoodEntryActivity.this, "Please select meal", Toast.LENGTH_SHORT).show();
                     mealSpinner.requestFocus();
+                    return;
                 } if (actvIsEmpty(foodEditTxt)) {
                     foodEditTxt.setError("Please enter food name");
                 } if (editTextIsEmpty(foodCaloriesEditTxt)) {

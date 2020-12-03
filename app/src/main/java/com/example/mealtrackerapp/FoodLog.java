@@ -100,6 +100,6 @@ public class FoodLog implements Serializable {
 
     @Override
     public String toString() {
-        return time + " | " + meal + " | " + name + " : " + calories + " kcal (" + (carbs*4) + "/" + (protein*4) + "/" + (fat*8) + ")";
+        return time + " | " + meal + " | " + name + " : " + calories + " kcal (" + Math.round(carbs*4) + "/" + Math.round(protein*4) + "/" + Math.round(fat*8) + ")";
     }
 }

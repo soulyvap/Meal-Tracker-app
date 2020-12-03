@@ -96,7 +96,8 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:progress="0" />
+            android:progress="0"
+            android:progressTint="@color/orange_pastel"/>
 
         <ProgressBar
             android:id="@+id/proteinPB"
@@ -105,14 +106,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:progress="0" />
+            android:progress="0"
+            android:progressTint="@color/orange_pastel"/>
 
         <ProgressBar
             android:id="@+id/fatPB"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:progress="0" />
+            android:progress="0"
+            android:progressTint="@color/orange_pastel"/>
 
     </LinearLayout>
 
@@ -145,28 +148,6 @@
         app:layout_constraintEnd_toStartOf="@+id/circularProgressionBar"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/txtDinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/txt_dinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
-        app:layout_constraintTop_toBottomOf="@+id/txtLunchValue" />
-
-    <TextView
-        android:id="@+id/txtExtras"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/txt_extras"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@id/circularProgressionBar"
-        app:layout_constraintTop_toBottomOf="@+id/txtDinnerValue" />
 
     <ImageView
         android:id="@+id/progressionbarBackground"
@@ -210,26 +191,76 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/txtLunch"
+        android:id="@+id/txtBreakfast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/txt_lunch"
+        android:text="@string/txt_breakfast"
+        app:layout_constraintBottom_toTopOf="@+id/txtLunch"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
-        app:layout_constraintTop_toBottomOf="@+id/txtBreakfastValue" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/progressionbarBackground"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtBreakfastValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
+        app:layout_constraintEnd_toEndOf="@+id/txtBreakfast"
+        app:layout_constraintStart_toStartOf="@+id/txtBreakfast"
         app:layout_constraintTop_toBottomOf="@+id/txtBreakfast" />
+
+    <TextView
+        android:id="@+id/txtLunch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_lunch"
+        app:layout_constraintBottom_toTopOf="@+id/txtDinner"
+        app:layout_constraintEnd_toEndOf="@+id/txtBreakfast"
+        app:layout_constraintStart_toStartOf="@+id/txtBreakfast"
+        app:layout_constraintTop_toBottomOf="@+id/txtBreakfast" />
+
+    <TextView
+        android:id="@+id/txtLunchValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintEnd_toEndOf="@+id/txtLunch"
+        app:layout_constraintStart_toStartOf="@+id/txtLunch"
+        app:layout_constraintTop_toBottomOf="@+id/txtLunch" />
+
+    <TextView
+        android:id="@+id/txtDinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_dinner"
+        app:layout_constraintBottom_toTopOf="@+id/txtExtras"
+        app:layout_constraintEnd_toEndOf="@+id/txtLunch"
+        app:layout_constraintStart_toStartOf="@+id/txtLunch"
+        app:layout_constraintTop_toBottomOf="@+id/txtLunch" />
+
+    <TextView
+        android:id="@+id/txtDinnerValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintEnd_toEndOf="@+id/txtDinner"
+        app:layout_constraintStart_toStartOf="@+id/txtDinner"
+        app:layout_constraintTop_toBottomOf="@+id/txtDinner" />
+
+    <TextView
+        android:id="@+id/txtExtras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/txt_extras"
+        app:layout_constraintBottom_toTopOf="@id/toolbar"
+        app:layout_constraintEnd_toEndOf="@+id/txtDinner"
+        app:layout_constraintStart_toStartOf="@+id/txtDinner"
+        app:layout_constraintTop_toBottomOf="@+id/txtDinner" />
 
     <TextView
         android:id="@+id/txtExtrasValue"
@@ -237,42 +268,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@id/circularProgressionBar"
+        app:layout_constraintEnd_toEndOf="@+id/txtExtras"
+        app:layout_constraintStart_toStartOf="@+id/txtExtras"
         app:layout_constraintTop_toBottomOf="@+id/txtExtras" />
-
-    <TextView
-        android:id="@+id/txtLunchValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
-        app:layout_constraintTop_toBottomOf="@+id/txtLunch" />
-
-    <TextView
-        android:id="@+id/txtBreakfast"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/txt_breakfast"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
-        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
-        app:layout_constraintTop_toTopOf="@+id/txtCaloricGoal" />
-
-    <TextView
-        android:id="@+id/txtDinnerValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.511"
-        app:layout_constraintStart_toEndOf="@+id/circularProgressionBar"
-        app:layout_constraintTop_toBottomOf="@+id/txtDinner" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
@@ -300,25 +298,29 @@
         android:id="@+id/fabBtnAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/ic_baseline_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@android:color/white" />
+        app:tint="@android:color/white"
+        android:backgroundTint="@color/orange_pastel"
+        app:borderWidth="0dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabBtnDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/ic_baseline_calendar_today_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:tint="@android:color/white" />
+        app:tint="@android:color/white"
+        android:backgroundTint="@color/orange_pastel"
+        app:borderWidth="0dp"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
@@ -356,34 +358,38 @@
 
     <TextView
         android:id="@+id/txtWaterPlus"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:gravity="center"
         android:text="+"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtWaterCountValue"
+        app:layout_constraintEnd_toStartOf="@+id/progressionbarBackground"
         app:layout_constraintStart_toEndOf="@+id/txtWaterCountValue" />
 
     <TextView
         android:id="@+id/txtWaterMinus"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
         android:text="-"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtWaterCountValue"
-        app:layout_constraintEnd_toStartOf="@+id/txtWaterCountValue" />
+        app:layout_constraintEnd_toStartOf="@+id/txtWaterCountValue"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ListView
         android:id="@+id/lvFoodLogs"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/fabBtnDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -425,37 +431,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintStart_toStartOf="@+id/toolbar"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
-
-    <Button
-        android:id="@+id/btnWeight"
-        style="@android:style/Widget.Holo.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="20sp"
-        android:padding="2sp"
-        android:text="Weight"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/txtExtras"
-        app:layout_constraintStart_toStartOf="@+id/txtExtras"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
-
-    <TextView
-        android:id="@+id/txtWeightValue"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:ems="10"
-        android:gravity="center"
-        android:inputType="numberDecimal"
-        android:text="00"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="@+id/txtExtras"
-        app:layout_constraintStart_toStartOf="@+id/txtExtras"
-        app:layout_constraintTop_toBottomOf="@+id/btnWeight" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupWeight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="btnWeight,txtWeightValue" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
