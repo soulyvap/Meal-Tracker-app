@@ -112,6 +112,7 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                 foodCarbsEditTxt.setText(String.valueOf(foodNutrientsSelected.getCarbs()));
                 foodProteinEditTxt.setText(String.valueOf(foodNutrientsSelected.getProtein()));
                 foodFatEditTxt.setText(String.valueOf(foodNutrientsSelected.getFat()));
+                foodQtyEditTxt.setText("");
             }
         });
 

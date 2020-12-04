@@ -35,12 +35,14 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
     public static final String CHOICE_FAT = "fat";
     public static final String CHOICE_WATER = "water";
     public static final String CHOICE_WEIGHT = "weight";
+    public static final String CHOICE_WEEKLY = "weekly";
+    public static final String CHOICE_MONTHLY = "monthly";
     Calendar calendar;
     FoodLogDBH foodLogDBH = new FoodLogDBH(GraphActivity.this);
     DayDataDBH dayDataDBH = new DayDataDBH(GraphActivity.this);
-    Spinner dataChoiceSpinner;
-    ArrayList<String> dataChoiceArray;
-    String dataSelected, database;
+    Spinner timeChoiceSpinner, dataChoiceSpinner;
+    ArrayList<String> timeChoiceArray, dataChoiceArray;
+    String timeSelected, dataSelected, database;
 
 // reference for MPAndroidChart: https://github.com/PhilJay/MPAndroidChart
     BarChart barChart;
@@ -52,15 +54,24 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
+
+        //refer bar chart
         barChart = (BarChart) findViewById(R.id.barChart);
 
-        //refer spinner spinner
+        //refer spinners
+        timeChoiceSpinner = findViewById(R.id.spinnerTimeChoice);
         dataChoiceSpinner = findViewById(R.id.spinnerDataChoice);
 
-        //set click listener
+        //set click listeners for spinners
+        timeChoiceSpinner.setOnItemSelectedListener(this);
         dataChoiceSpinner.setOnItemSelectedListener(this);
 
-        //creating arrayList with meal choice
+        //creating ArrayList with time period choices
+        timeChoiceArray = new ArrayList<>();
+        timeChoiceArray.add(CHOICE_WEEKLY);
+        timeChoiceArray.add(CHOICE_MONTHLY);
+
+        //creating ArrayList with meal choices
         dataChoiceArray = new ArrayList<>();
         dataChoiceArray.add(CHOICE_CALORIES);
         dataChoiceArray.add(CHOICE_CARBS);
@@ -69,11 +80,18 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
         dataChoiceArray.add(CHOICE_WATER);
         dataChoiceArray.add(CHOICE_WEIGHT);
 
+        //setting up ArrayAdapter for time choice spinner
+        ArrayAdapter<String> timeSpinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_center, timeChoiceArray);
+        timeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dataChoiceSpinner.setAdapter(timeSpinnerAdapter);
+
         //setting up arrayAdapter for spinner with elements of the arrayList and attaching adapter to spinner object
         ArrayAdapter<String> mealSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item_center, dataChoiceArray);
         mealSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dataChoiceSpinner.setAdapter(mealSpinnerAdapter);
 
+        //recording spinner default values
+        timeSelected = CHOICE_WEEKLY;
         dataSelected = CHOICE_CALORIES;
         database = "foodlogDBH";
 
