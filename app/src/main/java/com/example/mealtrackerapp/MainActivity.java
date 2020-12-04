@@ -420,6 +420,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             graphIntent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
             graphIntent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
             startActivity(graphIntent);
+        } if (itemSelected == R.id.menuItemAbout) {
+            Intent graphIntent = new Intent(MainActivity.this, AboutActivity.class);
+            graphIntent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
+            graphIntent.putExtra(EXTRA_DISPLAYED_DAY, dayDisplayed);
+            graphIntent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
+            graphIntent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
+            startActivity(graphIntent);
         }
         return super.onOptionsItemSelected(item);
     }
