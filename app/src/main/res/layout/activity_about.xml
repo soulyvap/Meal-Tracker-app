@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/imageViewid"
-        android:layout_width="167dp"
-        android:layout_height="189dp"
+        android:layout_width="127dp"
+        android:layout_height="155dp"
         android:layout_marginStart="229dp"
         android:layout_marginLeft="229dp"
         android:layout_marginTop="16dp"
@@ -22,4 +22,109 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/carrot_cropped" />
+
+    <TextView
+        android:id="@+id/textView5specifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="148dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginRight="44dp"
+        android:layout_marginBottom="14dp"
+        android:text="Specifications"
+        android:textColor="@color/blue_accent1"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView6useful"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewid"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView6useful"
+        android:layout_width="391dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="364dp"
+        android:text="Useful for measuring calories, weight and water consumption on daily, monthly and as well as yearly basis."
+        android:textSize="15sp"
+        android:textColor="@color/blue_accent1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewid" />
+
+    <TextView
+        android:id="@+id/textView8AboutApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="42dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginRight="19dp"
+        android:layout_marginBottom="50dp"
+        android:text="About App"
+        android:textSize="40sp"
+        android:textColor="@color/blue_accent1"
+        app:layout_constraintBottom_toTopOf="@+id/textView5specifications"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewid"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView9references"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="57dp"
+        android:layout_marginEnd="236dp"
+        android:layout_marginRight="236dp"
+        android:layout_marginBottom="267dp"
+        android:text="References"
+        android:textColor="@color/blue_accent1"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6useful" />
+
+    <TextView
+        android:id="@+id/textView10androidchart"
+        android:layout_width="407dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginBottom="13dp"
+        android:text="https://github.com/PhilJay/MPAndroidChart"
+        android:textColor="@color/blue_accent1"
+        app:layout_constraintBottom_toTopOf="@+id/textView11sqlite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9references" />
+
+    <TextView
+        android:id="@+id/textView11sqlite"
+        android:layout_width="401dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="184dp"
+        android:text="https://github.com/jgilfelt/android-sqlite-asset-helper"
+        android:textColor="@color/blue_accent1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
