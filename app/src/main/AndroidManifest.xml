@@ -9,6 +9,8 @@
         android:roundIcon="@mipmap/ic_carrot_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light">
+        <activity android:name=".AboutActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".GraphActivity"
             android:parentActivityName=".MainActivity" />
