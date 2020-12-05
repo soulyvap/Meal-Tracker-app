@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -16,6 +17,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.ArrayList;
@@ -38,28 +40,30 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
     public static final String CHOICE_WEIGHT = "weight";
     public static final String CHOICE_WEEKLY = "weekly";
     public static final String CHOICE_MONTHLY = "monthly";
-    Calendar calendar;
     FoodLogDBH foodLogDBH = new FoodLogDBH(GraphActivity.this);
     DayDataDBH dayDataDBH = new DayDataDBH(GraphActivity.this);
     Spinner timeChoiceSpinner, dataChoiceSpinner;
     ArrayList<String> timeChoiceArray, dataChoiceArray, xLabels;
     int numberOfDays;
-    String dataSelected;
+    String columnNeeded, txt, itemSelected, dataSelected;
+    TextView txtDescription;
 
 // reference for MPAndroidChart: https://github.com/PhilJay/MPAndroidChart
     BarChart barChart;
     BarData barData;
     BarDataSet barDataSet;
     ArrayList<BarEntry> barEntries;
-    ValueFormatter formatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
 
+        //refer TextView
+        txtDescription = findViewById(R.id.txtGraphDescription);
+
         //refer bar chart
-        barChart = (BarChart) findViewById(R.id.barChart);
+        barChart = findViewById(R.id.barChart);
 
         //refer spinners
         timeChoiceSpinner = findViewById(R.id.spinnerTimeChoice);
@@ -92,47 +96,25 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
         ArrayAdapter<String> mealSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item_center, dataChoiceArray);
         mealSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dataChoiceSpinner.setAdapter(mealSpinnerAdapter);
+
+        findViewById(R.id.btnShow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getBarEntries(columnNeeded, numberOfDays);
+                updateGraphDisplay(numberOfDays);
+                updateDescription();
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        numberOfDays = 30;
+        columnNeeded = COLUMN_CALORIES;
+        numberOfDays = 7;
         dataSelected = CHOICE_CALORIES;
-        barEntries = getBarEntries(COLUMN_CALORIES, numberOfDays);
-        updateGraphDisplay();
-    }
-
-    private void updateGraphDisplay() {
-        barDataSet = new BarDataSet(barEntries, "");
-        barData = new BarData(barDataSet);
-        barChart.setData(barData);
-        //creation of x labels
-        xLabels = new ArrayList<>();
-
-        switch (numberOfDays){
-            case 7:
-                for (int i = -numberOfDays + 1; i <= 0; i++) {
-                    xLabels.add(getFirstLetter(getDayOfWeek(i)));
-                }
-                break;
-            case 30:
-                for (int i = -numberOfDays + 1; i <= 0; i++) {
-                    xLabels.add(getFirstLetter(getDayOfWeek(i)));
-
-                }
-        }
-        Log.d("graph", xLabels.toString());
-        formatter = new ValueFormatter() {
-            @Override
-            public String getAxisLabel(float value, AxisBase axis) {
-                return xLabels.get((int)value);
-            }
-        };
-
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setValueFormatter(formatter);
+        getBarEntries(columnNeeded, numberOfDays);
+        updateGraphDisplay(numberOfDays);
 
         //bar chart customization
         barChart.setFitBars(true);
@@ -145,7 +127,53 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
         barChart.invalidate();
         barDataSet.setColor(Color.rgb(249, 155, 130));
         barDataSet.setValueTextColor(Color.BLACK);
-        barDataSet.setValueTextSize(10f);
+        barDataSet.setValueTextSize(1f);
+
+        updateDescription();
+    }
+
+    private void updateDescription() {
+        switch (columnNeeded) {
+            case COLUMN_CALORIES:
+            case COLUMN_CARBS:
+            case COLUMN_PROTEIN:
+            case COLUMN_FAT:
+                txt = "Daily " + dataSelected + " in kcal for the last " + numberOfDays + " days";
+                txtDescription.setText(txt);
+                break;
+            case COLUMN_WATER_INTAKE:
+                txt = "Daily " + dataSelected + " glasses for the last " + numberOfDays + " days";
+                txtDescription.setText(txt);
+            case COLUMN_WEIGHT:
+                txt = "Daily " + dataSelected + " in kg for the last " + numberOfDays + " days";
+                txtDescription.setText(txt);
+        }
+    }
+
+    private void updateGraphDisplay(int numberOfDays) {
+        barDataSet = new BarDataSet(barEntries, "");
+        barData = new BarData(barDataSet);
+        barChart.setData(barData);
+        //creation of x labels
+        xLabels = new ArrayList<>();
+
+        if (numberOfDays == 7) {
+            xLabels.clear();
+            for (int i = -numberOfDays + 1; i <= 0; i++) {
+                xLabels.add(getFirstLetter(getDayOfWeek(i)));
+                barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xLabels));
+            }
+        } else {
+            xLabels.clear();
+            for (int i = -numberOfDays + 1; i <= 0; i++) {
+                xLabels.add(getDayOfMonth(i));
+                barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xLabels));
+            }
+            Log.d("graph", xLabels.toString());
+            barChart.getXAxis().setTextSize(1f);
+            barChart.getXAxis().setLabelCount(xLabels.size());
+        }
+        barChart.invalidate();
     }
 
     private ArrayList<BarEntry> getBarEntries(String column, int numberOfDays) {
@@ -204,7 +232,7 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
     public String getDayOfMonth(int daySwitch) {
         final Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, daySwitch);
-        return cal.getDisplayName(Calendar.DAY_OF_MONTH, Calendar.LONG, Locale.getDefault());
+        return String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
     }
 
     public String getFirstLetter(String word){
@@ -213,40 +241,29 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        String itemSelected = (String) parent.getItemAtPosition(position);
+        itemSelected = (String) parent.getItemAtPosition(position);
 
         switch (parent.getId()) {
             case R.id.spinnerDataChoice:
+                dataSelected = itemSelected;
                 switch (itemSelected) {
                     case CHOICE_CALORIES:
-                        dataSelected = CHOICE_CALORIES;
-                        barEntries = getBarEntries(COLUMN_CALORIES, numberOfDays);
-                        updateGraphDisplay();
+                        columnNeeded = COLUMN_CALORIES;
                         break;
                     case CHOICE_CARBS:
-                        dataSelected = CHOICE_CARBS;
-                        barEntries = getBarEntries(COLUMN_CARBS, numberOfDays);
-                        updateGraphDisplay();
+                        columnNeeded = COLUMN_CARBS;
                         break;
                     case CHOICE_PROTEIN:
-                        dataSelected = CHOICE_PROTEIN;
-                        barEntries = getBarEntries(COLUMN_PROTEIN, numberOfDays);
-                        updateGraphDisplay();
+                        columnNeeded = COLUMN_PROTEIN;
                         break;
                     case CHOICE_FAT:
-                        dataSelected = CHOICE_FAT;
-                        barEntries = getBarEntries(COLUMN_FAT, numberOfDays);
-                        updateGraphDisplay();
+                        columnNeeded = COLUMN_FAT;
                         break;
                     case CHOICE_WATER:
-                        dataSelected = CHOICE_WATER;
-                        barEntries = getBarEntries(COLUMN_WATER_INTAKE, numberOfDays);
-                        updateGraphDisplay();
+                        columnNeeded = COLUMN_WATER_INTAKE;
                         break;
                     case CHOICE_WEIGHT:
-                        dataSelected = CHOICE_WEIGHT;
-                        barEntries = getBarEntries(COLUMN_WEIGHT, numberOfDays);
-                        updateGraphDisplay();
+                        columnNeeded = COLUMN_WEIGHT;
                         break;
                 }
                 break;
@@ -254,11 +271,9 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
                 switch (itemSelected) {
                     case CHOICE_WEEKLY:
                         numberOfDays = 7;
-                        switchData(dataSelected);
                         break;
                     case CHOICE_MONTHLY:
                         numberOfDays = 30;
-                        switchData(dataSelected);
                         break;
                 }
                 break;
@@ -270,33 +285,6 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
 
     }
 
-    private void switchData(String itemSelected) {
-        switch (itemSelected) {
-            case CHOICE_CALORIES:
-                barEntries = getBarEntries(COLUMN_CALORIES, numberOfDays);
-                updateGraphDisplay();
-                break;
-            case CHOICE_CARBS:
-                barEntries = getBarEntries(COLUMN_CARBS, numberOfDays);
-                updateGraphDisplay();
-                break;
-            case CHOICE_PROTEIN:
-                barEntries = getBarEntries(COLUMN_PROTEIN, numberOfDays);
-                updateGraphDisplay();
-                break;
-            case CHOICE_FAT:
-                barEntries = getBarEntries(COLUMN_FAT, numberOfDays);
-                updateGraphDisplay();
-                break;
-            case CHOICE_WATER:
-                barEntries = getBarEntries(COLUMN_WATER_INTAKE, numberOfDays);
-                updateGraphDisplay();
-                break;
-            case CHOICE_WEIGHT:
-                barEntries = getBarEntries(COLUMN_WEIGHT, numberOfDays);
-                updateGraphDisplay();
-                break;
-        }
-    }
+
 
 }

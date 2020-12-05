@@ -16,7 +16,8 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".FoodEntryActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".SetupActivity"
             android:parentActivityName=".MainActivity" />

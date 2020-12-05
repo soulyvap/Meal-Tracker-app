@@ -12,11 +12,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_main);
 
@@ -221,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             monthDisplayed = intent.getIntExtra(EXTRA_DISPLAYED_MONTH, monthToday);
             yearDisplayed = intent.getIntExtra(EXTRA_DISPLAYED_YEAR, yearToday);
             dateNowDisplay.setText(dateDisplayed);
+            Log.d("first", dayDisplayed + "-" + (monthDisplayed+1) + "-" + yearDisplayed);
         }
 
         //get shared preferences for profile and goals

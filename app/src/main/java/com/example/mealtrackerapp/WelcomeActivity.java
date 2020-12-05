@@ -14,6 +14,7 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide(); //hide the title bar
         setContentView(R.layout.activity_welcome);
         buttonSetup=findViewById(R.id.button);
         buttonSetup.setOnClickListener(new View.OnClickListener() {

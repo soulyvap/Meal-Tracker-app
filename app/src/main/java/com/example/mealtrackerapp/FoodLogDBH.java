@@ -133,7 +133,6 @@ public class FoodLogDBH extends SQLiteOpenHelper {
 
         }
         cursor.close();
-        db.close();
 
         return foodLogList;
     }
@@ -153,7 +152,6 @@ public class FoodLogDBH extends SQLiteOpenHelper {
             sumOfCalories = 0;
         }
         cursor.close();
-        db.close();
 
         return sumOfCalories;
     }
@@ -173,7 +171,6 @@ public class FoodLogDBH extends SQLiteOpenHelper {
             sumOfCalories = 0;
         }
         cursor.close();
-        db.close();
 
         return sumOfCalories;
     }

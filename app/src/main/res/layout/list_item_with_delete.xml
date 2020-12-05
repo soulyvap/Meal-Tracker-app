@@ -14,8 +14,8 @@
 
     <ImageView
         android:id="@+id/list_item_delete"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/ic_baseline_remove_circle_outline_24"/>
+        android:layout_width="15dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_baseline_remove_circle_outline_24" />
 
 </LinearLayout>
