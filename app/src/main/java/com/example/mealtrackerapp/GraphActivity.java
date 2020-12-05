@@ -115,20 +115,6 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
         dataSelected = CHOICE_CALORIES;
         getBarEntries(columnNeeded, numberOfDays);
         updateGraphDisplay(numberOfDays);
-
-        //bar chart customization
-        barChart.setFitBars(true);
-        barChart.getXAxis().setDrawGridLines(false);
-        barChart.getAxisLeft().setDrawGridLines(false);
-        barChart.getAxisRight().setDrawGridLines(false);
-        barChart.getAxisRight().setDrawLabels(false);
-        barChart.getLegend().setEnabled(false);
-        barChart.getDescription().setEnabled(false);
-        barChart.invalidate();
-        barDataSet.setColor(Color.rgb(249, 155, 130));
-        barDataSet.setValueTextColor(Color.BLACK);
-        barDataSet.setValueTextSize(1f);
-
         updateDescription();
     }
 
@@ -162,24 +148,36 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
             for (int i = -numberOfDays + 1; i <= 0; i++) {
                 xLabels.add(getFirstLetter(getDayOfWeek(i)));
                 barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xLabels));
+                barDataSet.setValueTextSize(10f);
             }
         } else {
             xLabels.clear();
             for (int i = -numberOfDays + 1; i <= 0; i++) {
                 xLabels.add(getDayOfMonth(i));
                 barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xLabels));
+                barDataSet.setValueTextSize(5f);
             }
             Log.d("graph", xLabels.toString());
             barChart.getXAxis().setTextSize(1f);
             barChart.getXAxis().setLabelCount(xLabels.size());
         }
+        //bar chart customization
+        barChart.setFitBars(true);
+        barChart.getXAxis().setDrawGridLines(false);
+        barChart.getAxisLeft().setDrawGridLines(false);
+        barChart.getAxisRight().setDrawGridLines(false);
+        barChart.getAxisRight().setDrawLabels(false);
+        barChart.getLegend().setEnabled(false);
+        barChart.getDescription().setEnabled(false);
+        barDataSet.setColor(Color.rgb(249, 155, 130));
+        barDataSet.setValueTextColor(Color.BLACK);
         barChart.invalidate();
     }
 
     private ArrayList<BarEntry> getBarEntries(String column, int numberOfDays) {
 
         ArrayList<String> dates = new ArrayList<>();
-        for (int i = 0; i > -numberOfDays; i--) {
+        for (int i = -numberOfDays + 1; i <= 0; i++) {
             dates.add(getDateString(i));
         }
 
