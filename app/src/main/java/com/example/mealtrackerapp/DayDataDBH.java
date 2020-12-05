@@ -59,9 +59,7 @@ public class DayDataDBH extends SQLiteOpenHelper {
         if (insert == -1) {
             return false;
         } else {
-//            ContentValues waterCV = new ContentValues();
-//            waterCV.put(COLUMN_WATER_INTAKE, 0);
-//            db.update(DAYDATA_TABLE, waterCV, COLUMN_DATE + " LIKE \'" + date + "\'", null);
+
             return true;
         }
 
@@ -105,9 +103,6 @@ public class DayDataDBH extends SQLiteOpenHelper {
         if (insert == -1) {
             return false;
         } else {
-//            ContentValues waterCV = new ContentValues();
-//            waterCV.put(COLUMN_WATER_INTAKE, 0);
-//            db.update(DAYDATA_TABLE, waterCV, COLUMN_DATE + " LIKE \'" + date + "\'", null);
             return true;
         }
     }
@@ -127,7 +122,6 @@ public class DayDataDBH extends SQLiteOpenHelper {
             returnInt = 0;
         }
         cursor.close();
-        db.close();
 
         return returnInt;
     }
@@ -147,7 +141,6 @@ public class DayDataDBH extends SQLiteOpenHelper {
             returnString = "";
         }
         cursor.close();
-        db.close();
 
         return returnString;
     }

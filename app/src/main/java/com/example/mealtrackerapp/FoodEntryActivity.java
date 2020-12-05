@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -61,7 +60,7 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
 
         //refer EditText
         timeEditTxt = findViewById(R.id.etxtTime);
-        foodEditTxt = findViewById(R.id.etxtFoodName);
+        foodEditTxt = findViewById(R.id.actvFoodName);
         foodCaloriesEditTxt = findViewById(R.id.etxtFoodCalories);
         foodCarbsEditTxt = findViewById(R.id.etxtFoodCarbs);
         foodProteinEditTxt = findViewById(R.id.etxtFoodProtein);
@@ -164,16 +163,24 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                     Toast.makeText(FoodEntryActivity.this, "Please select meal", Toast.LENGTH_SHORT).show();
                     mealSpinner.requestFocus();
                     return;
+                } if (isWrongTimeFormat(time)) {
+                    timeEditTxt.setError("Please enter time as hh:mm");
+                    return;
                 } if (actvIsEmpty(foodEditTxt)) {
                     foodEditTxt.setError("Please enter food name");
+                    return;
                 } if (editTextIsEmpty(foodCaloriesEditTxt)) {
                     foodCaloriesEditTxt.setError("Please enter calorie amount");
+                    return;
                 } if (editTextIsEmpty(foodCarbsEditTxt)) {
                     foodCarbsEditTxt.setError("Please enter carbohydrate/protein/fat amount");
+                    return;
                 } if (editTextIsEmpty(foodProteinEditTxt)) {
                     foodProteinEditTxt.setError("Please enter carbohydrate/protein/fat amount");
+                    return;
                 } if (editTextIsEmpty(foodFatEditTxt)) {
                     foodFatEditTxt.setError("Please enter carbohydrate/protein/fat amount");
+                    return;
                 } else {
                     String foodName = foodEditTxt.getText().toString();
                     int calories = editTextToInt(foodCaloriesEditTxt);
@@ -194,7 +201,6 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                     } else {
                         FoodLog newFoodlog = new FoodLog(-1, date, foodName, mealSelected, time, calories, carbs, protein, fat);
                         foodlogList.add(newFoodlog);
-                        Toast.makeText(FoodEntryActivity.this, foodlogList.toString(), Toast.LENGTH_SHORT).show();
                     }
                     ArrayAdapter foodLogAdapter = new CustomFoodAdapter(FoodEntryActivity.this, R.layout.list_item_with_delete, foodlogList);
                     lvFoodlogEntry.setAdapter(foodLogAdapter);
@@ -228,13 +234,15 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
             @Override
             public void onClick(View v) {
                 foodLogDBH = new FoodLogDBH(FoodEntryActivity.this);
-
+                time = timeEditTxt.getText().toString().trim();
 
                 if (fromMain) {
                     if (mealSelected.equals(MEAL_SPINNER_DEFAULT)) {
                         Toast.makeText(FoodEntryActivity.this, "Please select meal", Toast.LENGTH_SHORT).show();
                         mealSpinner.requestFocus();
                         return;
+                    } if (isWrongTimeFormat(time)) {
+                        timeEditTxt.setError("Please enter time as hh:mm");
                     } if (actvIsEmpty(foodEditTxt)) {
                         foodEditTxt.setError("Please enter food name");
                     } if (editTextIsEmpty(foodCaloriesEditTxt)) {
@@ -262,7 +270,7 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
                     }
                 } else {
                     if (foodlogList.size() == 0) {
-                        Toast.makeText(FoodEntryActivity.this, "Please enter at least one food", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FoodEntryActivity.this, "Please enter (+) at least one food", Toast.LENGTH_SHORT).show();
                     } else {
                         foodLogDBH.addArray(foodlogList);
                         Intent intent = new Intent(FoodEntryActivity.this, MainActivity.class);
@@ -411,6 +419,16 @@ public class FoodEntryActivity extends AppCompatActivity implements AdapterView.
             return Integer.parseInt(minutesExtracted);
         } else {
             return Integer.parseInt(hourExtracted);
+        }
+    }
+
+    private Boolean isWrongTimeFormat(String time) {
+        String trimmedTime = time.trim();
+        String[] timeParts = trimmedTime.split(":");
+        if (timeParts[0].length() == 2 && timeParts[1].length() == 2 && timeParts.length == 2) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

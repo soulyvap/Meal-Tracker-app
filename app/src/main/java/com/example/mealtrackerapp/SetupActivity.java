@@ -30,6 +30,8 @@ import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DATE;
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_DAY;
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_MONTH;
 import static com.example.mealtrackerapp.MainActivity.EXTRA_DISPLAYED_YEAR;
+import static com.example.mealtrackerapp.MainActivity.FIRST_TIME_PREF;
+import static com.example.mealtrackerapp.MainActivity.IS_FIRST_LAUNCH_PREF;
 
 public class SetupActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String PREF_CALORIC_GOAL = "pref_caloricGoal";
@@ -53,7 +55,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     Calendar c;
     TextView txtDate;
 
-    private int mYear, mMonth, mDay, year, month, day;
+    private int yearToday, monthToday, dayToday, year, month, day;
 
     DayDataDBH dayDataDHB;
 
@@ -67,11 +69,15 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
         //get current date and display it
         c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
+        yearToday = c.get(Calendar.YEAR);
+        monthToday = c.get(Calendar.MONTH);
+        dayToday = c.get(Calendar.DAY_OF_MONTH);
 
-        today = mDay + "-" + (mMonth + 1) + "-" + mYear;
+        day = dayToday;
+        month = monthToday;
+        year = yearToday;
+
+        today = dayToday + "-" + (monthToday + 1) + "-" + yearToday;
         dateDisplayed = today;
 
         //reference to layout elements
@@ -80,7 +86,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         etxtSetFirstname = findViewById(R.id.etxtSetFirstname);
         etxtSetLastname = findViewById(R.id.etxtSetLastname);
         etxtSetHeight = findViewById(R.id.etxtSetHeight);
-        etxtSetWeightValue = findViewById(R.id.etxtSetWightValue);
+        etxtSetWeightValue = findViewById(R.id.etxtSetWeightValue);
         etxtSetCaloricValue = findViewById(R.id.etxtSetCaloricValue);
         etxtSetCarbs = findViewById(R.id.etxtSetCarbs);
         etxtSetProtein = findViewById(R.id.etxtSetProtein);
@@ -102,24 +108,34 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 if (birthdate.equals(" ")) {
                     Toast.makeText(SetupActivity.this, "Please enter birth date", Toast.LENGTH_SHORT).show();
                     txtSetBirthdate.setTextColor(ContextCompat.getColor(SetupActivity.this, R.color.red));
+                    return;
                 } if (editTextIsEmpty(etxtSetFirstname)) {
                     etxtSetFirstname.setError("Please enter first name");
+                    return;
                 } if (editTextIsEmpty(etxtSetLastname)) {
                     etxtSetLastname.setError("Please enter last name");
+                    return;
                 } if (editTextIsEmpty(etxtSetHeight)) {
                     etxtSetHeight.setError("Please enter height");
+                    return;
                 } if (editTextIsEmpty(etxtSetWeightValue) || editTextIsZero(etxtSetWeightValue)) {
                     etxtSetWeightValue.setError("Please enter weight");
+                    return;
                 } if (editTextIsEmpty(etxtSetCaloricValue) || editTextIsZero(etxtSetCaloricValue)) {
                     etxtSetCaloricValue.setError("Please enter daily caloric goal");
+                    return;
                 } if (editTextIsEmpty(etxtSetCarbs)) {
                     etxtSetCarbs.setError("Please enter carbs amount");
+                    return;
                 } if (editTextIsEmpty(etxtSetProtein)) {
                     etxtSetProtein.setError("Please enter protein amount");
+                    return;
                 } if (editTextIsEmpty(etxtSetFat)) {
                     etxtSetFat.setError("Please enter fat amount");
+                    return;
                 } if (editTextIsEmpty(etxtSetWater)) {
                     etxtSetWater.setError("Please enter number of water glasses");
+                    return;
                 } else if (!editTextIsEmpty(etxtSetCarbs) &&
                         !editTextIsEmpty(etxtSetCarbs) &&
                         !editTextIsEmpty(etxtSetCarbs)) {
@@ -127,7 +143,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     int protein = Integer.parseInt(etxtSetProtein.getText().toString());
                     int fat = Integer.parseInt(etxtSetFat.getText().toString());
                     if (carbs + protein + fat != 100) {
-                        Toast.makeText(SetupActivity.this, "sum of macro should be 100", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SetupActivity.this, "Sum of macro should be 100", Toast.LENGTH_SHORT).show();
                     } else {
                         weight = editTextToInt(etxtSetWeightValue);
                         caloricGoal = editTextToInt(etxtSetCaloricValue);
@@ -146,12 +162,16 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                         prefEditor.putInt(PREF_PROTEIN, proteinGoal);
                         prefEditor.putInt(PREF_FAT, fatGoal);
                         prefEditor.putInt(PREF_WATER_GOAL, waterGoal);
-                        prefEditor.commit();
+                        prefEditor.apply();
 
-                        intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
-                        intent.putExtra(EXTRA_DISPLAYED_DAY, day);
-                        intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
-                        intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
+                        Boolean isFirstLaunch = getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).getBoolean(IS_FIRST_LAUNCH_PREF, true);
+                        if (!isFirstLaunch) {
+                            intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
+                            intent.putExtra(EXTRA_DISPLAYED_DAY, day);
+                            intent.putExtra(EXTRA_DISPLAYED_MONTH, month);
+                            intent.putExtra(EXTRA_DISPLAYED_YEAR, year);
+                        }
+
 
                         dayDataDHB.addOneReplace(dateDisplayed, weight, caloricGoal, carbsGoal, proteinGoal, fatGoal, waterGoal, waterIntake);
                         startActivity(intent);
@@ -172,9 +192,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_DISPLAYED_DATE)) {
             dateDisplayed = intent.getStringExtra(EXTRA_DISPLAYED_DATE);
-            day = intent.getIntExtra(EXTRA_DISPLAYED_DAY, 0);
-            month = intent.getIntExtra(EXTRA_DISPLAYED_MONTH, 0);
-            year = intent.getIntExtra(EXTRA_DISPLAYED_YEAR, 0);
+            day = intent.getIntExtra(EXTRA_DISPLAYED_DAY, dayToday);
+            month = intent.getIntExtra(EXTRA_DISPLAYED_MONTH, monthToday);
+            year = intent.getIntExtra(EXTRA_DISPLAYED_YEAR, yearToday);
         }
         txtDate = findViewById(R.id.txtDateForSetup);
         txtDate.setText(dateDisplayed);
@@ -234,11 +254,11 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                         birthdate = dayOfMonth + "-" + (monthOfYear+1) + "-" + year;
                         txtSetBirthdate.setText(birthdate);
                         txtSetBirthdate.setTextColor(ContextCompat.getColor(SetupActivity.this, R.color.black));
-                        mYear = year;
-                        mMonth = monthOfYear;
-                        mDay = dayOfMonth;
+                        yearToday = year;
+                        monthToday = monthOfYear;
+                        dayToday = dayOfMonth;
                     }
-                }, mYear, mMonth, mDay);
+                }, yearToday, monthToday, dayToday);
         datePickerDialog.show();
 
 

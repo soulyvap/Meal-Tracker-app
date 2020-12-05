@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -15,6 +17,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.ArrayList;
@@ -37,26 +40,30 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
     public static final String CHOICE_WEIGHT = "weight";
     public static final String CHOICE_WEEKLY = "weekly";
     public static final String CHOICE_MONTHLY = "monthly";
-    Calendar calendar;
     FoodLogDBH foodLogDBH = new FoodLogDBH(GraphActivity.this);
     DayDataDBH dayDataDBH = new DayDataDBH(GraphActivity.this);
     Spinner timeChoiceSpinner, dataChoiceSpinner;
-    ArrayList<String> timeChoiceArray, dataChoiceArray;
-    String timeSelected, dataSelected, database;
+    ArrayList<String> timeChoiceArray, dataChoiceArray, xLabels;
+    int numberOfDays;
+    String columnNeeded, txt, itemSelected, dataSelected;
+    TextView txtDescription;
 
 // reference for MPAndroidChart: https://github.com/PhilJay/MPAndroidChart
     BarChart barChart;
     BarData barData;
     BarDataSet barDataSet;
     ArrayList<BarEntry> barEntries;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
 
+        //refer TextView
+        txtDescription = findViewById(R.id.txtGraphDescription);
+
         //refer bar chart
-        barChart = (BarChart) findViewById(R.id.barChart);
+        barChart = findViewById(R.id.barChart);
 
         //refer spinners
         timeChoiceSpinner = findViewById(R.id.spinnerTimeChoice);
@@ -83,29 +90,78 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
         //setting up ArrayAdapter for time choice spinner
         ArrayAdapter<String> timeSpinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_item_center, timeChoiceArray);
         timeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dataChoiceSpinner.setAdapter(timeSpinnerAdapter);
+        timeChoiceSpinner.setAdapter(timeSpinnerAdapter);
 
         //setting up arrayAdapter for spinner with elements of the arrayList and attaching adapter to spinner object
         ArrayAdapter<String> mealSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item_center, dataChoiceArray);
         mealSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dataChoiceSpinner.setAdapter(mealSpinnerAdapter);
 
-        //recording spinner default values
-        timeSelected = CHOICE_WEEKLY;
-        dataSelected = CHOICE_CALORIES;
-        database = "foodlogDBH";
-
+        findViewById(R.id.btnShow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getBarEntries(columnNeeded, numberOfDays);
+                updateGraphDisplay(numberOfDays);
+                updateDescription();
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        columnNeeded = COLUMN_CALORIES;
+        numberOfDays = 7;
+        dataSelected = CHOICE_CALORIES;
+        getBarEntries(columnNeeded, numberOfDays);
+        updateGraphDisplay(numberOfDays);
+        updateDescription();
+    }
 
-        getEntries(getColumnName(dataSelected), database);
+    private void updateDescription() {
+        switch (columnNeeded) {
+            case COLUMN_CALORIES:
+            case COLUMN_CARBS:
+            case COLUMN_PROTEIN:
+            case COLUMN_FAT:
+                txt = "Daily " + dataSelected + " in kcal for the last " + numberOfDays + " days";
+                txtDescription.setText(txt);
+                break;
+            case COLUMN_WATER_INTAKE:
+                txt = "Daily " + dataSelected + " glasses for the last " + numberOfDays + " days";
+                txtDescription.setText(txt);
+            case COLUMN_WEIGHT:
+                txt = "Daily " + dataSelected + " in kg for the last " + numberOfDays + " days";
+                txtDescription.setText(txt);
+        }
+    }
+
+    private void updateGraphDisplay(int numberOfDays) {
         barDataSet = new BarDataSet(barEntries, "");
         barData = new BarData(barDataSet);
-        barData.setBarWidth(0.9f);
         barChart.setData(barData);
+        //creation of x labels
+        xLabels = new ArrayList<>();
+
+        if (numberOfDays == 7) {
+            xLabels.clear();
+            for (int i = -numberOfDays + 1; i <= 0; i++) {
+                xLabels.add(getFirstLetter(getDayOfWeek(i)));
+                barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xLabels));
+                barDataSet.setValueTextSize(10f);
+            }
+        } else {
+            xLabels.clear();
+            for (int i = -numberOfDays + 1; i <= 0; i++) {
+                xLabels.add(getDayOfMonth(i));
+                barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xLabels));
+                barDataSet.setValueTextSize(5f);
+            }
+            Log.d("graph", xLabels.toString());
+            barChart.getXAxis().setTextSize(1f);
+            barChart.getXAxis().setLabelCount(xLabels.size());
+        }
+        //bar chart customization
         barChart.setFitBars(true);
         barChart.getXAxis().setDrawGridLines(false);
         barChart.getAxisLeft().setDrawGridLines(false);
@@ -113,57 +169,47 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
         barChart.getAxisRight().setDrawLabels(false);
         barChart.getLegend().setEnabled(false);
         barChart.getDescription().setEnabled(false);
-        barChart.invalidate();
         barDataSet.setColor(Color.rgb(249, 155, 130));
         barDataSet.setValueTextColor(Color.BLACK);
-        barDataSet.setValueTextSize(10f);
-
-        final String[] days = new String[] {getFirstLetter(getDayOfWeek(-6)), getFirstLetter(getDayOfWeek(-5)),
-                getFirstLetter(getDayOfWeek(-4)), getFirstLetter(getDayOfWeek(-3)),
-                getFirstLetter(getDayOfWeek(-2)), getFirstLetter(getDayOfWeek(-1)),
-                getFirstLetter(getDayOfWeek(-0))};
-        ValueFormatter formatter = new ValueFormatter() {
-            @Override
-            public String getAxisLabel(float value, AxisBase axis) {
-                return days[(int) value];
-            }
-        };
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
-        xAxis.setValueFormatter(formatter);
+        barChart.invalidate();
     }
 
-    private void getEntries(String column, String databaseHelper) {
-        //get today's date
-        String dateNow = getDateString(0);
-        //get dates of 6 previous days
-        String dateMin1 = getDateString(-1);
-        String dateMin2 = getDateString(-2);
-        String dateMin3 = getDateString(-3);
-        String dateMin4 = getDateString(-4);
-        String dateMin5 = getDateString(-5);
-        String dateMin6 = getDateString(-6);
+    private ArrayList<BarEntry> getBarEntries(String column, int numberOfDays) {
+
+        ArrayList<String> dates = new ArrayList<>();
+        for (int i = -numberOfDays + 1; i <= 0; i++) {
+            dates.add(getDateString(i));
+        }
 
         barEntries = new ArrayList<>();
 
-        if (databaseHelper.equals("foodlogDBH")) {
-            barEntries.add(new BarEntry(0f,foodLogDBH.getSumByDate(column, dateMin6)));
-            barEntries.add(new BarEntry(1f,foodLogDBH.getSumByDate(column, dateMin5)));
-            barEntries.add(new BarEntry(2f,foodLogDBH.getSumByDate(column, dateMin4)));
-            barEntries.add(new BarEntry(3f,foodLogDBH.getSumByDate(column, dateMin3)));
-            barEntries.add(new BarEntry(4f,foodLogDBH.getSumByDate(column, dateMin2)));
-            barEntries.add(new BarEntry(5f,foodLogDBH.getSumByDate(column, dateMin1)));
-            barEntries.add(new BarEntry(6f,foodLogDBH.getSumByDate(column, dateNow)));
-        } if (databaseHelper.equals("dayDataDBH")) {
-            barEntries.add(new BarEntry(0f,dayDataDBH.getIntByDate(column, dateMin6)));
-            barEntries.add(new BarEntry(1f,dayDataDBH.getIntByDate(column, dateMin5)));
-            barEntries.add(new BarEntry(2f,dayDataDBH.getIntByDate(column, dateMin4)));
-            barEntries.add(new BarEntry(3f,dayDataDBH.getIntByDate(column, dateMin3)));
-            barEntries.add(new BarEntry(4f,dayDataDBH.getIntByDate(column, dateMin2)));
-            barEntries.add(new BarEntry(5f,dayDataDBH.getIntByDate(column, dateMin1)));
-            barEntries.add(new BarEntry(6f,dayDataDBH.getIntByDate(column, dateNow)));
+        if (column.equals(COLUMN_CALORIES)) {
+            float xAxis = 0f;
+            for (String date: dates) {
+                barEntries.add(new BarEntry(xAxis,foodLogDBH.getSumByDate(column, date)));
+                xAxis += 1;
+            }
+        } else if (column.equals(COLUMN_CARBS) || column.equals(COLUMN_PROTEIN)) {
+            float xAxis = 0f;
+            for (String date: dates) {
+                barEntries.add(new BarEntry(xAxis, (foodLogDBH.getSumByDate(column, date))*4));
+                xAxis += 1;
+            }
+        } else if (column.equals(COLUMN_FAT)) {
+            float xAxis = 0f;
+            for (String date: dates) {
+                barEntries.add(new BarEntry(xAxis, (foodLogDBH.getSumByDate(column, date))*8));
+                xAxis += 1;
+            }
+        } else if (column.equals(COLUMN_WATER_INTAKE) || column.equals(COLUMN_WEIGHT)) {
+            float xAxis = 0f;
+            for (String date: dates) {
+                barEntries.add(new BarEntry(xAxis, dayDataDBH.getIntByDate(column, date)));
+                xAxis += 1;
+            }
         }
-
+        Log.d("graph", String.valueOf(barEntries.size()));
+        return barEntries;
     }
 
     public String getDateString(int daySwitch) {
@@ -181,41 +227,62 @@ public class GraphActivity extends AppCompatActivity implements AdapterView.OnIt
         return cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
     }
 
+    public String getDayOfMonth(int daySwitch) {
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, daySwitch);
+        return String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+    }
+
     public String getFirstLetter(String word){
         return String.valueOf(word.charAt(0));
     }
 
-    private String getColumnName(String data) {
-        if (data.equals(CHOICE_CALORIES)) {
-            return COLUMN_CALORIES;
-        } else if (data.equals(CHOICE_CARBS)) {
-            return COLUMN_CARBS;
-        } else if (data.equals(CHOICE_PROTEIN)) {
-            return COLUMN_PROTEIN;
-        } else if (data.equals(CHOICE_FAT)) {
-            return COLUMN_FAT;
-        } else if (data.equals(CHOICE_WATER)) {
-            return COLUMN_WATER_INTAKE;
-        } else if (data.equals(CHOICE_WEIGHT)) {
-            return COLUMN_WEIGHT;
-        } else {
-         return "";
-        }
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        dataSelected = parent.getItemAtPosition(position).toString();
-        if (dataSelected.equals(CHOICE_CALORIES) || dataSelected.equals(CHOICE_CARBS) || dataSelected.equals(CHOICE_PROTEIN) || dataSelected.equals(CHOICE_FAT)) {
-            database = "foodlogDBH";
-        } else {
-            database = "dayDataDBH";
+        itemSelected = (String) parent.getItemAtPosition(position);
+
+        switch (parent.getId()) {
+            case R.id.spinnerDataChoice:
+                dataSelected = itemSelected;
+                switch (itemSelected) {
+                    case CHOICE_CALORIES:
+                        columnNeeded = COLUMN_CALORIES;
+                        break;
+                    case CHOICE_CARBS:
+                        columnNeeded = COLUMN_CARBS;
+                        break;
+                    case CHOICE_PROTEIN:
+                        columnNeeded = COLUMN_PROTEIN;
+                        break;
+                    case CHOICE_FAT:
+                        columnNeeded = COLUMN_FAT;
+                        break;
+                    case CHOICE_WATER:
+                        columnNeeded = COLUMN_WATER_INTAKE;
+                        break;
+                    case CHOICE_WEIGHT:
+                        columnNeeded = COLUMN_WEIGHT;
+                        break;
+                }
+                break;
+            case R.id.spinnerTimeChoice:
+                switch (itemSelected) {
+                    case CHOICE_WEEKLY:
+                        numberOfDays = 7;
+                        break;
+                    case CHOICE_MONTHLY:
+                        numberOfDays = 30;
+                        break;
+                }
+                break;
         }
-        onStart();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
+
 }
