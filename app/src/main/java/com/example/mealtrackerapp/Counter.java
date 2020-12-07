@@ -1,9 +1,16 @@
 package com.example.mealtrackerapp;
 
+/**
+ * Counter class to handle water counter
+ */
 public class Counter {
+    //count
     private int count;
+    //starting value
     private int startingValue;
+    //min value for the count
     private int minValue;
+    //max value for the count
     private int maxValue;
 
     public Counter(int startingValue, int minValue, int maxValue) {
@@ -17,14 +24,11 @@ public class Counter {
         this(0, 0, 100);
     }
 
-    public Counter(int maxValue) {
-        this(0, 0, maxValue);
-    }
-
     public int getCount() {
         return count;
     }
 
+    //get string value of the count
     public String getCountString() {
         return Integer.toString(count);
     }
@@ -33,6 +37,7 @@ public class Counter {
         this.count = count;
     }
 
+    //count never goes over max
     public void add(int value) {
         if ((count + value) > maxValue){
             this.count = maxValue;
@@ -41,35 +46,12 @@ public class Counter {
         }
     }
 
+    //count never goes below min
     public void remove(int value) {
         if ((count - value) < minValue){
             this.count = minValue;
         } else {
             this.count -= value;
         }
-    }
-
-    public int getStartingValue() {
-        return startingValue;
-    }
-
-    public void setStartingValue(int startingValue) {
-        this.startingValue = startingValue;
-    }
-
-    public int getMinValue() {
-        return minValue;
-    }
-
-    public void setMinValue(int minValue) {
-        this.minValue = minValue;
-    }
-
-    public int getMaxValue() {
-        return maxValue;
-    }
-
-    public void setMaxValue(int maxValue) {
-        this.maxValue = maxValue;
     }
 }
