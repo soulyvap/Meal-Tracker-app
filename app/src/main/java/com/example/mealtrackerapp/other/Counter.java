@@ -1,4 +1,4 @@
-package com.example.mealtrackerapp;
+package com.example.mealtrackerapp.other;
 
 /**
  * Counter class to handle water counter
