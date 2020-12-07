@@ -1,17 +1,48 @@
-package com.example.mealtrackerapp;
+package com.example.mealtrackerapp.databases;
 
 
 import java.io.Serializable;
 
+/**
+ * Class for logs in food diary.
+ * Implements Serializable so that the object of this class can be put as extras in an intent.
+ */
 public class FoodLog implements Serializable {
+    /**
+     * id for database entry
+     */
     private int id;
+    /**
+     * date of the log
+     */
     private String date;
+    /**
+     * name of the food log
+     */
     private String name;
+    /**
+     * meal of the log
+     */
     private String meal;
+    /**
+     * time of the log
+     */
     private String time;
+    /**
+     * caloric content in kCal
+     */
     private int calories;
+    /**
+     * carbs content in grams
+     */
     private double carbs;
+    /**
+     * protein content in grams
+     */
     private double protein;
+    /**
+     * fat content in grams
+     */
     private double fat;
 
     public FoodLog(int id, String date, String name, String meal, String time, int calories, double carbs, double protein, double fat) {
@@ -26,6 +57,7 @@ public class FoodLog implements Serializable {
         this.fat = fat;
     }
 
+    //typical setters and getters for each variable
     public int getId() {
         return id;
     }
@@ -98,10 +130,18 @@ public class FoodLog implements Serializable {
         this.fat = fat;
     }
 
+    /**
+     * Get simplified string of food log. Showing values in grams for macronutrients.
+     * @return String with name, calories in kCal and macronutrients in grams.
+     */
     public String getStringGrams() {
         return name + " : " + calories + " kcal (" + Math.round(carbs) + "g/" + Math.round(protein) + "g/" + Math.round(fat) + "g)";
     }
 
+    /**
+     * Get string with macronutrient values in kCal
+     * @return String with time, meal, name, calories and macronutrients in kCal
+     */
     @Override
     public String toString() {
         return time + " | " + meal + " | " + name + " : " + calories + " kcal (" + Math.round(carbs*4) + "/" + Math.round(protein*4) + "/" + Math.round(fat*8) + ")";

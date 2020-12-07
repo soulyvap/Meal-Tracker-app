@@ -4,157 +4,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AboutActivity">
+    android:background="@color/light_orange"
+    tools:context=".activities.AboutActivity">
 
     <ImageView
-        android:id="@+id/imageViewidimageview"
-        android:layout_width="127dp"
-        android:layout_height="155dp"
-        android:layout_marginStart="229dp"
-        android:layout_marginLeft="229dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="398dp"
-        android:background="#E91E63"
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginRight="100dp"
+        android:alpha="0.2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.498"
         app:srcCompat="@drawable/carrot_cropped" />
 
-    <TextView
-        android:id="@+id/textView5specifications"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="160dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:layout_marginBottom="2dp"
-        android:text="Specifications"
-        android:textColor="@color/blue_accent1"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView6useful"
-        app:layout_constraintEnd_toStartOf="@+id/imageViewidimageview"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
-    <TextView
-        android:id="@+id/textView6useful"
-        android:layout_width="391dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginBottom="364dp"
-        android:text="Useful for measuring calories, weight and water consumption on daily, monthly and as well as yearly basis."
-        android:textSize="15sp"
-        android:textColor="@color/blue_accent1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewidimageview" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20sp"
+            android:gravity="center">
 
-    <TextView
-        android:id="@+id/textView8AboutApp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="56dp"
-        android:layout_marginRight="56dp"
-        android:layout_marginBottom="75dp"
-        android:text="About App"
-        android:textColor="@color/blue_accent1"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView5specifications"
-        app:layout_constraintEnd_toStartOf="@+id/imageViewidimageview"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <TextView
 
-    <TextView
-        android:id="@+id/textView9references"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="57dp"
-        android:layout_marginEnd="236dp"
-        android:layout_marginRight="236dp"
-        android:layout_marginBottom="267dp"
-        android:text="References"
-        android:textColor="@color/blue_accent1"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6useful" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:fontFamily="casual"
+                android:text="About Meal Tracker"
+                android:textColor="@color/orange_pastel"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textView10androidchart"
-        android:layout_width="395dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="21dp"
-        android:layout_marginBottom="13dp"
-        android:text="https://github.com/PhilJay/MPAndroidChart"
-        android:textColor="@color/blue_accent1"
-        app:layout_constraintBottom_toTopOf="@+id/textView11sqlite"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9references"
-        app:layout_constraintVertical_bias="0.35" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="Authors"
+                android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/textView11sqlite"
-        android:layout_width="401dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginBottom="184dp"
-        android:text="https://github.com/jgilfelt/android-sqlite-asset-helper"
-        android:textColor="@color/blue_accent1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Neha (Product Master)\nSouly (Scrum and Code Master)"
+                />
 
-    <TextView
-        android:id="@+id/textView4howitworks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
-        android:layout_marginLeft="27dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="207dp"
-        android:layout_marginRight="207dp"
-        android:layout_marginBottom="18dp"
-        android:text="How it Works"
-        android:textColor="@color/blue_accent1"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView5worksentence"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11sqlite" />
 
-    <TextView
-        android:id="@+id/textView5worksentence"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="63dp"
-        android:text="work by providing some basic details that what we had in breakfast, lunch and dinner"
-        android:textColor="@color/blue_accent1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="Context"
+                android:textSize="20sp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="This app was developed as an assignment for the course Mobiles (TX00EB19) at Metropolia UAS"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="Description"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="With Meal Tracker you can measure calories in daily, monthly and yearly basis effortlessly. \nStart tracking by providing some basic information. "
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="References"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SQLiteAssetHelper Library\nhttps://github.com/jgilfelt/android-sqlite-asset-helper
+                \n\nMPAndroidChart Library\nhttps://github.com/PhilJay/MPAndroidChart
+                \n\nCarrot app logo\nhttps://icons8.com
+                \n\nFood nutrient database from National Institute for Health and Welfare, Fineli.\nhttps://fineli.fi/fineli/en/avoin-data
+                \n\nSQLite Database Tutorial by Shad Sluiter\nhttps://www.youtube.com/watch?v=hDSVInZ2JCs
+                \n\nText Spinner Tutorial by Coding in Flow\nhttps://www.youtube.com/watch?v=on_OrrX7Nw4
+                \n\nDatePickerDialog Tutorial by Android Coding\nhttps://www.youtube.com/watch?v=E1LSY3g-CtY&amp;t=22s
+                \n\nMany topics\nhttps://stackoverflow.com/" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20sp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="Git"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="https://gitlab.metropolia.fi/mobile/team-10-meal-tracker"
+                android:gravity="center"
+                android:layout_marginBottom="100sp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

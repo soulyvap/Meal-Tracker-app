@@ -1,8 +1,7 @@
-package com.example.mealtrackerapp;
+package com.example.mealtrackerapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
@@ -10,56 +9,59 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.mealtrackerapp.other.Counter;
+import com.example.mealtrackerapp.databases.DayDataDBH;
+import com.example.mealtrackerapp.databases.FoodLog;
+import com.example.mealtrackerapp.databases.FoodLogDBH;
+import com.example.mealtrackerapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
 import java.util.List;
 
-import static com.example.mealtrackerapp.DayDataDBH.COLUMN_CALORIC_GOAL;
-import static com.example.mealtrackerapp.DayDataDBH.COLUMN_CARBS_GOAL;
-import static com.example.mealtrackerapp.DayDataDBH.COLUMN_FAT_GOAL;
-import static com.example.mealtrackerapp.DayDataDBH.COLUMN_PROTEIN_GOAL;
-import static com.example.mealtrackerapp.DayDataDBH.COLUMN_WATER_GOAL;
-import static com.example.mealtrackerapp.DayDataDBH.COLUMN_WATER_INTAKE;
-import static com.example.mealtrackerapp.FoodEntryActivity.EXTRA_FOOD_LOG;
-import static com.example.mealtrackerapp.FoodLogDBH.COLUMN_CARBS;
-import static com.example.mealtrackerapp.FoodLogDBH.COLUMN_FAT;
-import static com.example.mealtrackerapp.FoodLogDBH.COLUMN_PROTEIN;
-import static com.example.mealtrackerapp.SetupActivity.PREF_CALORIC_GOAL;
-import static com.example.mealtrackerapp.SetupActivity.PREF_CARBS;
-import static com.example.mealtrackerapp.SetupActivity.PREF_FAT;
-import static com.example.mealtrackerapp.SetupActivity.PREF_FIRSTNAME;
-import static com.example.mealtrackerapp.SetupActivity.PREF_PROTEIN;
-import static com.example.mealtrackerapp.SetupActivity.PREF_WATER_GOAL;
-import static com.example.mealtrackerapp.SetupActivity.PREF_WEIGHT;
-import static com.example.mealtrackerapp.SetupActivity.SETUP_PREF;
+//import all needed constants from other classes
+import static com.example.mealtrackerapp.databases.DayDataDBH.COLUMN_CALORIC_GOAL;
+import static com.example.mealtrackerapp.databases.DayDataDBH.COLUMN_CARBS_GOAL;
+import static com.example.mealtrackerapp.databases.DayDataDBH.COLUMN_FAT_GOAL;
+import static com.example.mealtrackerapp.databases.DayDataDBH.COLUMN_PROTEIN_GOAL;
+import static com.example.mealtrackerapp.databases.DayDataDBH.COLUMN_WATER_GOAL;
+import static com.example.mealtrackerapp.databases.DayDataDBH.COLUMN_WATER_INTAKE;
+import static com.example.mealtrackerapp.activities.FoodEntryActivity.EXTRA_FOOD_LOG;
+import static com.example.mealtrackerapp.databases.FoodLogDBH.COLUMN_CARBS;
+import static com.example.mealtrackerapp.databases.FoodLogDBH.COLUMN_FAT;
+import static com.example.mealtrackerapp.databases.FoodLogDBH.COLUMN_PROTEIN;
+import static com.example.mealtrackerapp.activities.SetupActivity.PREF_CALORIC_GOAL;
+import static com.example.mealtrackerapp.activities.SetupActivity.PREF_CARBS;
+import static com.example.mealtrackerapp.activities.SetupActivity.PREF_FAT;
+import static com.example.mealtrackerapp.activities.SetupActivity.PREF_PROTEIN;
+import static com.example.mealtrackerapp.activities.SetupActivity.PREF_WATER_GOAL;
+import static com.example.mealtrackerapp.activities.SetupActivity.PREF_WEIGHT;
+import static com.example.mealtrackerapp.activities.SetupActivity.SETUP_PREF;
 
+/**
+ * Daily status activity. Displays daily progression in caloric intake, macronutrient intake and water intake, and daily food logs.
+ * Possibility to switch to another date.
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    //defining constants for first app launch criteria and for intent extras
     public static final String FIRST_TIME_PREF = "first_time_pref";
     public static final String IS_FIRST_LAUNCH_PREF = "isFirstLaunch";
     public static final String EXTRA_DISPLAYED_DATE = "extra_displayed_date";
     public static final String EXTRA_DISPLAYED_DAY = "extra_displayed_day";
     public static final String EXTRA_DISPLAYED_MONTH = "extra_displayed_month";
     public static final String EXTRA_DISPLAYED_YEAR = "extra_displayed_year";
-    //references to views on the layout
+    //initiating variables as final
     TextView caloricGoalDisplay, eatenDisplay, caloriesLeftDisplay, breakfastDisplay, lunchDisplay,
             dinnerDisplay, extrasDisplay, waterDisplay, waterMinus, waterPlus, dateNowDisplay,
             txtCaloriesLeft, txtCarbs, txtProtein, txtFat, txtEatenDisplay;
@@ -70,33 +72,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             lunchIntake, dinnerIntake, extrasIntake, waterIntake;
     ListView lvFoodLogs;
 
-    //counters
+    //counter for water
     Counter waterCounter;
 
-    //shared preferences
+    //shared preferences for profile and goals
     SharedPreferences setupPref;
-    SharedPreferences.Editor prefEditor;
 
     //date picker variables
     Calendar calendar;
     int dayToday, monthToday, yearToday, dayDisplayed, monthDisplayed, yearDisplayed;
     String dateToday, dateDisplayed, datePicked;
 
-    //database helpers
+    //database helpers for goal data and food logs
     DayDataDBH dayDataDHB;
     FoodLogDBH foodLogDBH;
 
-    //dayData
-    private DayData daydata;
-
+    /**
+     * Creation of databases. References to needed views. Creation of water counter. Implementation of button functions and OnClickListener for list view.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_main);
 
-        //first launch
+        //handle first launch. the first time, a shared preference value is set to true by default and starts the welcome activity.
+        //once this activity is started again, the value is set to false and the welcome activity will never be shown again.
         Boolean isFirstLaunch = getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).getBoolean(IS_FIRST_LAUNCH_PREF, true);
         if (isFirstLaunch) {
             Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
@@ -104,11 +105,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         getSharedPreferences(FIRST_TIME_PREF, MODE_PRIVATE).edit().putBoolean(IS_FIRST_LAUNCH_PREF, false).apply();
 
-        //create databases for day data
+        //create databases via database helpers for day data and food logs
         dayDataDHB = new DayDataDBH(MainActivity.this);
         foodLogDBH = new FoodLogDBH(MainActivity.this);
 
-        //references to caloric counters display, date display and water count
+        //references to caloric counters view, date view and water count
         caloricGoalDisplay = findViewById(R.id.txtCaloricGoalValue);
         eatenDisplay = findViewById(R.id.txtCaloriesEatenValue);
         caloriesLeftDisplay = findViewById(R.id.txtCaloriesLeftValue);
@@ -119,12 +120,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dateNowDisplay = findViewById(R.id.txtDateNow);
         waterDisplay = findViewById(R.id.txtWaterCountValue);
         txtCaloriesLeft = findViewById(R.id.txtCaloriesLeft);
+        //reference to TextViews for modification upon goal completion
         txtCarbs = findViewById(R.id.txtCarbs);
         txtProtein = findViewById(R.id.txtProteins);
         txtFat = findViewById(R.id.txtFat);
         txtEatenDisplay = findViewById(R.id.txtCaloriesEaten);
 
-        //reference to list view
+        //reference to food log list view
         lvFoodLogs = findViewById(R.id.lvFoodLogs);
 
         //reference to progress bars
@@ -140,62 +142,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         waterMinus = findViewById(R.id.txtWaterMinus);
         waterPlus = findViewById(R.id.txtWaterPlus);
 
-        waterMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                waterCounter.remove(1);
-                dayDataDHB.updateColumnWhereDateTo(COLUMN_WATER_INTAKE, dateDisplayed, waterCounter.getCount());
-                updateWaterDisplay(dateDisplayed);
-            }
+        //when plus or minus is clicked, the water counter is updated on the screen and in the day data database
+        waterMinus.setOnClickListener(v -> {
+            waterCounter.remove(1);
+            dayDataDHB.updateColumnWhereDateTo(COLUMN_WATER_INTAKE, dateDisplayed, waterCounter.getCount());
+            updateWaterDisplay(dateDisplayed);
         });
-        waterPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                waterCounter.add(1);
-                dayDataDHB.updateColumnWhereDateTo(COLUMN_WATER_INTAKE, dateDisplayed, waterCounter.getCount());
-                updateWaterDisplay(dateDisplayed);
-            }
+        waterPlus.setOnClickListener(v -> {
+            waterCounter.add(1);
+            dayDataDHB.updateColumnWhereDateTo(COLUMN_WATER_INTAKE, dateDisplayed, waterCounter.getCount());
+            updateWaterDisplay(dateDisplayed);
         });
 
         //floating action button add to food entry
         fabAdd = findViewById(R.id.fabBtnAdd);
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, FoodEntryActivity.class);
-                intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
-                intent.putExtra(EXTRA_DISPLAYED_DAY, dayDisplayed);
-                intent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
-                intent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
-                startActivity(intent);
-            }
+
+        //when clicked, the food entry activity is started. the date currently displayed is sent as extra for food log
+        fabAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, FoodEntryActivity.class);
+            intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
+            intent.putExtra(EXTRA_DISPLAYED_DAY, dayDisplayed);
+            intent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
+            intent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
+            startActivity(intent);
         });
 
-        //date picker button and functions
         fabDatePicker = findViewById(R.id.fabBtnDate);
-        fabDatePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dayDataDHB.addOneReplace(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, waterIntake);
-                showDateDialog();
-            }
+        fabDatePicker.setOnClickListener(v -> {
+            dayDataDHB.addOneReplace(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, waterIntake);
+            showDateDialog();
         });
-        lvFoodLogs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FoodLog selectedFoodLog = (FoodLog) parent.getItemAtPosition(position);
-                Intent intent = new Intent(MainActivity.this, FoodEntryActivity.class);
-                intent.putExtra(EXTRA_FOOD_LOG, selectedFoodLog);
-                intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
-                intent.putExtra(EXTRA_DISPLAYED_DAY, dayDisplayed);
-                intent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
-                intent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
-                startActivity(intent);
-            }
+        //if an element of the food log list view is clicked, food entry activity is started. the clicked food log is put in extra, as well as the current displayed date
+        /**
+         * The food log at the selected position in the list is stored and sent as an extra to the food entry activity
+         */
+        lvFoodLogs.setOnItemClickListener((parent, view, position, id) -> {
+            FoodLog selectedFoodLog = (FoodLog) parent.getItemAtPosition(position);
+            Intent intent = new Intent(MainActivity.this, FoodEntryActivity.class);
+            intent.putExtra(EXTRA_FOOD_LOG, selectedFoodLog);
+            intent.putExtra(EXTRA_DISPLAYED_DATE, dateDisplayed);
+            intent.putExtra(EXTRA_DISPLAYED_DAY, dayDisplayed);
+            intent.putExtra(EXTRA_DISPLAYED_MONTH, monthDisplayed);
+            intent.putExtra(EXTRA_DISPLAYED_YEAR, yearDisplayed);
+            startActivity(intent);
         });
-
     }
 
+    /**
+     * By default, displays the data related to the current date. If another date has been selected, if goals have been updated or if new food logs were created, the data is updated
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -217,20 +212,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dateNowDisplay.setText(dateToday);
         dateDisplayed = dateToday;
 
-        //retrieve date from intent
+        //retrieve date from intent if there is any and display it
         if (intent.hasExtra(EXTRA_DISPLAYED_DATE)){
             dateDisplayed = intent.getStringExtra(EXTRA_DISPLAYED_DATE);
             dayDisplayed = intent.getIntExtra(EXTRA_DISPLAYED_DAY, dayToday);
             monthDisplayed = intent.getIntExtra(EXTRA_DISPLAYED_MONTH, monthToday);
             yearDisplayed = intent.getIntExtra(EXTRA_DISPLAYED_YEAR, yearToday);
             dateNowDisplay.setText(dateDisplayed);
-            Log.d("first", dayDisplayed + "-" + (monthDisplayed+1) + "-" + yearDisplayed);
         }
 
         //get shared preferences for profile and goals
         setupPref = getSharedPreferences(SETUP_PREF, Activity.MODE_PRIVATE);
 
-        //retrieve data from sharedPreferences
+        //retrieve goal data from shared preferences
         weightInt = setupPref.getInt(PREF_WEIGHT, 0);
         caloricGoalInt = setupPref.getInt(PREF_CALORIC_GOAL, 0);
         carbGoalInt = setupPref.getInt(PREF_CARBS, 0);
@@ -238,21 +232,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fatGoalInt = setupPref.getInt(PREF_FAT, 0);
         waterGoalInt = setupPref.getInt(PREF_WATER_GOAL, 0);
 
-        //set water count
+        //set water count. if there is already data for it in the day data database, it is retrieved and displayed. if not, it is set to 0
         waterCounter.setCount(dayDataDHB.getIntByDate(COLUMN_WATER_INTAKE, dateDisplayed));
         waterIntake = waterCounter.getCount();
 
-        //store goals and weight to daydata.db only if there is no data yet
+        //creates new row in day data database if no data has been entered for the date currently displayed. If data already exists, no update.
         dayDataDHB.addOneIgnore(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, 0);
 
-        //set displayed caloric counter (goal, eaten and left) values
-        //set calories per meal
-        //set waterCount color
-        //set progress bar max values
-        //set food diary
+        //set up to date values for all UI elements
         setValuesTo(dateDisplayed);
     }
 
+    /**
+     * Data saved on pause in db just in case
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -260,29 +253,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dayDataDHB.addOneReplace(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, waterIntake);
     }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
-
+    /**
+     * Calls all the methods related to updating the UI with data from the date passed as parameter
+     * @param date String of the date the values will be updated to
+     */
     private void setValuesTo(String date) {
         updateCaloricCountersDisplays(date);
         updateMealDisplays(date);
@@ -291,6 +265,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         updateFoodDiary(date);
     }
 
+    /**
+     * Updates all UI elements related to overall caloric intake.
+     * Gathers sum of caloric intake from food logs of the day, and caloric goal from databases.
+     * Calculates the amount of calories left to eat.
+     * Values for caloric goal, calories eaten, calories left and circular progress bar are updated on the screen.
+     * If daily goals are reached, the UI is modified (colors and texts) to notify the user.
+     * @param date String of the date the values will be updated to
+     */
     private void updateCaloricCountersDisplays(String date) {
         //get caloric values from databases
         caloricIntake = foodLogDBH.getCaloriesByDate(date);
@@ -316,6 +298,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         circularPB.setProgress(caloricIntake);
     }
 
+    /**
+     * Updates progress bars for macronutrient objectives
+     * Gathers macronutrient goals from day data database, then calculates values as a share of caloric goal.
+     * Gathers the sum of each macronutrient intake from food logs database, then multiplies them by their caloric value
+     * (carbs and proteins are worth 4 kCal per gram; fats are worth 8 kCal per gram).
+     * Sets progress bar max values according to goals and progress values according to sum of daily intake.
+     * Updates the UI colors if goal has been reached.
+     * @param date String of the date the values will be updated to
+     */
     private void updateMacroPBs (String date) {
         //get macro goals from daydata.db
         carbGoalInt = dayDataDHB.getIntByDate(COLUMN_CARBS_GOAL, date);
@@ -345,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             txtFat.setTextColor(getResources().getColor(android.R.color.tab_indicator_text));
         }
-        //set macro progress bars
+        //set macro progress bar max and progress values
         carbsPB.setMax(carbShare);
         proteinPB.setMax(proteinShare);
         fatPB.setMax(fatShare);
@@ -354,6 +345,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fatPB.setProgress(fatIntake);
     }
 
+    /**
+     * Updates food diary (food log list).
+     * Gets ArrayList of all food logs of the selected date from the food logs database.
+     * Creates an adapter, with given style, to display the array in a list view.
+     * Attaches the list to the adapter
+     * @param date String of the date the values will be updated to
+     */
     private void updateFoodDiary(String date) {
         //get FoodLog list from foodlog.db
         List<FoodLog> foodLogs = foodLogDBH.getFoodLog(date);
@@ -363,6 +361,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lvFoodLogs.setAdapter(foodLogArrayAdapter);
     }
 
+    /**
+     * Updates the UI elements that show the calories eaten per meal.
+     * Gets the sums per meal from the food logs database.
+     * Updates the UI accordingly.
+     * @param date String of the date the values will be updated to
+     */
     private void updateMealDisplays(String date) {
         //get sum of calories per meal on a given date from foodlog.db
         breakfastIntake = foodLogDBH.getCaloriesByMealByDate("breakfast", date);
@@ -376,6 +380,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         extrasDisplay.setText(String.valueOf(extrasIntake));
     }
 
+    /**
+     * Updates the water counter value.
+     * Gathers the water intake and intake goal for a given date.
+     * Changes the color of the value to red if the goal is not reached yet, green otherwise.
+     * Updates the value in the UI.
+     * @param date String of the date the values will be updated to
+     */
     private void updateWaterDisplay(String date) {
         //get water intake and goal from daydata.db
         waterIntake = dayDataDHB.getIntByDate(COLUMN_WATER_INTAKE, date);
@@ -391,9 +402,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * Inflating menu object (reading xml and making menu visible in app)
-     * @param menu
-     * @return
+     * Inflating three dot options menu object (reading xml and making menu visible in app)
+     * @param menu Three dot menu
+     * @return true when the menu is created
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -403,8 +414,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * Define action on menu item selection
-     * @param item
+     * Define action on menu item selection.
+     * Starts setup, statistics or about activities, with date displayed as an extra so that the date remains when come back to main activity.
+     * @param item Menu item clicked
      * @return
      */
     @Override
@@ -435,37 +447,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Displays date picker dialog and handles date selection. Default value of the picker is current day.
+     * Gets string of date picked and displays it. Sets date displayed variable.
+     * Sets day, month and year values selected to default values for next use (the picker will start from that date next time it is used).
+     * A new row in the day data database is created if it does not exist for the selected date.
+     * The water counter is set to the value stored in the database if it exists, otherwise 0.
+     * The whole UI is updated.
+     */
     private void showDateDialog() {
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        datePicked = dayOfMonth + "-" + (monthOfYear+1) + "-" + year;
-                        dateDisplayed = datePicked;
-                        yearDisplayed = year;
-                        monthDisplayed = monthOfYear;
-                        dayDisplayed = dayOfMonth;
-                        dateNowDisplay.setText(datePicked);
-                        dayDataDHB.addOneIgnore(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, 0);
-                        waterCounter.setCount(dayDataDHB.getIntByDate(COLUMN_WATER_INTAKE, dateDisplayed));
-                        setValuesTo(dateDisplayed);
-                    }
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT,
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    datePicked = dayOfMonth + "-" + (monthOfYear+1) + "-" + year;
+                    dateDisplayed = datePicked;
+                    yearDisplayed = year;
+                    monthDisplayed = monthOfYear;
+                    dayDisplayed = dayOfMonth;
+                    dateNowDisplay.setText(datePicked);
+                    dayDataDHB.addOneIgnore(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, 0);
+                    waterCounter.setCount(dayDataDHB.getIntByDate(COLUMN_WATER_INTAKE, dateDisplayed));
+                    setValuesTo(dateDisplayed);
                 }, yearDisplayed, monthDisplayed, dayDisplayed);
         datePickerDialog.show();
 
     }
 
+    /**
+     * When the calendar button is clicked, the current day data is stored/updated into the day data database and the date picker dialog pops up
+     * @param v Calendar button
+     */
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fabBtnDate:
-                showDateDialog();
-                break;
+        dayDataDHB.addOneReplace(dateDisplayed, weightInt, caloricGoalInt, carbGoalInt, proteinGoalInt, fatGoalInt, waterGoalInt, waterIntake);
+        if (v.getId() == R.id.fabBtnDate) {
+            showDateDialog();
         }
     }
 
+    /**
+     * Handles back button press. Makes sure the app is closed.
+     */
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);

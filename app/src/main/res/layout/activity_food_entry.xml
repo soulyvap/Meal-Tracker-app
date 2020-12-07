@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FoodEntryActivity">
+    tools:context=".activities.FoodEntryActivity">
 
     <TextView
         android:id="@+id/txtFoodEntry"
@@ -43,7 +43,7 @@
         android:id="@+id/txtTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:text="Time"
         app:layout_constraintEnd_toEndOf="@+id/etxtTime"
         app:layout_constraintStart_toStartOf="@+id/etxtTime"
@@ -99,7 +99,7 @@
         android:id="@+id/txtEntries"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="Entries"
         app:layout_constraintStart_toStartOf="@+id/txtFoodEntry"
         app:layout_constraintTop_toBottomOf="@+id/etxtTime" />
@@ -109,12 +109,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:completionThreshold="3"
         android:ems="10"
         android:hint="Select food or input manually"
         android:inputType="textPersonName"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/editTextQuantity"
+        app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintStart_toStartOf="@+id/txtEntries"
         app:layout_constraintTop_toBottomOf="@+id/txtEntries" />
 
@@ -122,15 +124,19 @@
         android:id="@+id/editTextQuantity"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:ems="10"
         android:gravity="center"
-        android:hint="grams"
+        android:hint="Qty"
         android:inputType="number"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/actvFoodName"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline11"
+        app:layout_constraintStart_toEndOf="@+id/actvFoodName"
         app:layout_constraintTop_toTopOf="@+id/actvFoodName"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -142,8 +148,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:ems="10"
-        android:gravity="center"
-        android:hint="calories (kcal)"
+        android:gravity="bottom|center"
+        android:hint="kCal"
         android:inputType="number"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline10"
@@ -155,8 +161,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:gravity="center"
-        android:hint="carbs(g)"
+        android:gravity="bottom|center"
+        android:hint="g"
         android:inputType="number"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/etxtFoodProtein"
@@ -169,8 +175,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:gravity="center"
-        android:hint="protein(g)"
+        android:gravity="bottom|center"
+        android:hint="g"
         android:inputType="number"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/etxtFoodFat"
@@ -183,8 +189,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:gravity="center"
-        android:hint="fat(g)"
+        android:gravity="bottom|center"
+        android:hint="g"
         android:inputType="number"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline11"
@@ -212,7 +218,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/editTextQuantity"
+        app:layout_constraintStart_toStartOf="@+id/guideline11"
         app:layout_constraintTop_toTopOf="@+id/etxtFoodFat"
         app:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />
 
@@ -222,13 +228,14 @@
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline17"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etxtFoodCalories" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6">
+    </ListView>
 
     <Button
         android:id="@+id/btnAddFood"
@@ -272,6 +279,70 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.87" />
+        app:layout_constraintGuide_percent="0.9" />
+
+    <TextView
+        android:id="@+id/tvGram"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="g"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextQuantity"
+        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+        app:layout_constraintStart_toEndOf="@+id/editTextQuantity"
+        app:layout_constraintTop_toTopOf="@+id/editTextQuantity" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="calories"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/etxtFoodCalories"
+        app:layout_constraintStart_toStartOf="@+id/etxtFoodCalories"
+        app:layout_constraintTop_toBottomOf="@+id/etxtFoodCalories" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="carbs"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/etxtFoodCarbs"
+        app:layout_constraintStart_toStartOf="@+id/etxtFoodCarbs"
+        app:layout_constraintTop_toBottomOf="@+id/etxtFoodCarbs" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="protein"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/etxtFoodProtein"
+        app:layout_constraintStart_toEndOf="@+id/etxtFoodCarbs"
+        app:layout_constraintTop_toBottomOf="@+id/etxtFoodProtein" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="fat"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/etxtFoodFat"
+        app:layout_constraintStart_toStartOf="@+id/etxtFoodFat"
+        app:layout_constraintTop_toBottomOf="@+id/etxtFoodFat" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="New entries pending"
+        android:textColor="@color/orange_pastel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

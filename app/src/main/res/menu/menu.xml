@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menuItemSetup"
-        android:title="Setup" />
+        android:title="Profile &amp; Goal Setup" />
     <item
         android:id="@+id/menuItemStats"
-        android:title="Stats" />
+        android:title="Statistics" />
 
     <item
         android:id="@+id/menuItemAbout"

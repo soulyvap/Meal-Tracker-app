@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SetupActivity">
+    tools:context=".activities.SetupActivity">
 
 
     <TextView
@@ -112,7 +112,6 @@
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
-        android:text=" "
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
         app:layout_constraintHorizontal_bias="0.0"
@@ -126,7 +125,6 @@
         android:ems="10"
         android:gravity="center"
         android:inputType="textPersonName"
-        android:text=" "
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/btnBirthdateCalendar"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
@@ -151,7 +149,7 @@
         android:id="@+id/btnBirthdateCalendar"
         android:layout_width="30dp"
         android:layout_height="49dp"
-        android:src="@drawable/ic_baseline_calendar_today_24"
+        app:srcCompat="@drawable/ic_baseline_calendar_today_24"
         app:layout_constraintBottom_toTopOf="@+id/etxtSetHeight"
         app:layout_constraintEnd_toEndOf="@+id/etxtSetLastname"
         app:layout_constraintTop_toBottomOf="@+id/etxtSetLastname" />
