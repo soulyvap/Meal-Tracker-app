@@ -1,8 +1,11 @@
-Android app project
-
-Title: Meal Tracker app
+Meal Tracker app
 
 Authors: Soulyvanh Phetsarath and Neha Rana
+
+Description:
+
+With Meal Tracker you can measure calories in daily, monthly and yearly basis effortlessly. Start tracking by providing some basic information. 
+This app was developed as an assignment for the course Mobiles (TX00EB19) at Metropolia UAS
 
 [Download and Install the app](https://docs.google.com/document/d/1hTd2F4XxwjFy23seDv31Z3XPdi6KERoRRv1-UbocQlo/edit)
 
