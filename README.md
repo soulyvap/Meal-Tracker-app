@@ -1,4 +1,4 @@
-Meal Tracker app
+Meal Tracker app (android)
 
 Authors: Soulyvanh Phetsarath and Neha Rana
 
